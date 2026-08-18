@@ -1,0 +1,1327 @@
+INFO:     Will watch for changes in these directories: ['C:\\Users\\Claire\\Desktop\\simulateur\\credit-simulateur']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [16068] using WatchFiles
+Process SpawnProcess-1:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+SyntaxError: source code string cannot contain null bytes
+WARNING:  WatchFiles detected changes in 'app\main.py'. Reloading...
+ERROR:    Error loading ASGI app. Attribute "app" not found in module "app.main".
+WARNING:  WatchFiles detected changes in 'app\main.py'. Reloading...
+INFO:     Started server process [14376]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app\main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [14376]
+Process SpawnProcess-4:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 2, in <module>
+    from app.database import engine, Base
+SyntaxError: source code string cannot contain null bytes
+WARNING:  WatchFiles detected changes in 'app\config.py'. Reloading...
+WARNING:  WatchFiles detected changes in 'app\routers\auth.py', 'app\database.py', 'app\models\simulation.py', 'tests\test_calculs_financiers.py', 'app\main.py', 'app\schemas\user.py', 'app\models\message_ia.py', 'app\schemas\message_ia.py', 'app\schemas\simulation.py', 'app\services\claude_service.py', 'app\services\calculs_financiers.py', 'app\schemas\offre_credit.py', 'app\core\exceptions.py', 'app\core\security.py', 'tests\test_simulations.py', 'app\routers\ia.py', 'app\services\auth_service.py', 'app\models\user.py', 'app\models\offre_credit.py', 'app\routers\simulations.py', 'app\routers\offres.py'. Reloading...
+Process SpawnProcess-5:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+Process SpawnProcess-6:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+WARNING:  WatchFiles detected changes in 'app\routers\auth.py', 'app\core\exceptions.py', 'app\models\user.py', 'app\models\offre_credit.py', 'app\database.py', 'app\models\simulation.py', 'app\main.py', 'app\core\security.py', 'app\config.py', 'app\models\message_ia.py'. Reloading...
+WARNING:  WatchFiles detected changes in 'app\schemas\message_ia.py', 'app\schemas\simulation.py', 'app\routers\ia.py', 'app\services\auth_service.py', 'app\routers\simulations.py', 'app\schemas\offre_credit.py', 'app\schemas\user.py', 'app\routers\offres.py'. Reloading...
+Process SpawnProcess-7:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \ufeff\u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+    ^
+SyntaxError: invalid non-printable character U+FEFF
+WARNING:  WatchFiles detected changes in 'tests\test_calculs_financiers.py', 'tests\test_simulations.py', 'app\services\calculs_financiers.py', 'app\services\claude_service.py'. Reloading...
+Process SpawnProcess-8:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \ufeff\u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+    ^
+SyntaxError: invalid non-printable character U+FEFF
+Process SpawnProcess-9:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \ufeff\u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+    ^
+SyntaxError: invalid non-printable character U+FEFF
+WARNING:  WatchFiles detected changes in 'app\config.py'. Reloading...
+WARNING:  WatchFiles detected changes in 'app\routers\auth.py', 'app\core\exceptions.py', 'app\routers\ia.py', 'app\models\user.py', 'app\models\offre_credit.py', 'app\database.py', 'app\models\simulation.py', 'app\main.py', 'app\core\security.py', 'app\routers\offres.py', 'app\models\message_ia.py'. Reloading...
+Process SpawnProcess-10:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \ufeff\u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+    ^
+SyntaxError: invalid non-printable character U+FEFF
+WARNING:  WatchFiles detected changes in 'app\schemas\message_ia.py', 'tests\test_calculs_financiers.py', 'app\schemas\simulation.py', 'tests\test_simulations.py', 'app\services\auth_service.py', 'app\services\claude_service.py', 'app\services\calculs_financiers.py', 'app\routers\simulations.py', 'app\schemas\offre_credit.py', 'app\schemas\user.py'. Reloading...
+Process SpawnProcess-11:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \ufeff\u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+    ^
+SyntaxError: invalid non-printable character U+FEFF
+Process SpawnProcess-12:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \ufeff\u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+    ^
+SyntaxError: invalid non-printable character U+FEFF
+WARNING:  WatchFiles detected changes in 'app\config.py'. Reloading...
+Process SpawnProcess-13:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \ufeff\u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+    ^
+SyntaxError: invalid non-printable character U+FEFF
+WARNING:  WatchFiles detected changes in 'app\routers\auth.py', 'app\database.py', 'app\models\simulation.py', 'tests\test_calculs_financiers.py', 'app\main.py', 'app\schemas\user.py', 'app\models\message_ia.py', 'app\schemas\message_ia.py', 'app\schemas\simulation.py', 'app\services\claude_service.py', 'app\services\calculs_financiers.py', 'app\schemas\offre_credit.py', 'app\core\exceptions.py', 'app\core\security.py', 'tests\test_simulations.py', 'app\routers\ia.py', 'app\services\auth_service.py', 'app\models\user.py', 'app\models\offre_credit.py', 'app\routers\simulations.py', 'app\routers\offres.py'. Reloading...
+WARNING:  WatchFiles detected changes in 'app\services\calculs_financiers.py'. Reloading...
+Process SpawnProcess-14:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+Process SpawnProcess-15:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+WARNING:  WatchFiles detected changes in 'cleanup_utf8.py'. Reloading...
+WARNING:  WatchFiles detected changes in 'cleanup_utf8.py'. Reloading...
+Process SpawnProcess-16:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+Process SpawnProcess-17:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+WARNING:  WatchFiles detected changes in 'app\routers\auth.py', 'app\database.py', 'app\models\simulation.py', 'tests\test_calculs_financiers.py', 'app\main.py', 'app\schemas\user.py', 'app\models\message_ia.py', 'app\schemas\message_ia.py', 'app\schemas\simulation.py', 'app\services\claude_service.py', 'app\services\calculs_financiers.py', 'app\schemas\offre_credit.py', 'app\core\exceptions.py', 'app\core\security.py', 'tests\test_simulations.py', 'app\routers\ia.py', 'app\services\auth_service.py', 'app\models\user.py', 'app\models\offre_credit.py', 'app\routers\simulations.py', 'app\routers\offres.py'. Reloading...
+WARNING:  WatchFiles detected changes in 'app\services\calculs_financiers.py'. Reloading...
+Process SpawnProcess-18:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+Process SpawnProcess-19:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+WARNING:  WatchFiles detected changes in 'cleanup_utf8.py'. Reloading...
+WARNING:  WatchFiles detected changes in 'cleanup_utf8.py'. Reloading...
+Process SpawnProcess-20:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+Process SpawnProcess-21:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+WARNING:  WatchFiles detected changes in 'cleanup_utf8.py'. Reloading...
+Process SpawnProcess-22:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+WARNING:  WatchFiles detected changes in 'restore_backend.py'. Reloading...
+Process SpawnProcess-23:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+WARNING:  WatchFiles detected changes in 'restore_backend.py'. Reloading...
+Process SpawnProcess-24:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1133, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1063, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 1
+    \u7266\u6d6f\u6620\u7361\u6174\u6970\u6920\u706d\u726f\u2074\u6146\u7473\u5041\u0a49\u7266\u6d6f\u6120\u7070\u642e\u7461\u6261\u7361\u2065\u6d69\u6f70\u7472\u6520\u676e\u6e69\u2c65\u4220\u7361\u0a65\u7266\u6d6f\u6120\u7070\u722e\u756f\u6574\u7372\u6920\u706d\u726f\u2074\u7561\u6874\u202c\u666f\u7266\u7365\u202c\u6973\u756d\u616c\u6974\u6e6f\u2c73\u6920\u0a61\u230a\u4320\uc372\u65a9\u2072\u656c\u2073\u6174\u6c62\u7365\u7320\u2069\u6c65\u656c\u2073\u276e\u7865\u7369\u6574\u746e\u7020\u7361\u6520\u636e\u726f\u0a65\u6142\u6573\u6d2e\u7465\u6461\u7461\u2e61\u7263\u6165\u6574\u615f\u6c6c\u6228\u6e69\u3d64\u6e65\u6967\u656e\u0a29\u610a\u7070\u3d20\u4620\u7361\u4174\u4950\u0a28††\u6974\u6c74\u3d65\u4322\u6572\u6964\u2074\u6953\u756d\u616c\u6574\u7275\u4120\u4950\u2c22\u200a†\u6420\u7365\u7263\u7069\u6974\u6e6f\u223d\u5041\u2049\u6f70\u7275\u7320\u6d69\u6c75\u7265\u6420\u7365\u6320\uc372\u64a9\u7469\u2073\u7465\u6720\ua9c3\u6572\u2072\u6564\u2073\u666f\u7266\u7365\u6220\u6e61\u6163\u7269\u7365\u2c22\u200a†\u7620\u7265\u6973\u6e6f\u223d\u2e30\u2e31\u2230\u0a2c\u0a29\u230a\u4920\u636e\u756c\u6572\u6c20\u7365\u7220\u756f\u6574\u7275\u0a73\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6128\u7475\u2e68\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u6f28\u6666\u6572\u2e73\u6f72\u7475\u7265\u0a29\u7061\u2e70\u6e69\u6c63\u6475\u5f65\u6f72\u7475\u7265\u7328\u6d69\u6c75\u7461\u6f69\u736e\u722e\u756f\u6574\u2972\u610a\u7070\u692e\u636e\u756c\u6564\u725f\u756f\u6574\u2872\u6169\u722e\u756f\u6574\u2972\u0a0a\u400a\u7061\u2e70\u6567\u2874\u2f22\u2c22\u7420\u6761\u3d73\u225b\u6f52\u746f\u5d22\u0a29\u6564\u2066\u6572\u6461\u725f\u6f6f\u2874\u3a29\u200a†\u7220\u7465\u7275\u206e\u227b\u656d\u7373\u6761\u2265›\u4222\u6569\u766e\u6e65\u6575\u7320\u7275\u6c20\u4127\u4950\u6420\u2065\u6973\u756d\u616c\u6974\u6e6f\u6420\u2065\u7263\ua9c3\u6964\u2074\u2221
+             ^
+SyntaxError: invalid character '\u2074' (U+2074)
+WARNING:  WatchFiles detected changes in 'app\routers\__init__.py', 'app\main.py'. Reloading...
+Process SpawnProcess-25:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\networks.py", line 419, in import_email_validator
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 4, in <module>
+    from app.routers import auth, offres, simulations, ia
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\routers\auth.py", line 6, in <module>
+    from app.schemas.user import UserCreate, UserLogin, UserOut, Token
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\schemas\user.py", line 6, in <module>
+    class UserCreate(BaseModel):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_model_construction.py", line 224, in __new__
+    complete_model_class(
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_model_construction.py", line 577, in complete_model_class
+    schema = cls.__get_pydantic_core_schema__(cls, handler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\main.py", line 671, in __get_pydantic_core_schema__
+    return handler(source)
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_schema_generation_shared.py", line 83, in __call__
+    schema = self._handler(source_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_generate_schema.py", line 655, in generate_schema
+    schema = self._generate_schema_inner(obj)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_generate_schema.py", line 924, in _generate_schema_inner
+    return self._model_schema(obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_generate_schema.py", line 739, in _model_schema
+    {k: self._generate_md_field_schema(k, v, decorators) for k, v in fields.items()},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_generate_schema.py", line 1115, in _generate_md_field_schema
+    common_field = self._common_field_schema(name, field_info, decorators)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_generate_schema.py", line 1308, in _common_field_schema
+    schema = self._apply_annotations(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_generate_schema.py", line 2107, in _apply_annotations
+    schema = get_inner_schema(source_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_schema_generation_shared.py", line 83, in __call__
+    schema = self._handler(source_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_generate_schema.py", line 2086, in inner_handler
+    from_property = self._generate_schema_from_property(obj, source_type)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\_internal\_generate_schema.py", line 821, in _generate_schema_from_property
+    schema = get_schema(
+             ^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\networks.py", line 459, in __get_pydantic_core_schema__
+    import_email_validator()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\networks.py", line 421, in import_email_validator
+    raise ImportError('email-validator is not installed, run `pip install pydantic[email]`') from e
+ImportError: email-validator is not installed, run `pip install pydantic[email]`
+WARNING:  WatchFiles detected changes in 'restore_backend.py'. Reloading...
+Process SpawnProcess-26:
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 314, in _bootstrap
+    self.run()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\_subprocess.py", line 80, in subprocess_started
+    target(sockets=sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 65, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 69, in serve
+    await self._serve(sockets)
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\server.py", line 76, in _serve
+    config.load()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 434, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\importlib\__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\main.py", line 4, in <module>
+    from app.routers import auth, offres, simulations, ia
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\routers\ia.py", line 7, in <module>
+    from app.services.claude_service import generer_recommandation, expliquer_clause
+  File "C:\Users\Claire\Desktop\simulateur\credit-simulateur\app\services\claude_service.py", line 5, in <module>
+    client = Anthropic(api_key=settings.anthropic_api_key)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\anthropic\_client.py", line 117, in __init__
+    super().__init__(
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\anthropic\_base_client.py", line 856, in __init__
+    self._client = http_client or SyncHttpxClientWrapper(
+                                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\anthropic\_base_client.py", line 754, in __init__
+    super().__init__(**kwargs)
+TypeError: Client.__init__() got an unexpected keyword argument 'proxies'
+WARNING:  WatchFiles detected changes in 'app\services\claude_service.py'. Reloading...
+INFO:     Started server process [16424]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'app\services\claude_service.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [16424]
+WARNING:  WatchFiles detected changes in 'app\services\claude_service.py'. Reloading...
+INFO:     Started server process [17172]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+INFO:     Started server process [3844]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'test_api.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [3844]
+WARNING:  WatchFiles detected changes in 'test_api_detail.py', 'test_api.py'. Reloading...
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 122, in spawn_main
+    exitcode = _main(fd, parent_sentinel)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\multiprocessing\spawn.py", line 132, in _main
+    self = reduction.pickle.load(from_parent)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\__init__.py", line 1, in <module>
+    from uvicorn.config import Config
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\config.py", line 3, in <module>
+    import asyncio
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\__init__.py", line 8, in <module>
+    from .base_events import *
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 34, in <module>
+    import ssl
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\ssl.py", line 100, in <module>
+    import _ssl             # if we can't import it, let the error propagate
+    ^^^^^^^^^^^
+KeyboardInterrupt
+INFO:     Started server process [14908]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'init_db.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [14908]
+WARNING:  WatchFiles detected changes in 'init_db.py'. Reloading...
+INFO:     Started server process [21832]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+WARNING:  WatchFiles detected changes in 'init_db.py'. Reloading...
+INFO:     Started server process [9136]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+asyncio.exceptions.CancelledError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 123, in run
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\routing.py", line 700, in lifespan
+    await receive()
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\site-packages\uvicorn\lifespan\on.py", line 137, in receive
+    return await self.receive_queue.get()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Claire\AppData\Local\Programs\Python\Python312\Lib\asyncio\queues.py", line 158, in get
+    await getter
+asyncio.exceptions.CancelledError
+
+INFO:     Started server process [6808]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'init_db.py'. Reloading...
+INFO:     ('12.12.12.238', 64368) - "WebSocket /" 403
+INFO:     connection rejected (403 Forbidden)
+INFO:     connection closed

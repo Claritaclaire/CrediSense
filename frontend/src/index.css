@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-image: linear-gradient(to bottom, rgba(212, 182, 228, 0.9), rgba(196, 174, 211, 0.95)), url('/image2.jpg');
+    background-size: cover;
+    background-position: left top;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    @apply text-slate-900 font-body antialiased min-h-screen selection:bg-or/30 selection:text-white;
+  }
+
+  .logo-frame {
+    background-color: rgba(211, 179, 179, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 0.75rem;
+    padding: 0.5rem;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .logo-glow {
+    filter: drop-shadow(0 0 24px rgba(255, 255, 255, 0.35));
+  }
+
+  h1, h2, h3 {
+    @apply font-display text-indigo;
+  }
+
+  .chiffres {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Animations Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(217, 119, 6, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(217, 119, 6, 0.35);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s infinite;
+}
+
+@layer components {
+  .filet {
+    @apply border-t border-ardoise/20;
+  }
+
+  .eyebrow {
+    @apply text-xs uppercase tracking-widest text-or font-bold inline-block px-2.5 py-0.5 rounded-full bg-or/10 border border-or/20;
+  }
+
+  .btn-primaire {
+    @apply bg-indigo text-papier px-6 py-3 rounded-lg font-semibold shadow-md
+           hover:bg-indigo-dark hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0
+           transition-all duration-200 ease-out
+           focus:outline-none focus:ring-2 focus:ring-or focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+  }
+
+  .btn-secondaire {
+    @apply border border-indigo/30 text-indigo px-6 py-3 rounded-lg font-semibold bg-white
+           hover:bg-indigo hover:text-papier hover:border-indigo hover:shadow-md hover:-translate-y-0.5
+           transition-all duration-200 ease-out
+           focus:outline-none focus:ring-2 focus:ring-or focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none;
+  }
+
+  .btn-ghost {
+    @apply text-ardoise px-4 py-2 rounded-lg text-sm font-medium
+           hover:text-indigo hover:bg-indigo/5 transition-colors duration-150;
+  }
+
+  .champ {
+    @apply w-full border border-slate-300 rounded-lg px-4 py-3 bg-white text-slate-900 font-medium
+           focus:outline-none focus:ring-2 focus:ring-or/50 focus:border-or
+           transition-all duration-200 placeholder:text-slate-400 shadow-sm;
+  }
+
+  .carte {
+    @apply bg-white/95 backdrop-blur-md rounded-xl border border-white/80 text-slate-900
+           shadow-[0_4px_25px_rgba(0,0,0,0.18)]
+           hover:shadow-[0_8px_35px_rgba(0,0,0,0.25)]
+           transition-all duration-300;
+  }
+
+  .carte-accent {
+    @apply carte border-l-4 border-l-or;
+  }
+
+  .section-titre {
+    @apply text-3xl md:text-4xl font-display leading-tight text-white font-bold tracking-tight drop-shadow-sm;
+  }
+
+  .nav-lien {
+    @apply text-sm font-semibold text-papier/90 hover:text-or transition-colors duration-150 py-1 px-2.5 rounded hover:bg-white/10;
+  }
+
+  .nav-lien-actif {
+    @apply text-or font-bold bg-white/10;
+  }
+
+  .skeleton {
+    @apply animate-pulse bg-ardoise/10 rounded-lg;
+  }
+
+  .alerte {
+    @apply text-sm border-l-4 px-4 py-3 rounded-r-lg font-medium;
+  }
+
+  .alerte-erreur {
+    @apply alerte text-rose-800 bg-rose-50 border-rose-500 shadow-sm;
+  }
+
+  .alerte-info {
+    @apply alerte text-indigo bg-indigo/5 border-indigo/40;
+  }
+}

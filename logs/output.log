@@ -1,0 +1,6 @@
+INFO:     127.0.0.1:59680 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50499 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59680 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     12.12.12.238:64338 - "GET / HTTP/1.1" 200 OK
+INFO:     12.12.12.238:64369 - "GET /loginMsg.js HTTP/1.1" 404 Not Found
+INFO:     12.12.12.238:64372 - "GET /cgi/get.cgi?cmd=home_login HTTP/1.1" 404 Not Found
