@@ -37,7 +37,7 @@ export default function OffreDetail() {
   // Calcul d'exemple simplifié
   const calculMensualiteIndicative = () => {
     if (!offre) return 0;
-    const r = (offre.taux_annuel / 100) / 12;
+    const r = (offre.taux_annuel <= 1 ? offre.taux_annuel : offre.taux_annuel / 100) / 12;
     const n = dureeExemple;
     if (r === 0) return Math.round(montantExemple / n);
     const m = (montantExemple * r) / (1 - Math.pow(1 + r, -n));
@@ -93,12 +93,12 @@ export default function OffreDetail() {
               {offre.nom_banque}
             </h1>
             <p className="text-ardoise text-sm mt-1">
-              Solution bancaire sur mesure adaptée à vos projets en Zone FCFA.
+              {offre.description || "Solution bancaire sur mesure adaptée à vos projets en Zone FCFA."}
             </p>
           </div>
           <div className="bg-indigo text-white px-5 py-3 rounded-2xl text-center shadow-md">
             <span className="block text-xs uppercase tracking-wider text-or font-bold">Taux Nominal</span>
-            <span className="text-3xl font-extrabold font-display">{offre.taux_annuel} %</span>
+            <span className="text-3xl font-extrabold font-display">{(offre.taux_annuel <= 1 ? offre.taux_annuel * 100 : offre.taux_annuel).toFixed(1)} %</span>
           </div>
         </div>
 
@@ -185,7 +185,7 @@ export default function OffreDetail() {
               {mensualiteExemple.toLocaleString("fr-FR")} <span className="text-lg text-or">FCFA/mois</span>
             </div>
             <p className="text-xs text-white/70">
-              *Taux nominal de {offre.taux_annuel}%. Hors frais d'assurance ajustés.
+              *Taux nominal de {(offre.taux_annuel <= 1 ? offre.taux_annuel * 100 : offre.taux_annuel).toFixed(1)} %. Hors frais d'assurance ajustés.
             </p>
           </div>
         </div>
@@ -208,6 +208,82 @@ export default function OffreDetail() {
             <span className="group-hover:translate-x-1 transition-transform">→</span>
           </button>
         </div>
+      </div>
+
+      {/* Conditions d'octroi & Pièces à fournir CCA Bank */}
+      <div className="carte p-6 sm:p-8 space-y-6">
+        <h2 className="text-xl font-bold text-indigo border-b border-slate-100 pb-3">
+          Conditions d'octroi & Documents officiels requis (CCA Bank)
+        </h2>
+
+        {offre.nom_banque.toLowerCase().includes("scolaire") ? (
+          <div className="space-y-6 text-sm text-ardoise">
+            <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 space-y-1">
+              <h3 className="font-bold text-indigo">Conditions clés d'octroi :</h3>
+              <ul className="list-disc list-inside space-y-1 text-xs">
+                <li>Durée maximale du crédit scolaire : <strong>11 mois</strong>.</li>
+                <li>Frais de dossier : <strong>0,5% HT</strong> (Minimum 5 000 FCFA).</li>
+                <li>Assurance crédit obligatoire : <strong>CCA Emprunteur NSIA</strong>.</li>
+                <li>Souscription au produit C-sécur pour les clients non engagés.</li>
+              </ul>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                <h4 className="font-bold text-indigo text-xs uppercase tracking-wider">Fonctionnaires & Agents de l'État :</h4>
+                <ul className="list-disc list-inside text-xs space-y-1.5 text-slate-700">
+                  <li>Demande de crédit scolaire imprimée et signée.</li>
+                  <li>Attestation de Virement Irrévocable (AVI).</li>
+                  <li>Photocopie de la Carte Nationale d'Identité (CNI).</li>
+                  <li>Plan de localisation du domicile.</li>
+                  <li>Billet à ordre correctement rempli avant déboursement.</li>
+                  <li>Numéro d'Identification Unique (NIU).</li>
+                </ul>
+              </div>
+
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                <h4 className="font-bold text-indigo text-xs uppercase tracking-wider">Salariés du Secteur Privé & Parapublic :</h4>
+                <ul className="list-disc list-inside text-xs space-y-1.5 text-slate-700">
+                  <li>Demande de crédit scolaire signée.</li>
+                  <li>Attestation de Virement Irrévocable (AVI).</li>
+                  <li>Photocopie de la CNI & Plan de localisation.</li>
+                  <li>Billet à ordre intégralement renseigné.</li>
+                  <li>Attestation de présence effective au poste.</li>
+                  <li>Fiche de souscription CCA-Emprunteur NSIA.</li>
+                  <li>Liste des bénéficiaires dressée par l'employeur.</li>
+                  <li>Numéro d'Identification Unique (NIU).</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        ) : offre.nom_banque.toLowerCase().includes("découvert") ? (
+          <div className="space-y-6 text-sm text-ardoise">
+            <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 space-y-1">
+              <h3 className="font-bold text-indigo">Conditions d'éligibilité du Découvert :</h3>
+              <ul className="list-disc list-inside space-y-1 text-xs">
+                <li>Avance mensuelle de manière revolving jusqu'à <strong>50% du salaire net</strong>.</li>
+                <li>Salaire obligatoirement domicilié auprès de la CCA Bank (depuis au moins 1 mois).</li>
+                <li>Employeur faisant partie des contreparties agréées par la banque.</li>
+                <li>Ancienneté d'au moins 6 mois chez l'employeur actuel.</li>
+                <li>Remboursement assuré automatiquement sur le salaire mensuel perçu.</li>
+              </ul>
+            </div>
+
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+              <h4 className="font-bold text-indigo text-xs uppercase tracking-wider">Pièces requises pour le dossier :</h4>
+              <ul className="list-disc list-inside text-xs space-y-1.5 text-slate-700">
+                <li>Demande manuscrite duly remplie et signée.</li>
+                <li>Contrat de travail dûment signé par l'employeur.</li>
+                <li>Attestation d'emploi (ou attestation de présence au corps pour les militaires).</li>
+                <li>Pièce d'identité valide (CNI).</li>
+              </ul>
+            </div>
+          </div>
+        ) : (
+          <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-ardoise space-y-2">
+            <p><strong>Documents généraux requis :</strong> Pièce d'identité (CNI), Justificatif de domicile (plan de localisation), Justificatifs de revenus (bulletins de paie ou relevés de compte) et Numéro d'Identification Unique (NIU).</p>
+          </div>
+        )}
       </div>
     </div>
   );

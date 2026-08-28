@@ -1,13 +1,13 @@
 const formateur = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 2 });
 
-export function exporterCSV(lignes, nomFichier = "amortissement") {
+export function exporterCSV(lignes, nomFichier = "amortissement", afficherInterets = false) {
   if (!lignes?.length) return;
 
-  const entetes = ["Mois", "Mensualité", "Intérêts", "Capital", "Restant dû"];
+  const entetes = ["Mois", "Mensualité", ...(afficherInterets ? ["Intérêts"] : []), "Capital", "Restant dû"];
   const rows = lignes.map((l) => [
     l.mois,
     formateur.format(l.mensualite),
-    formateur.format(l.interets),
+    ...(afficherInterets ? [formateur.format(l.interets)] : []),
     formateur.format(l.part_capital),
     formateur.format(l.capital_restant_fin),
   ]);
@@ -25,7 +25,7 @@ export function exporterCSV(lignes, nomFichier = "amortissement") {
   URL.revokeObjectURL(url);
 }
 
-export function exporterPDF(lignes, titre = "Tableau d'amortissement") {
+export function exporterPDF(lignes, titre = "Tableau d'amortissement", afficherInterets = false) {
   if (!lignes?.length) return;
 
   const echapperHTML = (valeur) =>
@@ -42,7 +42,7 @@ export function exporterPDF(lignes, titre = "Tableau d'amortissement") {
     <tr>
       <td>${ligne.mois}</td>
       <td>${fcfa(ligne.mensualite)}</td>
-      <td>${fcfa(ligne.interets)}</td>
+      ${afficherInterets ? `<td>${fcfa(ligne.interets)}</td>` : ""}
       <td>${fcfa(ligne.part_capital)}</td>
       <td>${fcfa(ligne.capital_restant_fin)}</td>
     </tr>`
@@ -75,7 +75,7 @@ export function exporterPDF(lignes, titre = "Tableau d'amortissement") {
         <tr>
           <th>Mois</th>
           <th>Mensualité</th>
-          <th>Intérêts</th>
+          ${afficherInterets ? "<th>Intérêts</th>" : ""}
           <th>Capital</th>
           <th>Restant dû</th>
         </tr>

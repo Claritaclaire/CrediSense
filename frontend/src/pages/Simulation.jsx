@@ -10,6 +10,7 @@ import ProfilFinancier from "../components/ProfilFinancier";
 import GraphiqueRepartition from "../components/GraphiqueRepartition";
 import InterpretationTAEG from "../components/InterpretationTAEG";
 import { SkeletonCarte } from "../components/Skeleton";
+import CapaciteEmprunt from "../components/CapaciteEmprunt";
 
 export default function Simulation() {
   const navigate = useNavigate();
@@ -285,6 +286,8 @@ export default function Simulation() {
 
       {/* Main layout */}
       <div className="space-y-8">
+        <CapaciteEmprunt />
+
         {/* Form column */}
         <div className={resultat ? "hidden" : "space-y-6"}>
           <FormulaireSimulation

@@ -5,6 +5,7 @@ import client from "../api/client";
 
 const PRODUITS_CCA_DEFAUT = [
   {
+    cle: "scolaire",
     id: "defaut-scolaire",
     nom_banque: "Crédit Scolaire CCA",
     taux_annuel: 7.5,
@@ -16,6 +17,7 @@ const PRODUITS_CCA_DEFAUT = [
     icone: "🎓",
   },
   {
+    cle: "fonctionnaire",
     id: "defaut-fonctionnaire",
     nom_banque: "CCT Fonctionnaire",
     taux_annuel: 6.5,
@@ -27,6 +29,7 @@ const PRODUITS_CCA_DEFAUT = [
     icone: "🏛️",
   },
   {
+    cle: "urgence",
     id: "defaut-urgence",
     nom_banque: "Crédit d'Urgence",
     taux_annuel: 8.0,
@@ -38,6 +41,7 @@ const PRODUITS_CCA_DEFAUT = [
     icone: "⚡",
   },
   {
+    cle: "découvert",
     id: "defaut-decouvert",
     nom_banque: "Découvert Autorisé",
     taux_annuel: 9.0,
@@ -144,10 +148,12 @@ export default function Accueil() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {offres.map((item, idx) => {
-            const defaultMatch = PRODUITS_CCA_DEFAUT[idx % PRODUITS_CCA_DEFAUT.length];
+            const nomOffre = item.nom_banque.toLowerCase();
+            const defaultMatch = PRODUITS_CCA_DEFAUT.find((produit) => nomOffre.includes(produit.cle));
+            const offreDisponible = !String(item.id).startsWith("defaut-");
             const icone = item.icone || defaultMatch?.icone || "💰";
             const badge = item.badge || defaultMatch?.badge || "Produit CCA";
-            const desc = item.desc || defaultMatch?.desc || "Formule de prêt bancaire souple et accessible en zone FCFA.";
+            const desc = item.description || defaultMatch?.desc || "Formule de prêt bancaire souple et accessible en zone FCFA.";
 
             return (
               <div
@@ -177,7 +183,7 @@ export default function Accueil() {
                   <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/60 space-y-1">
                     <div className="flex justify-between text-xs">
                       <span className="text-ardoise">Taux nominal :</span>
-                      <strong className="text-indigo font-bold font-display">{item.taux_annuel} %</strong>
+                      <strong className="text-indigo font-bold font-display">{(item.taux_annuel <= 1 ? item.taux_annuel * 100 : item.taux_annuel).toFixed(1)} %</strong>
                     </div>
                     <div className="flex justify-between text-xs">
                       <span className="text-ardoise font-medium">Plafond :</span>
@@ -196,13 +202,19 @@ export default function Accueil() {
 
                 {/* Bouton vers la page produit dédiée (Étape 2) */}
                 <div className="pt-5 mt-4 border-t border-slate-100">
-                  <Link
-                    to={`/offres/${item.id}`}
-                    className="w-full bg-indigo text-white hover:bg-or hover:text-indigo font-bold text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-1.5 transition-all shadow-sm group-hover:shadow"
-                  >
-                    <span>Découvrir l'offre</span>
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
-                  </Link>
+                  {offreDisponible ? (
+                    <Link
+                      to={`/offres/${item.id}`}
+                      className="w-full bg-indigo text-white hover:bg-or hover:text-indigo font-bold text-xs py-2.5 px-4 rounded-lg flex items-center justify-center gap-1.5 transition-all shadow-sm group-hover:shadow"
+                    >
+                      <span>Découvrir l'offre</span>
+                      <span className="group-hover:translate-x-1 transition-transform">→</span>
+                    </Link>
+                  ) : (
+                    <span className="block w-full rounded-lg bg-slate-200 px-4 py-2.5 text-center text-xs font-semibold text-ardoise">
+                      Détails momentanément indisponibles
+                    </span>
+                  )}
                 </div>
               </div>
             );

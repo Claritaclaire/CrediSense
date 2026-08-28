@@ -29,14 +29,14 @@ export default function DashboardClient() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Récupérer la dernière simulation et les prêts
+        // Récupérer la dernière simulation du client et ses prêts
         const [simRes, pretRes] = await Promise.all([
-          client.get("/simulations/all").catch(() => ({ data: [] })),
+          client.get("/simulations/historique").catch(() => ({ data: [] })),
           client.get("/historique-prets/").catch(() => ({ data: [] })),
         ]);
 
         if (Array.isArray(simRes.data) && simRes.data.length > 0) {
-          setDerniereSimulation(simRes.data[simRes.data.length - 1]);
+          setDerniereSimulation(simRes.data[0]);
         }
 
         if (Array.isArray(pretRes.data)) {
@@ -207,102 +207,43 @@ export default function DashboardClient() {
         </div>
       </div>
 
-      {/* Grille des raccourcis d'action */}
-      <div className="space-y-4">
-        <h2 className="text-xl font-bold text-white">Raccourcis & Modules Client</h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Link
-            to="/simulation"
-            className="carte p-6 hover:-translate-y-1 transition-all duration-200 group border-l-4 border-l-or"
-          >
-            <div className="text-3xl mb-3 p-2.5 bg-slate-50 rounded-xl inline-block group-hover:scale-110 transition-transform">
-              📊
-            </div>
-            <h3 className="font-bold text-indigo text-lg group-hover:text-or transition-colors">
-              Simuler un nouveau crédit
-            </h3>
-            <p className="text-ardoise text-xs mt-1 leading-relaxed">
-              Calculez au franc près vos mensualités, frais et tableau d'amortissement.
+      {/* Actions prioritaires uniquement */}
+      <section className="carte p-6 sm:p-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="eyebrow mb-2">Prochaine étape</p>
+            <h2 className="text-xl font-bold text-indigo">Préparez votre demande</h2>
+            <p className="mt-1 max-w-2xl text-sm text-ardoise">
+              {revenuMensuel > 0
+                ? "Votre profil financier est renseigné. Vous pouvez lancer une simulation ou déposer une demande."
+                : "Renseignez votre revenu et vos charges pour obtenir une estimation adaptée à votre capacité."}
             </p>
-          </Link>
-
-          <Link
-            to="/comparaison"
-            className="carte p-6 hover:-translate-y-1 transition-all duration-200 group border-l-4 border-l-indigo"
-          >
-            <div className="text-3xl mb-3 p-2.5 bg-slate-50 rounded-xl inline-block group-hover:scale-110 transition-transform">
-              ⚖️
-            </div>
-            <h3 className="font-bold text-indigo text-lg group-hover:text-or transition-colors">
-              Comparer les offres
-            </h3>
-            <p className="text-ardoise text-xs mt-1 leading-relaxed">
-              Comparez côte à côte plusieurs formules de prêt pour choisir la plus avantageuse.
-            </p>
-          </Link>
-
-          <Link
-            to="/profil"
-            className="carte p-6 hover:-translate-y-1 transition-all duration-200 group border-l-4 border-l-amber-500"
-          >
-            <div className="text-3xl mb-3 p-2.5 bg-slate-50 rounded-xl inline-block group-hover:scale-110 transition-transform">
-              👤
-            </div>
-            <h3 className="font-bold text-indigo text-lg group-hover:text-or transition-colors">
-              Mon Profil & Finances
-            </h3>
-            <p className="text-ardoise text-xs mt-1 leading-relaxed">
-              Renseignez vos revenus et charges pour réutiliser ces données automatiquement.
-            </p>
-          </Link>
-
-          <Link
-            to="/profil"
-            className="carte p-6 hover:-translate-y-1 transition-all duration-200 group border-l-4 border-l-purple-500"
-          >
-            <div className="text-3xl mb-3 p-2.5 bg-slate-50 rounded-xl inline-block group-hover:scale-110 transition-transform">
-              💳
-            </div>
-            <h3 className="font-bold text-indigo text-lg group-hover:text-or transition-colors">
-              Mes Prêts en cours
-            </h3>
-            <p className="text-ardoise text-xs mt-1 leading-relaxed">
-              Déclarez vos crédits actuels pour ajuster le calcul de votre taux d'endettement.
-            </p>
-          </Link>
-
-          <Link
-            to="/historique"
-            className="carte p-6 hover:-translate-y-1 transition-all duration-200 group border-l-4 border-l-blue-500"
-          >
-            <div className="text-3xl mb-3 p-2.5 bg-slate-50 rounded-xl inline-block group-hover:scale-110 transition-transform">
-              📜
-            </div>
-            <h3 className="font-bold text-indigo text-lg group-hover:text-or transition-colors">
-              Historique des calculs
-            </h3>
-            <p className="text-ardoise text-xs mt-1 leading-relaxed">
-              Retrouvez l'ensemble de vos simulations sauvegardées et téléchargez vos bilans.
-            </p>
-          </Link>
-
-          <Link
-            to="/clause"
-            className="carte p-6 hover:-translate-y-1 transition-all duration-200 group border-l-4 border-l-emerald-500"
-          >
-            <div className="text-3xl mb-3 p-2.5 bg-slate-50 rounded-xl inline-block group-hover:scale-110 transition-transform">
-              🤖
-            </div>
-            <h3 className="font-bold text-indigo text-lg group-hover:text-or transition-colors">
-              Explication de Clause IA
-            </h3>
-            <p className="text-ardoise text-xs mt-1 leading-relaxed">
-              Soumettez le texte d'un contrat de prêt pour obtenir une vulgarisation claire en langage simple.
-            </p>
-          </Link>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              to={revenuMensuel > 0 ? "/simulation" : "/profil"}
+              className="btn-primaire whitespace-nowrap"
+            >
+              {revenuMensuel > 0 ? "Nouvelle simulation" : "Compléter mon profil"}
+            </Link>
+            {derniereSimulation && (
+              <Link
+                to={`/mes-demandes?simulation_id=${derniereSimulation.id}`}
+                className="btn-secondaire whitespace-nowrap"
+              >
+                Déposer une demande
+              </Link>
+            )}
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* Accès secondaires regroupés sur une seule ligne */}
+      <nav aria-label="Accès secondaires" className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
+        <Link to="/comparaison" className="font-semibold text-white hover:text-or">Comparer les offres</Link>
+        <Link to="/historique" className="font-semibold text-white hover:text-or">Voir l'historique</Link>
+        <Link to="/clause" className="font-semibold text-white hover:text-or">Comprendre une clause</Link>
+      </nav>
     </div>
   );
 }

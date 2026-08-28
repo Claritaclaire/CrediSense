@@ -8,7 +8,7 @@
   }
 
   body {
-    background-image: linear-gradient(to bottom, rgba(212, 182, 228, 0.9), rgba(196, 174, 211, 0.95)), url('/image2.jpg');
+    background-image: linear-gradient(to bottom, rgba(246, 244, 247, 0.9), rgba(196, 174, 211, 0.95)), url('/image2.jpg');
     background-size: cover;
     background-position: left top;
     background-attachment: fixed;
@@ -171,5 +171,13 @@
 
   .alerte-info {
     @apply alerte text-indigo bg-indigo/5 border-indigo/40;
+  }
+
+  .assistant-panneau {
+    height: min(620px, calc(100vh - 120px));
+  }
+
+  .assistant-messages {
+    min-height: 240px;
   }
 }

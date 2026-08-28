@@ -8,7 +8,7 @@ const formateurFCFA = new Intl.NumberFormat("fr-FR", {
 
 const LIGNES_PAR_PAGE = 12;
 
-export default function TableauAmortissement({ lignes, nomExport = "amortissement" }) {
+export default function TableauAmortissement({ lignes, nomExport = "amortissement", afficherInterets = false }) {
   const [page, setPage] = useState(0);
 
   if (!lignes || lignes.length === 0) return null;
@@ -22,10 +22,10 @@ export default function TableauAmortissement({ lignes, nomExport = "amortissemen
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <p className="eyebrow">Tableau d'amortissement</p>
         <div className="flex flex-wrap gap-2">
-          <button type="button" onClick={() => exporterPDF(lignes, "Tableau d'amortissement")} className="btn-ghost text-indigo border border-ardoise/20">
+          <button type="button" onClick={() => exporterPDF(lignes, "Tableau d'amortissement", afficherInterets)} className="btn-ghost text-indigo border border-ardoise/20">
             ↓ Exporter PDF
           </button>
-          <button type="button" onClick={() => exporterCSV(lignes, nomExport)} className="btn-ghost text-indigo border border-ardoise/20">
+          <button type="button" onClick={() => exporterCSV(lignes, nomExport, afficherInterets)} className="btn-ghost text-indigo border border-ardoise/20">
             ↓ Exporter CSV
           </button>
         </div>
@@ -37,7 +37,7 @@ export default function TableauAmortissement({ lignes, nomExport = "amortissemen
             <tr className="text-left text-ardoise border-b border-ardoise/20">
               <th className="py-2.5 pr-4 font-medium">Mois</th>
               <th className="py-2.5 pr-4 font-medium text-right">Mensualité</th>
-              <th className="py-2.5 pr-4 font-medium text-right">Intérêts</th>
+              {afficherInterets && <th className="py-2.5 pr-4 font-medium text-right">Intérêts</th>}
               <th className="py-2.5 pr-4 font-medium text-right">Capital</th>
               <th className="py-2.5 font-medium text-right">Restant dû</th>
             </tr>
@@ -47,9 +47,11 @@ export default function TableauAmortissement({ lignes, nomExport = "amortissemen
               <tr key={ligne.mois} className="border-b border-ardoise/8 hover:bg-papier/80">
                 <td className="py-2.5 pr-4">{ligne.mois}</td>
                 <td className="py-2.5 pr-4 text-right">{formateurFCFA.format(ligne.mensualite)} F</td>
-                <td className="py-2.5 pr-4 text-right text-ardoise">
-                  {formateurFCFA.format(ligne.interets)} F
-                </td>
+                {afficherInterets && (
+                  <td className="py-2.5 pr-4 text-right text-ardoise">
+                    {formateurFCFA.format(ligne.interets)} F
+                  </td>
+                )}
                 <td className="py-2.5 pr-4 text-right">{formateurFCFA.format(ligne.part_capital)} F</td>
                 <td className="py-2.5 text-right font-medium">
                   {formateurFCFA.format(ligne.capital_restant_fin)} F

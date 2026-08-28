@@ -194,17 +194,17 @@ Voici les informations complètes du client :
 
 Voici les offres simulées, triées par TAEG croissant : {offres_simulees}
 
-Consignes d'analyse :
+Consignes d'analyse banquaires CCA Bank :
 1. Prends en compte l'objectif du projet ({projet_str}) et la situation globale du client.
-2. Recommande l'offre financièrement la plus avantageuse selon le TAEG et la mensualité.
-3. Si l'offre choisie par le client n'est pas la meilleure, explique pourquoi et propose la meilleure alternative.
-4. Évalue le TAUX D'ENDETTEMENT GLOBAL = (Charges fixes + Prêts en cours + Nouvelle mensualité) / Revenu mensuel (seuil recommandé : 33%).
-5. Réponds en français simple, bienveillant, en 3 à 4 phrases complètes maximum, sans liste ni raisonnement technique."""
+2. Recommande l'offre financièrement la plus avantageuse (ex: Crédit Scolaire & Universitaire max 11 mois, ou Découvert sur salaire à 50% max du net).
+3. Évalue le TAUX D'ENDETTEMENT GLOBAL = (Charges fixes + Prêts en cours + Nouvelle mensualité) / Revenu mensuel (seuil recommandé : 33%).
+4. Rappelle brièvement les pièces clés nécessaires selon son statut (Fonctionnaire : AVI, CNI, billet à ordre, NIU ; Salarié Privé : Attestation de présence effective, attestation de virement, fiche NSIA).
+5. Réponds en français simple, professionnel et bienveillant, en 3 à 4 phrases complètes maximum, sans liste à puces."""
 
     message = _get_client().messages.create(
         model=settings.anthropic_model,
         max_tokens=450,
-        system="Tu es un conseiller financier expert de la banque. Tu ne dois produire que la réponse finale au client en français, sans raisonnement interne.",
+        system="Tu es un conseiller financier expert de la CCA Bank. Tu ne dois produire que la réponse finale au client en français, sans raisonnement interne.",
         messages=[{"role": "user", "content": prompt}],
     )
     reponse = _extraire_texte_reponse(message)

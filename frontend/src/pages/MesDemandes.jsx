@@ -184,6 +184,18 @@ export default function MesDemandes() {
               />
             </div>
 
+            <div className="sm:col-span-2 p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs text-ardoise">
+              <p className="font-bold text-indigo uppercase tracking-wider">📋 Rappel des documents à préparer pour votre dossier en agence CCA Bank :</p>
+              <ul className="list-disc list-inside grid sm:grid-cols-2 gap-1 text-slate-700">
+                <li>Photocopie de la Carte Nationale d'Identité (CNI)</li>
+                <li>Plan de localisation du domicile</li>
+                <li>Numéro d'Identification Unique (NIU)</li>
+                <li>Attestation de Virement Irrévocable (AVI) / Domiciliation</li>
+                <li>Billet à ordre intégralement renseigné et signé</li>
+                <li>Attestation de présence au poste (pour salariés du privé)</li>
+              </ul>
+            </div>
+
             <div className="sm:col-span-2 flex justify-end gap-3 pt-2">
               <button
                 type="button"

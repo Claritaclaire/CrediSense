@@ -26,7 +26,7 @@ export function EnTete() {
     <header className="bg-[#350B4C]/95 text-papier sticky top-0 z-50 backdrop-blur-md border-b border-amber-500/20 shadow-lg">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
         <Link to="/" className="flex items-center gap-3 shrink-0 hover:opacity-90 transition-opacity" onClick={fermeMenu}>
-          <img src="/logo-credisense.png" alt="CrediSense" className="h-10 sm:h-12 w-auto logo-frame logo-glow" />
+          <img src="/logo-cca-bank.png" alt="CCA Bank" className="h-10 sm:h-12 w-auto" />
         </Link>
 
         {/* Bouton Hamburger Mobile */}
@@ -138,6 +138,72 @@ export function PiedDePage() {
   );
 }
 
+function ContactCallCenter() {
+  const { estConnecte } = useAuth();
+  const [ouvert, setOuvert] = useState(false);
+
+  if (!estConnecte) return null;
+
+  return (
+    <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-3">
+      {ouvert && (
+        <div className="w-72 rounded-2xl border border-white/80 bg-white p-4 text-slate-900 shadow-2xl animate-scale-in">
+          <div className="mb-3 flex items-start justify-between gap-3">
+            <div>
+              <p className="text-sm font-bold text-indigo">Signaler une demande</p>
+              <p className="mt-1 text-xs text-ardoise">Notre call center peut vous accompagner.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setOuvert(false)}
+              className="text-lg leading-none text-ardoise hover:text-indigo"
+              aria-label="Fermer le contact call center"
+            >
+              ×
+            </button>
+          </div>
+          <div className="space-y-2">
+            <a
+              href="tel:+237679009630"
+              className="flex items-center justify-between rounded-lg bg-indigo px-3 py-2.5 text-sm font-semibold text-white hover:bg-indigo-dark"
+            >
+              <span>Appeler le call center</span>
+              <span aria-hidden="true">+237 679 00 96 30</span>
+            </a>
+            <a
+              href="mailto:callcenter@cca-bank.com?subject=Signalement%20d%27une%20demande"
+              className="flex items-center justify-between rounded-lg border border-indigo/20 bg-slate-50 px-3 py-2.5 text-sm font-semibold text-indigo hover:border-or hover:bg-or/10"
+            >
+              <span>Écrire par email</span>
+              <span aria-hidden="true">✉</span>
+            </a>
+          </div>
+        </div>
+      )}
+      <button
+        type="button"
+        onClick={() => setOuvert((etat) => !etat)}
+        className="group relative flex h-14 w-14 items-center justify-center rounded-full bg-or text-indigo shadow-xl ring-2 ring-white/70 transition hover:bg-amber-400 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-or/40"
+        aria-expanded={ouvert}
+        aria-label="Signaler une demande au call center"
+        title="Signaler une demande"
+      >
+        {ouvert ? (
+          <span className="text-2xl leading-none" aria-hidden="true">×</span>
+        ) : (
+          <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <path d="M21 15.5a2 2 0 0 1-2 2h-1.2a2 2 0 0 0-1.4.6l-1.7 1.7a1 1 0 0 1-1.7-.7v-.6a2 2 0 0 0-2-2H7a4 4 0 0 1-4-4v-5a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z" />
+            <path d="M8 9h8M8 12h5" />
+          </svg>
+        )}
+        <span className="pointer-events-none absolute right-0 bottom-full mb-3 whitespace-nowrap rounded-md bg-indigo px-3 py-1.5 text-xs font-semibold text-white opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100 group-focus-visible:opacity-100">
+          {ouvert ? "Fermer" : "Signaler une demande"}
+        </span>
+      </button>
+    </div>
+  );
+}
+
 export default function PageLayout({ children, large = false }) {
   const { pathname } = useLocation();
   const isAdminRoute = pathname.startsWith("/admin");
@@ -153,6 +219,7 @@ export default function PageLayout({ children, large = false }) {
         {children}
       </main>
       <PiedDePage />
+      <ContactCallCenter />
     </div>
   );
 }

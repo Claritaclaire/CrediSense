@@ -1,8 +1,12 @@
 import smtplib
 import ssl
+import logging
 from email.message import EmailMessage
-import os
 from typing import List
+
+from app.config import settings
+
+logger = logging.getLogger(__name__)
 
 def send_email(
     subject: str,
@@ -21,12 +25,12 @@ def send_email(
         SMTP_TLS: whether to use STARTTLS (default "true")
         SMTP_FROM: sender email address (defaults to SMTP_USER if set)
     """
-    smtp_host = os.getenv("SMTP_HOST", "localhost")
-    smtp_port = int(os.getenv("SMTP_PORT", "587"))
-    smtp_user = os.getenv("SMTP_USER")
-    smtp_password = os.getenv("SMTP_PASSWORD")
-    smtp_tls = os.getenv("SMTP_TLS", "true").lower() in ("true", "1", "yes")
-    smtp_from = os.getenv("SMTP_FROM", smtp_user or "no-reply@example.com")
+    smtp_host = settings.smtp_host or "localhost"
+    smtp_port = settings.smtp_port
+    smtp_user = settings.smtp_user
+    smtp_password = settings.smtp_password
+    smtp_tls = settings.smtp_tls
+    smtp_from = settings.smtp_from or smtp_user or "no-reply@example.com"
 
     msg = EmailMessage()
     msg["Subject"] = subject
@@ -42,3 +46,4 @@ def send_email(
         if smtp_user and smtp_password:
             server.login(smtp_user, smtp_password)
         server.send_message(msg)
+    logger.info("Email envoyé: sujet=%r destinataires=%s", subject, ", ".join(recipients))

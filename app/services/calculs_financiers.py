@@ -112,15 +112,18 @@ def calculer_taeg(capital: float, mensualite: float, duree_mois: int,
 
 
 def simuler_credit(capital: float, taux_annuel: float, duree_mois: int,
-                     frais_dossier_pct: float, assurance_pct_an: float) -> dict:
+                     frais_dossier_pct: float, assurance_pct_an: float,
+                     frais_dossier_min: float = 0.0) -> dict:
     """
-    Fonction principale : orchestre les 4 calculs pour produire une simulation complète.
+    Fonction principale : orchestre les calculs pour produire une simulation complète.
 
-    :param frais_dossier_pct: ex. 0.015 pour 1,5% du capital
+    :param frais_dossier_pct: ex. 0.005 pour 0,5% du capital
     :param assurance_pct_an: ex. 0.004 pour 0,4% par an du capital initial
+    :param frais_dossier_min: montant minimum des frais de dossier en FCFA
     :return: dictionnaire de synthèse (mensualité, TAEG, coût total, tableau complet)
     """
-    frais_dossier = round(capital * frais_dossier_pct, 2)
+    frais_calcules = capital * frais_dossier_pct
+    frais_dossier = round(max(frais_calcules, frais_dossier_min), 2)
     assurance_mensuelle = round(capital * assurance_pct_an / 12, 2)
 
     mensualite = calculer_mensualite(capital, taux_annuel, duree_mois)
@@ -138,4 +141,48 @@ def simuler_credit(capital: float, taux_annuel: float, duree_mois: int,
         "cout_total": cout_total,
         "taeg": taeg,
         "tableau_amortissement": tableau,
+    }
+
+
+def calculer_capacite_offre(
+    mensualite_max: float,
+    taux_annuel: float,
+    duree_mois: int,
+    frais_dossier_pct: float,
+    assurance_pct_an: float,
+    montant_max: float,
+    frais_dossier_min: float = 0.0,
+) -> dict:
+    """Trouve le capital maximal compatible avec une mensualite donnee."""
+    if mensualite_max <= 0 or duree_mois <= 0 or montant_max <= 0:
+        return {"montant_max_indicatif": 0.0, "mensualite": 0.0}
+
+    def mensualite_complete(capital: float) -> float:
+        resultat = simuler_credit(
+            capital=capital,
+            taux_annuel=taux_annuel,
+            duree_mois=duree_mois,
+            frais_dossier_pct=frais_dossier_pct,
+            assurance_pct_an=assurance_pct_an,
+            frais_dossier_min=frais_dossier_min,
+        )
+        return resultat["mensualite"] + resultat["assurance_mensuelle"]
+
+    if mensualite_complete(montant_max) <= mensualite_max:
+        montant = montant_max
+    else:
+        minimum = 0.0
+        maximum = montant_max
+        for _ in range(45):
+            milieu = (minimum + maximum) / 2
+            if mensualite_complete(milieu) <= mensualite_max:
+                minimum = milieu
+            else:
+                maximum = milieu
+        montant = minimum
+
+    mensualite = mensualite_complete(montant) if montant > 0 else 0.0
+    return {
+        "montant_max_indicatif": round(montant, 2),
+        "mensualite": round(mensualite, 2),
     }

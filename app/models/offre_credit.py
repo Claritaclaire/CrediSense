@@ -12,6 +12,7 @@ class OffreCredit(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     nom_banque = Column(String, nullable=False)
+    description = Column(String, nullable=True)
     categorie_client = Column(String, nullable=False, default="particulier", server_default="particulier")
     actif = Column(Boolean, nullable=False, default=True, server_default="true")
     taux_annuel = Column(Float, nullable=False)          # ex. 0.145

@@ -139,10 +139,11 @@ export default function ToutesSimulations() {
 
                 {detail.tableau_amortissement && (
                   <>
-                    <GraphiqueRepartition lignes={detail.tableau_amortissement} />
+                    <GraphiqueRepartition lignes={detail.tableau_amortissement} afficherInterets />
                     <TableauAmortissement
                       lignes={detail.tableau_amortissement}
                       nomExport={`toutes-simulations-${detail.nom_banque || "credit"}`.replace(/\s+/g, "-")}
+                      afficherInterets
                     />
                   </>
                 )}

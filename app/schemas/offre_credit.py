@@ -5,6 +5,7 @@ from typing import Literal, Optional
 
 class OffreCreditBase(BaseModel):
     nom_banque: str
+    description: str | None = None
     categorie_client: Literal["particulier", "professionnel"] = "particulier"
     actif: bool = True
     taux_annuel: float

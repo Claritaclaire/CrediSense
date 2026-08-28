@@ -3,16 +3,16 @@ const formateurFCFA = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 
 /**
  * Donut SVG montrant la répartition capital remboursé vs intérêts totaux.
  */
-export default function GraphiqueRepartition({ lignes, fraisDossier = 0, assuranceMensuelle = 0 }) {
+export default function GraphiqueRepartition({ lignes, fraisDossier = 0, assuranceMensuelle = 0, afficherInterets = false }) {
   if (!lignes?.length) return null;
 
   const totalInterets = lignes.reduce((s, l) => s + l.interets, 0);
   const totalCapital = lignes.reduce((s, l) => s + l.part_capital, 0);
   const totalAssurance = assuranceMensuelle * lignes.length;
-  const segments = [
-    { label: "Capital", valeur: totalCapital, couleur: "#1B2A4A" },
-    { label: "Intérêts", valeur: totalInterets, couleur: "#B8860B" },
-  ];
+  const segments = [{ label: "Capital", valeur: totalCapital, couleur: "#1B2A4A" }];
+  if (afficherInterets) {
+    segments.push({ label: "Intérêts", valeur: totalInterets, couleur: "#B8860B" });
+  }
   if (fraisDossier > 0) {
     segments.push({ label: "Frais dossier", valeur: fraisDossier, couleur: "#9B4B3F" });
   }

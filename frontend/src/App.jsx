@@ -23,6 +23,7 @@ import AdminOffreEdit from "./pages/admin/AdminOffreEdit.jsx";
 import AdminIA from "./pages/admin/AdminIA.jsx";
 import AdminConfig from "./pages/admin/AdminConfig.jsx";
 import AdminAudit from "./pages/admin/AdminAudit.jsx";
+import AssistantFlottant from "./components/AssistantFlottant.jsx";
 
 function RouteProtegee({ children }) {
   const { estConnecte, loading } = useAuth();
@@ -134,6 +135,7 @@ function AppRoutes() {
           />
         </Routes>
       </PageLayout>
+      <AssistantFlottant />
     </BrowserRouter>
   );
 }

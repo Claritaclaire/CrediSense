@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS offres_credit (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     nom_banque VARCHAR NOT NULL,
+    description VARCHAR,
     categorie_client VARCHAR NOT NULL DEFAULT 'particulier' CHECK (categorie_client IN ('particulier', 'professionnel')),
     actif BOOLEAN NOT NULL DEFAULT TRUE,
     taux_annuel FLOAT NOT NULL,

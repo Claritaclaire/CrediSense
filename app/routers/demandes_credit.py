@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 from typing import List, Optional
@@ -10,13 +12,23 @@ from app.models.user import User, RoleUtilisateur
 from app.schemas.demande_credit import DemandeCreditCreate, DemandeCreditOut, DemandeCreditUpdate, StatutUpdate
 from app.core.security import get_current_user, exiger_role
 from app.utils.mail import send_email
+from app.config import settings
 
 router = APIRouter(prefix="/demandes-credit", tags=["Demandes de crédit"])
+logger = logging.getLogger(__name__)
+
+
+def _envoyer_notification_demande(sujet: str, destinataire: str, contenu: str) -> None:
+    try:
+        send_email(sujet, [destinataire], contenu)
+    except Exception:
+        logger.exception("Échec d'envoi de la notification de demande vers %s", destinataire)
 
 # Client : Soumettre une demande
 @router.post("/", response_model=DemandeCreditOut, status_code=status.HTTP_201_CREATED)
 def soumettre_demande(
     demande_data: DemandeCreditCreate,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
@@ -24,6 +36,36 @@ def soumettre_demande(
     db.add(nouvelle_demande)
     db.commit()
     db.refresh(nouvelle_demande)
+
+    sujet = f"Nouvelle demande de crédit #{nouvelle_demande.id}"
+    body = f"""Bonjour,
+
+Une nouvelle demande de crédit vient d'être soumise dans CrediSense.
+
+Informations du client
+----------------------
+Nom : {current_user.nom}
+Email : {current_user.email}
+Identifiant client : {current_user.id}
+
+Détails de la demande
+---------------------
+Référence : {nouvelle_demande.id}
+Montant demandé : {nouvelle_demande.montant_demande:,.0f} FCFA
+Durée souhaitée : {nouvelle_demande.duree_souhaitee} mois
+Apport : {nouvelle_demande.apport or 0:,.0f} FCFA
+Motif : {nouvelle_demande.motif or "Non précisé"}
+Statut : {nouvelle_demande.statut.value}
+
+Cordialement,
+CrediSense
+"""
+    background_tasks.add_task(
+        _envoyer_notification_demande,
+        sujet,
+        settings.demandes_email_destinataire or settings.smtp_from or "callcenter@cca-bank.com",
+        body,
+    )
     return nouvelle_demande
 
 # Client : Voir ses propres demandes

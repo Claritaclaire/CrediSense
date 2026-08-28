@@ -20,6 +20,11 @@ class ExplicationClauseRequest(BaseModel):
     texte_clause: str
 
 
+class AssistantRequest(BaseModel):
+    question: str
+    page: Optional[str] = None
+
+
 class MessageIAOut(BaseModel):
     id: uuid.UUID
     simulation_id: Optional[uuid.UUID] = None
