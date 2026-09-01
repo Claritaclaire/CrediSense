@@ -22,15 +22,12 @@ client.interceptors.response.use(
   },
   (error) => {
     console.error('[API Error]', error.config?.method?.toUpperCase(), error.config?.url, error.response?.status, error.message);
-    // Only clear token and redirect if 401 occurs on protected endpoints, NOT during login/register
     if (
       error.response?.status === 401 &&
       !error.config?.url?.includes("/auth/")
     ) {
       localStorage.removeItem("access_token");
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
-      }
+      delete client.defaults.headers.common["Authorization"];
     }
     return Promise.reject(error);
   }

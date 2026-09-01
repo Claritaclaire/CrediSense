@@ -17,34 +17,43 @@ function decodeJwtPayload(token) {
   }
 }
 
+// Initialiser le header axios avec le token s'il existe déjà
+const initialToken = localStorage.getItem("access_token");
+if (initialToken) {
+  client.defaults.headers.common["Authorization"] = `Bearer ${initialToken}`;
+}
+
 export function AuthProvider({ children }) {
-  const [token, setToken] = useState(localStorage.getItem("access_token"));
+  const [token, setToken] = useState(initialToken);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch user profile when token changes
+  // Synchronisation du profil au démarrage ou lors des changements de jeton
   useEffect(() => {
     let isMounted = true;
-    const fetchUserProfile = async () => {
-      if (!token) {
-        if (isMounted) {
-          setUser(null);
-          setLoading(false);
-        }
-        return;
-      }
 
+    if (!token) {
+      delete client.defaults.headers.common["Authorization"];
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
+    client.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+    const fetchUserProfile = async () => {
       try {
         const { data } = await client.get("/users/me");
         if (isMounted) {
           setUser(data);
-          console.log('[AuthContext.useEffect] User fetched from /users/me:', data);
+          console.log('[AuthContext] User loaded:', data);
         }
       } catch (err) {
         if (isMounted) {
-          console.warn("[AuthContext.useEffect] Failed to fetch user profile:", err);
+          console.warn("[AuthContext] Failed to load user profile:", err);
           setUser(null);
           localStorage.removeItem("access_token");
+          delete client.defaults.headers.common["Authorization"];
           setToken(null);
         }
       } finally {
@@ -54,12 +63,7 @@ export function AuthProvider({ children }) {
       }
     };
 
-    if (token) {
-      fetchUserProfile();
-    } else {
-      setUser(null);
-      setLoading(false);
-    }
+    fetchUserProfile();
 
     return () => {
       isMounted = false;
@@ -68,26 +72,24 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(async (email, password) => {
     try {
+      setLoading(true);
       const { data } = await client.post("/auth/login", { email, password });
       const accessToken = data.access_token;
-      localStorage.setItem("access_token", accessToken);
-      setToken(accessToken);
-      console.log('[AuthContext.login] Token set in localStorage:', accessToken.substring(0, 20) + '...');
       
-      try {
-        const { data: userData } = await client.get("/users/me");
-        setUser(userData);
-        return userData;
-      } catch (fetchErr) {
-        console.warn('[AuthContext.login] Failed to fetch user profile during login:', fetchErr);
-        const decoded = decodeJwtPayload(accessToken);
-        return decoded;
-      }
+      localStorage.setItem("access_token", accessToken);
+      client.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+      
+      const { data: userData } = await client.get("/users/me");
+      setUser(userData);
+      setToken(accessToken);
+      setLoading(false);
+      return userData;
     } catch (error) {
+      setLoading(false);
       console.error('[AuthContext.login] Login error:', error);
       throw error;
     }
-  }, [client, setToken]);
+  }, []);
 
   const register = useCallback(async (nom, email, password) => {
     try {

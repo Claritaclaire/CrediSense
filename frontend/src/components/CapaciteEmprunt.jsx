@@ -75,7 +75,7 @@ export default function CapaciteEmprunt() {
         <p className="eyebrow mb-2">Capacité d'emprunt</p>
         <h2 className="text-xl font-bold text-indigo">Jusqu'à quel montant pouvez-vous emprunter ?</h2>
         <p className="mt-1 max-w-2xl text-sm text-ardoise">
-          Évaluez votre capacité selon votre revenu et vos engagements. Le calcul utilise un seuil indicatif de 33 %.
+          Évaluez votre capacité selon votre revenu net et la Quotité Cessible Légale (Décret n°94/197/PM du Cameroun).
         </p>
       </div>
 
@@ -106,53 +106,68 @@ export default function CapaciteEmprunt() {
       {erreur && <p className="alerte-erreur">{erreur}</p>}
 
       {resultat && (
-        <div className="space-y-4">
-          <div className="rounded-xl border border-indigo/15 bg-indigo/5 p-5 text-sm text-ardoise">
-            <p className="text-base font-bold text-indigo">Votre situation pour une demande de {formateurFCFA.format(resultat.montant_souhaite)} FCFA</p>
-            <ul className="mt-3 space-y-1.5">
-              <li>- Mensualité sur 12 mois : <strong className="text-indigo">{mensualite12 == null ? "Non disponible" : `${formateurFCFA.format(mensualite12)} FCFA`}</strong></li>
-              <li>- Mensualité disponible avec vos prêts : <strong className="text-indigo">{formateurFCFA.format(resultat.mensualite_max_avec_prets)} FCFA</strong></li>
-              <li>- Mensualité disponible sans vos prêts : <strong className="text-indigo">{formateurFCFA.format(resultat.mensualite_max_sans_prets)} FCFA</strong></li>
-              <li className={`font-semibold ${demandeDansCapacite ? "text-emerald-700" : "text-rose-700"}`}>
-                {demandeDansCapacite
-                  ? "✓ Demande inférieure ou égale à votre capacité avec vos prêts en cours."
-                  : "❌ Demande supérieure à votre capacité avec vos prêts en cours."}
-              </li>
-            </ul>
+        <div className="space-y-5">
+          {/* Bloc de synthèse direct */}
+          <div className={`rounded-xl border p-5 text-sm ${resultat.demande_faisable ? "border-emerald-200 bg-emerald-50 text-emerald-900" : "border-rose-200 bg-rose-50 text-rose-900"}`}>
+            <p className="text-base font-bold">
+              Résultat pour votre demande de {formateurFCFA.format(resultat.montant_souhaite)} FCFA
+            </p>
+            {resultat.demande_faisable ? (
+              <div className="mt-3 space-y-2">
+                <p className="text-lg font-bold text-emerald-800">
+                  ✓ Votre prêt est réalisable à partir de <span className="underline">{resultat.duree_min_faisable} mois</span> de remboursement.
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mt-3 pt-3 border-t border-emerald-200/60 text-xs">
+                  <div>
+                    <span className="block text-emerald-700 font-medium">Mensualité minimale ({resultat.duree_min_faisable} mois) :</span>
+                    <span className="text-base font-bold chiffres">{formateurFCFA.format(resultat.mensualite_duree_min)} FCFA/mois</span>
+                  </div>
+                  <div>
+                    <span className="block text-emerald-700 font-medium">Montant total à rembourser :</span>
+                    <span className="text-base font-bold text-indigo chiffres">
+                      {resultat.cout_total_duree_min ? `${formateurFCFA.format(resultat.cout_total_duree_min)} FCFA` : "-"}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="block text-emerald-700 font-medium">Capacité mensuelle disponible :</span>
+                    <span className="text-base font-bold chiffres">{formateurFCFA.format(resultat.mensualite_max_avec_prets)} FCFA/mois</span>
+                  </div>
+                  <div>
+                    <span className="block text-emerald-700 font-medium">Prêts en cours déduits :</span>
+                    <span className="text-base font-bold chiffres">{formateurFCFA.format(resultat.total_mensualites_prets_en_cours)} FCFA</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-3 space-y-2">
+                <p className="text-base font-bold text-rose-800">
+                  ❌ Votre demande de {formateurFCFA.format(resultat.montant_souhaite)} FCFA dépasse votre capacité mensuelle autorisée.
+                </p>
+                <p className="text-xs">
+                  La mensualité minimale sur les durées du catalogue excède votre quotité cessible disponible de <strong>{formateurFCFA.format(resultat.mensualite_max_avec_prets)} FCFA/mois</strong>.
+                </p>
+              </div>
+            )}
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-4">
+          <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl bg-indigo p-4 text-white">
-              <p className="text-xs text-white/70">Mensualité disponible avec prêts</p>
+              <p className="text-xs text-white/70">Quotité mensuelle disponible (avec prêts)</p>
               <p className="mt-1 text-xl font-bold text-or chiffres">{formateurFCFA.format(resultat.mensualite_max_avec_prets)} FCFA/mois</p>
             </div>
             <div className="rounded-xl bg-slate-50 p-4">
-              <p className="text-xs text-ardoise">Sans prêts en cours</p>
+              <p className="text-xs text-ardoise">Quotité mensuelle nette (sans prêts)</p>
               <p className="mt-1 text-xl font-bold text-indigo chiffres">{formateurFCFA.format(resultat.mensualite_max_sans_prets)} FCFA/mois</p>
             </div>
             <div className="rounded-xl bg-slate-50 p-4">
-              <p className="text-xs text-ardoise">Prêts en cours</p>
-              <p className="mt-1 text-xl font-bold text-indigo chiffres">{formateurFCFA.format(resultat.total_mensualites_prets_en_cours)} FCFA</p>
-            </div>
-            <div className="rounded-xl bg-slate-50 p-4">
-              <p className="text-xs text-ardoise">Seuil indicatif</p>
-              <p className="mt-1 text-xl font-bold text-indigo chiffres">{resultat.seuil_endettement}%</p>
-            </div>
-          </div>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            <div className={`rounded-lg border p-3 text-sm ${resultat.depassement_avec_prets ? "border-rose-300 bg-rose-50 text-rose-800" : "border-emerald-300 bg-emerald-50 text-emerald-800"}`}>
-              <strong>Avec prêts en cours :</strong> {resultat.depassement_avec_prets ? "le seuil de 33 % est dépassé." : "la capacité reste sous le seuil de 33 %."}
-            </div>
-            <div className={`rounded-lg border p-3 text-sm ${resultat.depassement_sans_prets ? "border-rose-300 bg-rose-50 text-rose-800" : "border-emerald-300 bg-emerald-50 text-emerald-800"}`}>
-              <strong>Sans prêts en cours :</strong> {resultat.depassement_sans_prets ? "le seuil de 33 % est dépassé." : "la capacité reste sous le seuil de 33 %."}
+              <p className="text-xs text-ardoise">Barème réglementaire utilisé</p>
+              <p className="mt-1 text-sm font-bold text-indigo">Décret 94/197/PM (Quotité Cessible)</p>
             </div>
           </div>
 
           <div>
-            <p className="eyebrow mb-2">Projection par durée</p>
-            <h3 className="text-lg font-bold text-indigo">Montant maximal estimé selon la durée</h3>
-            <p className="mt-1 text-sm text-ardoise">Cliquez sur une durée pour voir comment le capital restant diminue chaque mois jusqu'à zéro.</p>
+            <h3 className="text-base font-bold text-indigo">Options de remboursement selon la durée</h3>
+            <p className="mt-0.5 text-xs text-ardoise">Découvrez ci-dessous votre mensualité, le montant total remboursé et la faisabilité selon chaque durée de prêt.</p>
           </div>
 
           {resultat.durees.length > 0 && (
@@ -161,9 +176,10 @@ export default function CapaciteEmprunt() {
                 <thead className="bg-slate-50 text-left text-xs uppercase text-ardoise">
                   <tr>
                     <th className="px-4 py-3">Durée</th>
-                    <th className="px-4 py-3">Mensualité demandée</th>
-                    <th className="px-4 py-3">Montant maximal avec prêts</th>
-                    <th className="px-4 py-3">Montant maximal sans prêts</th>
+                    <th className="px-4 py-3">Mensualité estimée</th>
+                    <th className="px-4 py-3">Montant total remboursé</th>
+                    <th className="px-4 py-3">Éligibilité</th>
+                    <th className="px-4 py-3">Capacité max d'emprunt</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
@@ -171,13 +187,30 @@ export default function CapaciteEmprunt() {
                     <Fragment key={ligne.duree_mois}>
                       <tr onClick={() => setLigneOuverte(ligneOuverte === ligne.duree_mois ? null : ligne.duree_mois)} className="cursor-pointer hover:bg-or/5">
                         <td className="px-4 py-3 font-bold text-indigo">{ligne.duree_mois} mois</td>
-                        <td className="px-4 py-3 text-ardoise chiffres">{ligne.mensualite_demande == null ? "Non disponible" : `${formateurFCFA.format(ligne.mensualite_demande)} FCFA`}</td>
-                        <td className={`px-4 py-3 font-bold chiffres ${Number(ligne.montant_dans_capacite_avec_prets) >= Number(resultat.montant_souhaite) ? "text-emerald-700" : "text-rose-700"}`}>{formateurFCFA.format(ligne.montant_dans_capacite_avec_prets)} FCFA</td>
-                        <td className={`px-4 py-3 font-bold chiffres ${Number(ligne.montant_dans_capacite_sans_prets) >= Number(resultat.montant_souhaite) ? "text-emerald-700" : "text-rose-700"}`}>{formateurFCFA.format(ligne.montant_dans_capacite_sans_prets)} FCFA</td>
+                        <td className="px-4 py-3 text-ardoise chiffres font-semibold">
+                          {ligne.mensualite_demande == null ? "Non proposé" : `${formateurFCFA.format(ligne.mensualite_demande)} FCFA/mois`}
+                        </td>
+                        <td className="px-4 py-3 text-indigo chiffres font-bold">
+                          {ligne.cout_total_demande == null ? "-" : `${formateurFCFA.format(ligne.cout_total_demande)} FCFA`}
+                        </td>
+                        <td className="px-4 py-3">
+                          {ligne.faisable ? (
+                            <span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
+                              ✓ Réalisable
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+                              Non réalisable
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 font-bold chiffres text-indigo">
+                          {formateurFCFA.format(ligne.montant_dans_capacite_avec_prets)} FCFA
+                        </td>
                       </tr>
                       {ligneOuverte === ligne.duree_mois && (
                         <tr className="bg-slate-50">
-                          <td colSpan="4" className="px-4 py-3">
+                          <td colSpan="5" className="px-4 py-3">
                             <div className="overflow-x-auto">
                               <p className="mb-2 text-xs font-bold text-indigo">Détail du remboursement sur {ligne.duree_mois} mois</p>
                               <table className="min-w-full text-xs"><thead><tr className="text-left text-ardoise"><th className="px-2 py-1">Mois</th><th className="px-2 py-1">Capital début</th><th className="px-2 py-1">Mensualité</th><th className="px-2 py-1">Capital restant</th></tr></thead><tbody className="divide-y divide-slate-200">{ligne.tableau_amortissement.map((mois) => <tr key={mois.mois}><td className="px-2 py-1">{mois.mois}</td><td className="px-2 py-1 chiffres">{formateurFCFA.format(mois.capital_restant_debut)} F</td><td className="px-2 py-1 chiffres">{formateurFCFA.format(mois.mensualite)} F</td><td className="px-2 py-1 font-semibold text-indigo chiffres">{formateurFCFA.format(mois.capital_restant_fin)} F</td></tr>)}</tbody></table>

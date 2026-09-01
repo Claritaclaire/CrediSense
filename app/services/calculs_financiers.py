@@ -186,3 +186,67 @@ def calculer_capacite_offre(
         "montant_max_indicatif": round(montant, 2),
         "mensualite": round(mensualite, 2),
     }
+
+
+def calculer_quotite_cessible_legale(revenu_net: float) -> dict:
+    """
+    Calcule la quotité cessible et saisissable du salaire selon le Décret n°94/197/PM du 9 mai 1994 (Cameroun).
+
+    Barème légal par tranches appliquées sur le salaire mensuel net :
+    - 1/10ème : sur la tranche <= 18 750 FCFA
+    - 1/5ème  : sur la tranche de 18 751 à 37 500 FCFA
+    - 1/4ème  : sur la tranche de 37 501 à 75 000 FCFA
+    - 1/3ème  : sur la tranche de 75 001 à 112 500 FCFA
+    - 1/2ème  : sur la tranche de 112 501 à 142 500 FCFA
+    - Totalité: sur la fraction > 142 500 FCFA
+
+    :param revenu_net: Salaire mensuel net en FCFA
+    :return: Dictionnaire contenant la quotité cessible totale, le salaire insaisissable (protégé) et le détail par tranche.
+    """
+    if revenu_net <= 0:
+        return {
+            "decret": "Décret n°94/197/PM du 9 mai 1994",
+            "revenu_net": 0.0,
+            "quotite_cessible_totale": 0.0,
+            "salaire_protege": 0.0,
+            "taux_effectif_pct": 0.0,
+            "details_tranches": [],
+        }
+
+    tranches_definition = [
+        {"nom": "Tranche 1 (<= 18 750 FCFA)", "min": 0.0, "max": 18750.0, "taux": 0.10, "label_taux": "1/10ème (10%)"},
+        {"nom": "Tranche 2 (18 751 - 37 500 FCFA)", "min": 18750.0, "max": 37500.0, "taux": 0.20, "label_taux": "1/5ème (20%)"},
+        {"nom": "Tranche 3 (37 501 - 75 000 FCFA)", "min": 37500.0, "max": 75000.0, "taux": 0.25, "label_taux": "1/4ème (25%)"},
+        {"nom": "Tranche 4 (75 001 - 112 500 FCFA)", "min": 75000.0, "max": 112500.0, "taux": 1.0 / 3.0, "label_taux": "1/3ème (33,33%)"},
+        {"nom": "Tranche 5 (112 501 - 142 500 FCFA)", "min": 112500.0, "max": 142500.0, "taux": 0.50, "label_taux": "1/2ème (50%)"},
+        {"nom": "Tranche 6 (> 142 500 FCFA)", "min": 142500.0, "max": float("inf"), "taux": 1.0, "label_taux": "Totalité (100%)"},
+    ]
+
+    total_quotite = 0.0
+    details = []
+
+    for t in tranches_definition:
+        if revenu_net > t["min"]:
+            assiette = min(revenu_net, t["max"]) - t["min"]
+            retenue = assiette * t["taux"]
+            total_quotite += retenue
+            details.append({
+                "tranche": t["nom"],
+                "assiette": round(assiette, 2),
+                "taux_str": t["label_taux"],
+                "retenue": round(retenue, 2),
+            })
+
+    total_quotite = round(total_quotite, 2)
+    salaire_protege = round(max(0.0, revenu_net - total_quotite), 2)
+    taux_effectif = round((total_quotite / revenu_net) * 100, 2)
+
+    return {
+        "decret": "Décret n°94/197/PM du 9 mai 1994",
+        "revenu_net": round(revenu_net, 2),
+        "quotite_cessible_totale": total_quotite,
+        "salaire_protege": salaire_protege,
+        "taux_effectif_pct": taux_effectif,
+        "details_tranches": details,
+    }
+

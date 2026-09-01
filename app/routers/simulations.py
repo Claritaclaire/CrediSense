@@ -3,11 +3,16 @@ from sqlalchemy.orm import Session
 from typing import List, Optional
 
 from app.database import get_db
+from app.models.message_ia import MessageIA
 from app.models.offre_credit import OffreCredit
 from app.models.simulation import Simulation
 from app.models.user import User, RoleUtilisateur
 from app.schemas.simulation import SimulationCreate, SimulationOut, ComparaisonRequest, CapaciteRequest
-from app.services.calculs_financiers import calculer_capacite_offre, simuler_credit
+from app.services.calculs_financiers import (
+    calculer_capacite_offre,
+    calculer_quotite_cessible_legale,
+    simuler_credit,
+)
 from app.core.security import get_current_user, exiger_role
 from app.core.exceptions import (
     OffreNonTrouveeException,
@@ -108,89 +113,146 @@ def calculer_capacite(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Calcule une capacite indicative pour chaque offre active."""
+    """Calcule la capacité d'emprunt directement sur la base de la Quotité Cessible Légale (Décret n°94/197/PM)."""
     if data.revenu_mensuel <= 0 or data.montant_souhaite <= 0:
         raise HTTPException(status_code=422, detail="Le revenu et le montant souhaité doivent être supérieurs à zéro.")
     if data.charges_mensuelles < 0 or data.total_mensualites_prets_en_cours < 0:
         raise HTTPException(status_code=422, detail="Les charges ne peuvent pas être négatives.")
-    if not 0 < data.seuil_endettement <= 100:
-        raise HTTPException(status_code=422, detail="Le seuil d'endettement doit être compris entre 0 et 100.")
 
-    mensualite_max_sans_prets = (
-        data.revenu_mensuel * data.seuil_endettement / 100
-        - data.charges_mensuelles
-    )
+    # Calcul direct selon la Quotité Cessible Légale (Décret n°94/197/PM)
+    quotite_legale = calculer_quotite_cessible_legale(data.revenu_mensuel)
+    quotite_totale = quotite_legale["quotite_cessible_totale"]
+
+    mensualite_max_sans_prets = quotite_totale - data.charges_mensuelles
     mensualite_max_avec_prets = mensualite_max_sans_prets - data.total_mensualites_prets_en_cours
+
     offres = db.query(OffreCredit).filter(OffreCredit.actif.is_(True)).all()
-    resultats = []
+    resultats_bruts = []
+
+    # Jalon de durées standards à évaluer (en mois)
+    jalons_durees = [3, 6, 12, 18, 24, 36, 48, 60, 72, 84, 96, 108, 120]
+
     for offre in offres:
         frais_dossier_min = 5000.0 if "scolaire" in offre.nom_banque.lower() else 0.0
-        durees = range(
-            ((offre.duree_min_mois + 11) // 12) * 12,
-            offre.duree_max_mois + 1,
-            12,
-        )
-        for duree in durees:
+        # Sélectionner les durées applicables pour cette offre
+        durees_applicables = [
+            d for d in jalons_durees
+            if offre.duree_min_mois <= d <= offre.duree_max_mois
+        ]
+        if not durees_applicables:
+            # Fallback si l'offre a une durée spécifique hors jalons
+            durees_applicables = list(range(offre.duree_min_mois, offre.duree_max_mois + 1, 12))
+
+        for duree in durees_applicables:
             capacite_avec_prets = calculer_capacite_offre(
-                mensualite_max=mensualite_max_avec_prets,
+                mensualite_max=max(0.0, mensualite_max_avec_prets),
                 taux_annuel=offre.taux_annuel, duree_mois=duree,
                 frais_dossier_pct=offre.frais_dossier_pct, assurance_pct_an=offre.assurance_pct_an,
                 montant_max=offre.montant_max, frais_dossier_min=frais_dossier_min,
             )
             capacite_sans_prets = calculer_capacite_offre(
-                mensualite_max=mensualite_max_sans_prets,
+                mensualite_max=max(0.0, mensualite_max_sans_prets),
                 taux_annuel=offre.taux_annuel, duree_mois=duree,
                 frais_dossier_pct=offre.frais_dossier_pct, assurance_pct_an=offre.assurance_pct_an,
                 montant_max=offre.montant_max, frais_dossier_min=frais_dossier_min,
             )
             simulation_demandee = None
             if data.montant_souhaite <= offre.montant_max:
-                simulation_demandee = _executer_simulation(offre, data.montant_souhaite, duree)
-            resultats.append({
+                try:
+                    simulation_demandee = _executer_simulation(offre, data.montant_souhaite, duree)
+                except Exception:
+                    simulation_demandee = None
+
+            mensualite_demande = (
+                round(simulation_demandee["mensualite"] + simulation_demandee["assurance_mensuelle"], 2)
+                if simulation_demandee else None
+            )
+            cout_total_demande = (
+                round(simulation_demandee["cout_total"], 2)
+                if simulation_demandee else None
+            )
+
+            resultats_bruts.append({
                 "offre_id": str(offre.id),
                 "nom_banque": offre.nom_banque,
                 "duree_mois": duree,
-                "mensualite_demande": round(simulation_demandee["mensualite"] + simulation_demandee["assurance_mensuelle"], 2) if simulation_demandee else None,
+                "mensualite_demande": mensualite_demande,
+                "cout_total_demande": cout_total_demande,
                 "montant_dans_capacite_avec_prets": capacite_avec_prets["montant_max_indicatif"],
                 "montant_dans_capacite_sans_prets": capacite_sans_prets["montant_max_indicatif"],
                 "tableau_amortissement": simulation_demandee["tableau_amortissement"] if simulation_demandee else [],
             })
 
-    # La capacite ne recommande pas une offre : on regroupe les calculs par
-    # duree et conserve une estimation prudente pour chaque duree.
+    # Regroupement des capacités par durée en retenant l'offre offrant la plus forte capacité d'emprunt pour chaque durée
     resultats_par_duree = {}
-    for ligne in resultats:
+    for ligne in resultats_bruts:
         duree = ligne["duree_mois"]
         existant = resultats_par_duree.get(duree)
         if not existant:
             resultats_par_duree[duree] = {
                 "duree_mois": duree,
                 "mensualite_demande": ligne["mensualite_demande"],
+                "cout_total_demande": ligne["cout_total_demande"],
                 "montant_dans_capacite_avec_prets": ligne["montant_dans_capacite_avec_prets"],
                 "montant_dans_capacite_sans_prets": ligne["montant_dans_capacite_sans_prets"],
                 "tableau_amortissement": ligne["tableau_amortissement"],
             }
         else:
-            # On retient la capacite la plus prudente parmi les conditions actives.
-            existant["montant_dans_capacite_avec_prets"] = min(
+            existant["montant_dans_capacite_avec_prets"] = max(
                 existant["montant_dans_capacite_avec_prets"],
                 ligne["montant_dans_capacite_avec_prets"],
             )
-            existant["montant_dans_capacite_sans_prets"] = min(
+            existant["montant_dans_capacite_sans_prets"] = max(
                 existant["montant_dans_capacite_sans_prets"],
                 ligne["montant_dans_capacite_sans_prets"],
             )
+            if ligne["mensualite_demande"] is not None:
+                if existant["mensualite_demande"] is None or ligne["mensualite_demande"] < existant["mensualite_demande"]:
+                    existant["mensualite_demande"] = ligne["mensualite_demande"]
+                    existant["cout_total_demande"] = ligne["cout_total_demande"]
+                    existant["tableau_amortissement"] = ligne["tableau_amortissement"]
+
     resultats = sorted(resultats_par_duree.values(), key=lambda ligne: ligne["duree_mois"])
+
+    # Évaluation de la faisabilité pour chaque durée
+    capacite_disponible = max(0.0, mensualite_max_avec_prets)
+    for ligne in resultats:
+        mensualite = ligne.get("mensualite_demande")
+        ligne["faisable"] = (
+            mensualite is not None
+            and mensualite <= capacite_disponible
+            and ligne["montant_dans_capacite_avec_prets"] >= data.montant_souhaite
+        )
+
+    # Recherche de la première durée (minimale) où le prêt est réalisable
+    premiere_duree_faisable = next((l for l in resultats if l["faisable"]), None)
+
+    if premiere_duree_faisable:
+        duree_min_faisable = premiere_duree_faisable["duree_mois"]
+        mensualite_duree_min = premiere_duree_faisable["mensualite_demande"]
+        cout_total_duree_min = premiere_duree_faisable["cout_total_demande"]
+        demande_faisable = True
+    else:
+        duree_min_faisable = None
+        mensualite_duree_min = None
+        cout_total_duree_min = None
+        demande_faisable = False
+
     return {
         "revenu_mensuel": data.revenu_mensuel,
         "montant_souhaite": data.montant_souhaite,
         "charges_mensuelles": data.charges_mensuelles,
         "total_mensualites_prets_en_cours": data.total_mensualites_prets_en_cours,
-        "seuil_endettement": data.seuil_endettement,
+        "seuil_endettement": quotite_legale["taux_effectif_pct"],
         "mensualite_max_avec_prets": round(max(0.0, mensualite_max_avec_prets), 2),
         "mensualite_max_sans_prets": round(max(0.0, mensualite_max_sans_prets), 2),
         "depassement_avec_prets": mensualite_max_avec_prets <= 0,
         "depassement_sans_prets": mensualite_max_sans_prets <= 0,
+        "quotite_legale": quotite_legale,
+        "demande_faisable": demande_faisable,
+        "duree_min_faisable": duree_min_faisable,
+        "mensualite_duree_min": mensualite_duree_min,
+        "cout_total_duree_min": cout_total_duree_min,
         "durees": resultats,
     }
 
@@ -257,4 +319,26 @@ def obtenir_simulation(
         assurance_pct_an=offre.assurance_pct_an,
     )
     return _construire_simulation_out(simulation, offre, resultat["tableau_amortissement"])
+
+
+@router.delete("/{simulation_id}", status_code=204)
+def supprimer_simulation(
+    simulation_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    """Supprime une simulation appartenant à l'utilisateur connecté."""
+    simulation = (
+        db.query(Simulation)
+        .filter(Simulation.id == simulation_id, Simulation.user_id == current_user.id)
+        .first()
+    )
+    if not simulation:
+        raise SimulationNonTrouveeException()
+
+    db.query(MessageIA).filter(MessageIA.simulation_id == simulation.id).delete()
+    db.delete(simulation)
+    db.commit()
+    return None
+
 

@@ -16,6 +16,8 @@ export default function DashboardClient() {
   });
 
   useEffect(() => {
+    if (!user) return;
+
     // Charger le profil financier local s'il existe
     const storedProfil = localStorage.getItem(`credisense_profil_${user?.id}`);
     if (storedProfil) {

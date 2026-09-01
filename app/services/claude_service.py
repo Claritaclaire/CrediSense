@@ -137,36 +137,46 @@ def generer_recommandation_locale(profil: dict, offres_simulees: list[dict]) -> 
 
 
 def expliquer_clause_locale(texte_clause: str) -> str:
-    """Explication de secours quand le service IA externe est indisponible."""
+    """Explication de secours structurée quand le service IA externe est indisponible."""
     clause = " ".join(texte_clause.split()).strip()
     clause_minuscule = clause.lower()
 
     if any(mot in clause_minuscule for mot in ("retard", "impay", "échéance")):
-        return (
-            "Cette clause précise ce qui se passe si une mensualité est payée en retard : "
-            "des frais ou intérêts supplémentaires peuvent s'ajouter. Veillez à payer à la date prévue "
-            "et contactez la banque rapidement si vous anticipez une difficulté."
-        )
-    if any(mot in clause_minuscule for mot in ("assurance", "assuré")):
-        return (
-            "Cette clause concerne l'assurance liée au crédit. Elle peut prendre en charge certaines "
-            "situations prévues au contrat ; vérifiez les garanties, exclusions et le montant de la cotisation."
-        )
-    if any(mot in clause_minuscule for mot in ("remboursement anticipé", "rembourser par anticipation")):
-        return (
-            "Cette clause explique les conditions pour rembourser le crédit avant la fin prévue. "
-            "Demandez à la banque le montant restant dû et les éventuels frais avant de prendre votre décision."
-        )
-    if any(mot in clause_minuscule for mot in ("frais", "commission", "pénalité")):
-        return (
-            "Cette clause décrit des frais qui peuvent s'ajouter au crédit dans les situations prévues par le contrat. "
-            "Vérifiez leur montant, leur fréquence et les conditions qui déclenchent leur application."
-        )
+        signification = "Cette clause fixe les sanctions financières s'il y a un retard ou un défaut de remboursement à l'échéance convenue."
+        risques = "Des pénalités et intérêts de retard viendront augmenter le coût total de votre prêt. En cas d'impayés répétés, le contrat peut être résilié et entraîner une inscription aux fichiers des incidents de paiement."
+        conseil = "Respectez scrupuleusement vos dates d'échéance. En cas d'imprévu financier, contactez votre conseiller CCA Bank avant la date de prélèvement."
 
-    return (
-        "Cette clause fixe une règle applicable à votre crédit et les conséquences si elle n'est pas respectée. "
-        "Lisez-la avec attention et demandez à la banque de préciser tout point qui reste ambigu avant de signer."
-    )
+    elif any(mot in clause_minuscule for mot in ("domicili", "virement", "salaire", "avi")):
+        signification = "Cette clause vous engagerait à faire verser directement et irrévocablement votre salaire ou vos revenus sur votre compte ouvert à la CCA Bank pendant toute la durée du crédit."
+        risques = "Vous ne pourrez pas modifier le compte de prélèvement de vos revenus sans l'accord préalable écrit de la banque."
+        conseil = "Assurez-vous de la faisabilité de cette domiciliation avec votre employeur avant la signature du contrat (Attestation de Virement Irrévocable)."
+
+    elif any(mot in clause_minuscule for mot in ("déchéance", "résiliation", "exigibilité")):
+        signification = "Cette clause permet à la banque d'exiger le remboursement immédiat de la totalité du capital restant dû sans attendre la fin initiale du prêt."
+        risques = "Cette sanction est déclenchée en cas de fausse déclaration, de défaut d'assurance ou de non-paiement prolongé. Vous devriez alors régler tout le solde sous court délai."
+        conseil = "Fournissez des informations sincères dès le départ et prévenez la banque au moindre changement important de situation."
+
+    elif any(mot in clause_minuscule for mot in ("assurance", "assuré", "décès", "invalidité")):
+        signification = "Cette clause impose la souscription d'une assurance pour couvrir les risques d'incapacité, de décès ou d'invalidité pendant le remboursement."
+        risques = "En cas de sinistre garanti, l'assureur prend en charge tout ou partie des mensualités restantes. Si vous manquez à vos cotisations, la couverture s'arrête."
+        conseil = "Lisez attentivement la notice d'information de l'assurance pour connaître les délais de carence, les franchises et les exclusions."
+
+    elif any(mot in clause_minuscule for mot in ("remboursement anticipé", "rembourser par anticipation")):
+        signification = "Cette clause stipule les conditions et modalités pour rembourser votre prêt plus tôt que prévu, en partie ou en totalité."
+        risques = "Des indemnités de remboursement anticipé peuvent être perçues par la banque pour compenser le manque à gagner sur les intérêts futurs."
+        conseil = "Avant tout versement anticipé, demandez un décompte d'arrêté de compte à la CCA Bank pour vérifier s'il est plus avantageux de solder le prêt."
+
+    elif any(mot in clause_minuscule for mot in ("taux", "variation", "beac", "révisable", "variable")):
+        signification = "Cette clause indique que le taux d'intérêt de votre crédit n'est pas fixe et peut évoluer selon la conjoncture monétaire (taux directeurs BEAC)."
+        risques = "Si les taux augmentent, votre mensualité ou la durée de remboursement pourra augmenter, renchérissant le coût global du crédit."
+        conseil = "Privilégiez les crédits à taux fixe si vous souhaitez préserver la stabilité exacte de votre budget mensuel."
+
+    else:
+        signification = "Cette clause définit une obligation ou une règle spécifique encadrant la relation contractuelle entre l'emprunteur et la banque."
+        risques = "Le non-respect des engagements prévus par cette clause peut donner lieu à des frais administratifs ou à un litige contractuel."
+        conseil = "En cas de doute sur la portée exacte d'un terme contractuel, demandez une explication écrite et détaillée à votre conseiller CCA Bank."
+
+    return f"**1. Que signifie cette clause ?**\n{signification}\n\n**2. Impacts et risques pour l'emprunteur**\n{risques}\n\n**3. Conseil bancaire CCA Bank**\n{conseil}"
 
 
 def generer_recommandation(profil: dict, offres_simulees: list[dict]) -> str:
@@ -214,18 +224,27 @@ Consignes d'analyse banquaires CCA Bank :
 
 
 def expliquer_clause(texte_clause: str) -> str:
-    """Reformule une clause contractuelle en langage simple."""
+    """Reformule une clause contractuelle en langage simple et structuré."""
     prompt = f"""Voici une clause d'un contrat de crédit :
 
 "{texte_clause}"
 
-Explique cette clause en français simple et accessible, sans jargon juridique,
-en 2-3 phrases maximum, à destination d'un client qui n'est pas familier
-avec le vocabulaire bancaire."""
+Analyse et explique cette clause en français simple pour un client non-juriste.
+Structure ta réponse EXACTEMENT selon ces 3 points :
+
+**1. Que signifie cette clause ?**
+(1-2 phrases explicatives en langage très accessible)
+
+**2. Impacts et risques pour l'emprunteur**
+(1-2 phrases sur les conséquences financières ou engagements)
+
+**3. Conseil bancaire CCA Bank**
+(1 conseil pratique pour le client)"""
 
     message = _get_client().messages.create(
         model=settings.anthropic_model,
-        max_tokens=220,
+        max_tokens=350,
         messages=[{"role": "user", "content": prompt}],
     )
     return _extraire_texte_reponse(message)
+

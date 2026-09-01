@@ -33,11 +33,8 @@ export default function Login() {
     setChargement(true);
     try {
       const loggedUser = await login(email, password);
-      if (loggedUser?.role === "admin") {
-        navigate("/admin");
-      } else {
-        navigate(targetRedirect);
-      }
+      const destination = loggedUser?.role === "admin" ? "/admin" : targetRedirect;
+      navigate(destination, { replace: true });
     } catch (err) {
       console.error("Erreur de connexion:", err);
       setErreur(

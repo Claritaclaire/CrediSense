@@ -43,6 +43,22 @@ export default function Historique() {
     }
   }
 
+  async function supprimerSimulation(e, id) {
+    e.stopPropagation();
+    if (!window.confirm("Êtes-vous sûr de vouloir supprimer cette simulation de votre historique ?")) {
+      return;
+    }
+    try {
+      await client.delete(`/simulations/${id}`);
+      setSimulations((prev) => prev.filter((sim) => sim.id !== id));
+      if (detail?.id === id) {
+        setDetail(null);
+      }
+    } catch {
+      alert("Impossible de supprimer cette simulation pour le moment.");
+    }
+  }
+
   return (
     <div>
       <div className="mb-10">
@@ -66,10 +82,9 @@ export default function Historique() {
               <ul className="divide-y divide-ardoise/10">
                 {simulations.map((sim) => (
                   <li key={sim.id}>
-                    <button
-                      type="button"
+                    <div
                       onClick={() => ouvrirDetail(sim.id)}
-                      className={`w-full text-left px-5 py-4 hover:bg-papier transition-colors ${
+                      className={`w-full cursor-pointer px-5 py-4 hover:bg-papier transition-colors ${
                         detail?.id === sim.id ? "bg-or/5 border-l-4 border-l-or" : ""
                       }`}
                     >
@@ -80,15 +95,27 @@ export default function Historique() {
                             {formateurDate.format(new Date(sim.date_creation))}
                           </p>
                         </div>
-                        <span className="chiffres text-sm font-semibold text-or">
-                          {sim.taeg.toFixed(2)}%
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="chiffres text-sm font-semibold text-or">
+                            {sim.taeg.toFixed(2)}%
+                          </span>
+                          <button
+                            type="button"
+                            title="Supprimer cette simulation"
+                            onClick={(e) => supprimerSimulation(e, sim.id)}
+                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                       <p className="text-xs text-ardoise mt-2 chiffres">
                         {formateurFCFA.format(sim.montant)} F · {sim.duree_mois} mois ·{" "}
                         {formateurFCFA.format(sim.mensualite)} F/mois
                       </p>
-                    </button>
+                    </div>
                   </li>
                 ))}
               </ul>
