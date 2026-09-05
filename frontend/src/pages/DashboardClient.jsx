@@ -86,7 +86,7 @@ export default function DashboardClient() {
             Tableau de Bord Client CCA Bank
           </span>
           <h1 className="text-2xl sm:text-4xl font-extrabold font-display text-white mt-2">
-            Bonjour, {user?.nom || "Cher Client"} 👋
+            Bonjour, {user?.nom || "Cher Client"}
           </h1>
           <p className="text-white/80 text-sm mt-1 max-w-xl">
             Retrouvez en un coup d'œil vos indicateurs financiers, vos simulations récentes et vos prêts en cours.

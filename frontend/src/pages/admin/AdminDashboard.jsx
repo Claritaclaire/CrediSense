@@ -120,7 +120,7 @@ export default function AdminDashboard() {
     <div className="space-y-6">
       <div className="bg-white p-5 rounded-xl border border-ardoise/20 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-xl font-bold text-indigo">Bienvenue, {user?.nom || "Administrateur"} 👋</h2>
+          <h2 className="text-xl font-bold text-indigo">Bienvenue, {user?.nom || "Administrateur"}</h2>
           <p className="text-ardoise text-xs mt-1">
             Voici la vue d'ensemble de l'activité du système et vos accès rapides aux modules de gestion.
           </p>

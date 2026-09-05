@@ -23,6 +23,7 @@ import AdminOffreEdit from "./pages/admin/AdminOffreEdit.jsx";
 import AdminIA from "./pages/admin/AdminIA.jsx";
 import AdminConfig from "./pages/admin/AdminConfig.jsx";
 import AdminAudit from "./pages/admin/AdminAudit.jsx";
+import AdministrationSysteme from "./pages/admin/AdministrationSysteme.jsx";
 import AssistantFlottant from "./components/AssistantFlottant.jsx";
 
 function RouteProtegee({ children }) {
@@ -45,6 +46,14 @@ function RouteAdmin({ children }) {
   if (!user || user.role !== "admin") {
     return <Navigate to="/" replace />;
   }
+  return children;
+}
+
+function RouteAdminSysteme({ children }) {
+  const { user, estConnecte, loading } = useAuth();
+  if (loading) return <div className="py-12 text-center text-white">Chargement de la session administrateur système...</div>;
+  if (!estConnecte) return <Navigate to="/login" replace />;
+  if (!user || user.role !== "admin_systeme") return <Navigate to="/" replace />;
   return children;
 }
 
@@ -131,6 +140,14 @@ function AppRoutes() {
                   </Routes>
                 </AdminLayout>
               </RouteAdmin>
+            }
+          />
+          <Route
+            path="/administration-systeme"
+            element={
+              <RouteAdminSysteme>
+                <AdministrationSysteme />
+              </RouteAdminSysteme>
             }
           />
         </Routes>

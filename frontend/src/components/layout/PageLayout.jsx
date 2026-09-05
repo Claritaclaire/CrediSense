@@ -61,6 +61,9 @@ export function EnTete() {
               {user?.role === "admin" && (
                 <NavLink to="/admin">Administration</NavLink>
               )}
+              {user?.role === "admin_systeme" && (
+                <NavLink to="/administration-systeme">Administration système</NavLink>
+              )}
               <button onClick={logout} className="nav-lien ml-1 sm:ml-2">
                 Déconnexion
               </button>
@@ -93,6 +96,9 @@ export function EnTete() {
               <NavLink to="/profil" onClick={fermeMenu}>Mon Profil</NavLink>
               {user?.role === "admin" && (
                 <NavLink to="/admin" onClick={fermeMenu}>Administration</NavLink>
+              )}
+              {user?.role === "admin_systeme" && (
+                <NavLink to="/administration-systeme" onClick={fermeMenu}>Administration système</NavLink>
               )}
               <button
                 onClick={() => {

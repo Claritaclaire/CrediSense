@@ -21,7 +21,7 @@ from app.services.dify_service import (
     repondre_assistant,
 )
 from app.models.offre_credit import OffreCredit
-from app.services.calculs_financiers import simuler_credit
+from app.services.calculs_financiers import calculer_quotite_cessible_legale, simuler_credit
 
 router = APIRouter(prefix="/ia", tags=["Intelligence Artificielle"])
 logger = logging.getLogger(__name__)
@@ -30,6 +30,13 @@ logger = logging.getLogger(__name__)
 @router.post("/recommandation", response_model=MessageIAOut)
 def recommandation(data: RecommandationRequest, db: Session = Depends(get_db)):
     offres = db.query(OffreCredit).filter(OffreCredit.montant_max >= data.montant_souhaite).all()
+    quotite = calculer_quotite_cessible_legale(data.revenu_mensuel)
+    mensualite_max = max(
+        0.0,
+        quotite["quotite_cessible_totale"]
+        - (data.charges_mensuelles or 0)
+        - (data.total_mensualites_prets_en_cours or 0),
+    )
 
     offres_simulees = []
     for offre in offres:
@@ -43,6 +50,10 @@ def recommandation(data: RecommandationRequest, db: Session = Depends(get_db)):
                 assurance_pct_an=offre.assurance_pct_an,
                 frais_dossier_min=frais_dossier_min,
             )
+            mensualite_complete = round(
+                resultat["mensualite"] + resultat["assurance_mensuelle"],
+                2,
+            )
             offres_simulees.append({
                 "offre_id": str(offre.id),
                 "nom_banque": offre.nom_banque,
@@ -55,23 +66,35 @@ def recommandation(data: RecommandationRequest, db: Session = Depends(get_db)):
                 "frais_dossier_pct": offre.frais_dossier_pct,
                 "assurance_pct_an": offre.assurance_pct_an,
                 "mensualite": resultat["mensualite"],
+                "assurance_mensuelle": resultat["assurance_mensuelle"],
+                "mensualite_complete": mensualite_complete,
+                "quotite_cessible_disponible": round(mensualite_max, 2),
+                "compatible_quotite": mensualite_complete <= mensualite_max,
                 "taeg": resultat["taeg"],
                 "cout_total": resultat["cout_total"],
                 "offre_selectionnee": data.offre_id == offre.id,
             })
 
+    offres_simulees = [offre for offre in offres_simulees if offre["compatible_quotite"]]
     offres_simulees.sort(key=lambda offre: offre["taeg"])
 
+    contexte_recommandation = data.model_dump()
+    contexte_recommandation.update({
+        "quotite_cessible_totale": quotite["quotite_cessible_totale"],
+        "mensualite_maximale_disponible": mensualite_max,
+        "taux_quotite_effectif_pct": quotite["taux_effectif_pct"],
+    })
+
     try:
-        reponse_ia = generer_recommandation(data.model_dump(), offres_simulees)
+        reponse_ia = generer_recommandation(contexte_recommandation, offres_simulees)
     except Exception as exc:
         logger.exception("Échec Dify lors de la recommandation IA")
-        reponse_ia = generer_recommandation_locale(data.model_dump(), offres_simulees)
+        reponse_ia = generer_recommandation_locale(contexte_recommandation, offres_simulees)
 
     message = MessageIA(
         simulation_id=None,
         type="recommandation",
-        contenu_entree=str(data.model_dump()),
+        contenu_entree=str(contexte_recommandation),
         contenu_reponse=reponse_ia,
     )
     db.add(message)

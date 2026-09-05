@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app import models
 
 from app.routers import auth, offres, simulations, ia, user, demandes_credit, historique_prets
-from app.routers import admin_config, admin_audit, admin_ia
+from app.routers import admin_config, admin_audit, admin_ia, system_admin
 
 app = FastAPI(
     title='Credit Simulateur',
@@ -31,6 +31,7 @@ app.include_router(historique_prets.router)
 app.include_router(admin_config.router)
 app.include_router(admin_audit.router)
 app.include_router(admin_ia.router)
+app.include_router(system_admin.router)
 
 @app.get('/', tags=['Général'])
 def root():

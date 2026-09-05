@@ -91,8 +91,10 @@ def generer_recommandation(data: dict, offres_simulees: list) -> str:
     revenu = data.get("revenu_mensuel") or 0
     charges = data.get("charges_mensuelles") or 0
     prets_en_cours = data.get("total_mensualites_prets_en_cours") or 0
+    quotite_totale = data.get("quotite_cessible_totale") or 0
+    mensualite_max_disponible = data.get("mensualite_maximale_disponible") or 0
     mensualite_recommandee = (
-        offres_simulees[0].get("mensualite", 0) if offres_simulees else 0
+        offres_simulees[0].get("mensualite_complete", offres_simulees[0].get("mensualite", 0)) if offres_simulees else 0
     )
     taux_endettement = (
         ((charges + prets_en_cours + mensualite_recommandee) / revenu) * 100
@@ -123,6 +125,8 @@ def generer_recommandation(data: dict, offres_simulees: list) -> str:
         "montant_souhaite": profil["montant_souhaite"],
         "duree_mois": profil["duree_mois"],
         "taux_endettement": taux_endettement,
+        "quotite_cessible_totale": quotite_totale,
+        "mensualite_maximale_disponible": mensualite_max_disponible,
         "profil_json": json.dumps(profil, ensure_ascii=False),
         "offres": json.dumps(offres_simulees, ensure_ascii=False),
     }

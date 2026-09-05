@@ -21,6 +21,11 @@ class UserOut(BaseModel):
     nom: str
     email: EmailStr
     role: RoleUtilisateur
+    telephone: str | None = None
+    banque: str | None = None
+    agence: str | None = None
+    actif: bool = True
+    permissions: str | None = None
     date_creation: datetime
 
     class Config:

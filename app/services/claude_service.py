@@ -81,6 +81,13 @@ def _semble_contenir_raisonnement(reponse: str) -> bool:
 
 def generer_recommandation_locale(profil: dict, offres_simulees: list[dict]) -> str:
     if not offres_simulees:
+        mensualite_max_disponible = profil.get("mensualite_maximale_disponible")
+        if mensualite_max_disponible is not None:
+            return (
+                f"Aucune offre ne respecte votre quotité cessible : après vos charges et crédits en cours, "
+                f"votre mensualité disponible est de {_formater_fcfa(mensualite_max_disponible)} FCFA. "
+                "Réduisez le montant demandé, choisissez une durée plus longue ou consultez votre conseiller."
+            )
         return (
             "Aucune offre disponible ne correspond au montant et à la durée demandés. "
             "Essayez de réduire le montant, de modifier la durée ou de consulter une autre offre."
@@ -94,7 +101,8 @@ def generer_recommandation_locale(profil: dict, offres_simulees: list[dict]) -> 
     revenu = profil.get("revenu_mensuel") or 0
     charges_fixes = profil.get("charges_mensuelles") or 0
     prets_existants = profil.get("total_mensualites_prets_en_cours") or 0
-    mensualite_totale = charges_fixes + prets_existants + meilleure["mensualite"]
+    mensualite_max_disponible = profil.get("mensualite_maximale_disponible") or 0
+    mensualite_totale = charges_fixes + prets_existants + meilleure.get("mensualite_complete", meilleure["mensualite"])
 
     taux_endettement_global = (
         mensualite_totale / revenu * 100
@@ -111,6 +119,12 @@ def generer_recommandation_locale(profil: dict, offres_simulees: list[dict]) -> 
         f"et un coût total de {_formater_fcfa(meilleure['cout_total'])} FCFA."
     )
 
+    quotite = (
+        f" La mensualité complète reste sous votre quotité disponible de {_formater_fcfa(mensualite_max_disponible)} FCFA."
+        if mensualite_max_disponible is not None
+        else ""
+    )
+
     if selectionnee and selectionnee["offre_id"] != meilleure["offre_id"]:
         comparaison = (
             f"Votre choix actuel, {selectionnee['nom_banque']}, est moins intéressant car son TAEG "
@@ -124,16 +138,14 @@ def generer_recommandation_locale(profil: dict, offres_simulees: list[dict]) -> 
         endettement = "Renseignez un revenu mensuel valide pour vérifier le taux d'endettement global."
     elif taux_endettement_global > 33:
         endettement = (
-            f"Attention toutefois : en incluant vos charges fixes et vos crédits en cours, la nouvelle mensualité porterait votre taux d'endettement global à environ {taux_endettement_global:.1f} %, "
-            "ce qui dépasse le seuil recommandé de 33 %."
+            f"Attention toutefois : en incluant vos charges fixes, vos crédits en cours et l'assurance, le taux d'endettement global serait d'environ {taux_endettement_global:.1f} %."
         )
     else:
         endettement = (
-            f"En prenant en compte vos charges et crédits actuels, votre taux d'endettement global sera d'environ {taux_endettement_global:.1f} %, "
-            "ce qui reste sous le seuil recommandé de 33 %."
+            f"En prenant en compte vos charges, vos crédits actuels et l'assurance, votre taux d'endettement global serait d'environ {taux_endettement_global:.1f} %."
         )
 
-    return " ".join([intro, comparaison, endettement])
+    return " ".join([intro + quotite, comparaison, endettement])
 
 
 def expliquer_clause_locale(texte_clause: str) -> str:
@@ -197,6 +209,8 @@ Voici les informations complètes du client :
 - Revenu mensuel : {profil['revenu_mensuel']} FCFA
 - Charges fixes mensuelles (hors crédit) : {charges_fixes} FCFA
 - Mensualités de crédits déjà en cours : {prets_existants} FCFA
+- Quotité cessible légale totale : {quotite_totale} FCFA
+- Mensualité maximale disponible après charges et prêts : {mensualite_max_disponible} FCFA
 - Apport disponible : {profil['apport']} FCFA
 - Montant du nouveau crédit souhaité : {profil['montant_souhaite']} FCFA
 - Durée souhaitée : {profil['duree_mois']} mois
@@ -206,8 +220,8 @@ Voici les offres simulées, triées par TAEG croissant : {offres_simulees}
 
 Consignes d'analyse banquaires CCA Bank :
 1. Prends en compte l'objectif du projet ({projet_str}) et la situation globale du client.
-2. Recommande l'offre financièrement la plus avantageuse (ex: Crédit Scolaire & Universitaire max 11 mois, ou Découvert sur salaire à 50% max du net).
-3. Évalue le TAUX D'ENDETTEMENT GLOBAL = (Charges fixes + Prêts en cours + Nouvelle mensualité) / Revenu mensuel (seuil recommandé : 33%).
+2. Recommande uniquement une offre dont la mensualité complète (mensualité + assurance) ne dépasse pas la mensualité maximale disponible selon la quotité cessible.
+3. Vérifie que la mensualité complète (mensualité + assurance) respecte la mensualité maximale disponible calculée avec la quotité cessible légale. Présente aussi le taux d'endettement global à titre informatif.
 4. Rappelle brièvement les pièces clés nécessaires selon son statut (Fonctionnaire : AVI, CNI, billet à ordre, NIU ; Salarié Privé : Attestation de présence effective, attestation de virement, fiche NSIA).
 5. Réponds en français simple, professionnel et bienveillant, en 3 à 4 phrases complètes maximum, sans liste à puces."""
 

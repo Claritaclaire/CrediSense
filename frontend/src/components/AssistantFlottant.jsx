@@ -8,6 +8,23 @@ const SUGGESTIONS = [
   "Que signifie le TAEG ?",
   "Quelles pièces dois-je préparer ?",
 ];
+const SUGGESTION_RECOMMANDATION = "Recommander une offre pour mon profil";
+const formateurFCFA = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
+
+function extraireMontant(texte) {
+  const correspondance = texte.match(/(\d+(?:[.,]\d+)?\s*[kKmM]|\d{1,3}(?:[\s.]\d{3})+|\d+)/);
+  if (!correspondance) return null;
+
+  const valeur = correspondance[1].replace(/\s/g, "").replace(",", ".");
+  const suffixe = valeur.slice(-1).toLowerCase();
+  const nombre = Number.parseFloat(suffixe === "k" || suffixe === "m" ? valeur.slice(0, -1) : valeur);
+  if (!Number.isFinite(nombre)) return null;
+  return nombre * (suffixe === "k" ? 1000 : suffixe === "m" ? 1000000 : 1);
+}
+
+function estQuestionCapacite(texte) {
+  return /(?:combien|quel|quelle|hauteur|montant|capacit|emprunt|pr[eê]t)/i.test(texte) && extraireMontant(texte) !== null;
+}
 
 function IconeAssistant() {
   return (
@@ -31,7 +48,7 @@ function IconeEnvoyer() {
 
 export default function AssistantFlottant() {
   const { pathname } = useLocation();
-  const { estConnecte } = useAuth();
+  const { estConnecte, user } = useAuth();
   const [ouvert, setOuvert] = useState(false);
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([
@@ -46,8 +63,6 @@ export default function AssistantFlottant() {
   const messagesRef = useRef(null);
   const inputRef = useRef(null);
 
-  if (!estConnecte) return null;
-
   useEffect(() => {
     if (ouvert) inputRef.current?.focus();
   }, [ouvert]);
@@ -56,6 +71,8 @@ export default function AssistantFlottant() {
     const element = messagesRef.current;
     if (element) element.scrollTop = element.scrollHeight;
   }, [messages, chargement]);
+
+  if (!estConnecte) return null;
 
   async function envoyerMessage(texte = question) {
     const contenu = texte.trim();
@@ -70,10 +87,91 @@ export default function AssistantFlottant() {
     setChargement(true);
 
     try {
-      const { data } = await client.post("/ia/assistant", {
-        question: contenu,
-        page: pathname,
+      let reponse;
+      if (estQuestionCapacite(contenu)) {
+        const profil = JSON.parse(localStorage.getItem(`credisense_profil_${user.id}`) || "{}");
+        const { data } = await client.post("/simulations/capacite", {
+          revenu_mensuel: extraireMontant(contenu),
+          montant_souhaite: 1,
+          charges_mensuelles: Number(profil.charges) || 0,
+          total_mensualites_prets_en_cours: 0,
+        });
+        const meilleureDuree = (data.durees || []).reduce(
+          (meilleure, ligne) => ligne.montant_dans_capacite_avec_prets > (meilleure?.montant_dans_capacite_avec_prets || 0) ? ligne : meilleure,
+          null
+        );
+        const montantMax = meilleureDuree?.montant_dans_capacite_avec_prets || 0;
+        reponse = montantMax > 0
+          ? `Avec un revenu mensuel de ${formateurFCFA.format(data.revenu_mensuel)} FCFA et sans autres charges déclarées, votre capacité indicative peut atteindre environ ${formateurFCFA.format(montantMax)} FCFA sur ${meilleureDuree.duree_mois} mois. Le montant exact dépendra de l'offre choisie, de la durée et de l'étude de votre dossier.`
+          : "Avec ce revenu, aucune capacité positive n'est calculée dans les hypothèses actuelles. Les charges et prêts existants peuvent réduire davantage le montant accessible.";
+      } else {
+        const { data } = await client.post("/ia/assistant", {
+          question: contenu,
+          page: pathname,
+        });
+        reponse = data.contenu_reponse;
+      }
+      setMessages((precedents) => [
+        ...precedents,
+        { id: `reponse-${Date.now()}`, role: "assistant", contenu: reponse },
+      ]);
+    } catch (error) {
+      setErreur(
+        error.response?.data?.detail ||
+          "L'assistant est momentanément indisponible. Vous pouvez contacter le call center."
+      );
+    } finally {
+      setChargement(false);
+    }
+  }
+
+  async function demanderRecommandation() {
+    if (chargement) return;
+
+    setErreur("");
+    setMessages((precedents) => [
+      ...precedents,
+      { id: `question-${Date.now()}`, role: "user", contenu: SUGGESTION_RECOMMANDATION },
+    ]);
+    setChargement(true);
+
+    try {
+      const profil = JSON.parse(localStorage.getItem(`credisense_profil_${user.id}`) || "{}");
+      const simulationPayload = JSON.parse(localStorage.getItem("simulationPayload") || "null");
+      const revenu = Number(localStorage.getItem("simulationRevenu")) || Number(profil.revenu) || 0;
+      const apport = Number(localStorage.getItem("simulationApport")) || 0;
+
+      if (!revenu || !simulationPayload?.montant || !simulationPayload?.duree_mois) {
+        throw new Error("Renseignez votre profil financier et effectuez une simulation avant de demander une recommandation.");
+      }
+
+      let totalMensualitesPrets = 0;
+      try {
+        const { data: prets } = await client.get("/historique-prets/");
+        totalMensualitesPrets += (prets || [])
+          .filter((pret) => pret.statut === "en_cours")
+          .reduce((total, pret) => total + (pret.mensualite || 0), 0);
+      } catch (error) {
+        console.warn("Impossible de charger les prêts en cours", error);
+      }
+
+      const pretsLocaux = JSON.parse(localStorage.getItem(`credisense_prets_${user.id}`) || "[]");
+      totalMensualitesPrets += pretsLocaux
+        .filter((pret) => pret.statut === "en_cours")
+        .reduce((total, pret) => total + (pret.mensualite || 0), 0);
+
+      const { data } = await client.post("/ia/recommandation", {
+        revenu_mensuel: revenu,
+        apport,
+        montant_souhaite: Number(simulationPayload.montant),
+        duree_mois: Number(simulationPayload.duree_mois),
+        offre_id: simulationPayload.offre_id || null,
+        projet: localStorage.getItem("simulationProjet") || null,
+        profession: profil.profession || null,
+        charges_mensuelles: Number(profil.charges) || 0,
+        total_mensualites_prets_en_cours: totalMensualitesPrets,
       });
+
       setMessages((precedents) => [
         ...precedents,
         { id: `reponse-${Date.now()}`, role: "assistant", contenu: data.contenu_reponse },
@@ -81,7 +179,8 @@ export default function AssistantFlottant() {
     } catch (error) {
       setErreur(
         error.response?.data?.detail ||
-          "L'assistant est momentanément indisponible. Vous pouvez contacter le call center."
+          error.message ||
+          "Impossible de générer une recommandation pour le moment."
       );
     } finally {
       setChargement(false);
@@ -139,6 +238,9 @@ export default function AssistantFlottant() {
             ))}
             {messages.length === 1 && (
               <div className="mt-1 flex flex-wrap gap-2">
+                <button type="button" onClick={demanderRecommandation} className="rounded-full border border-or bg-or/10 px-3 py-1.5 text-left text-xs font-bold text-indigo transition hover:bg-or/20">
+                  {SUGGESTION_RECOMMANDATION}
+                </button>
                 {SUGGESTIONS.map((suggestion) => (
                   <button key={suggestion} type="button" onClick={() => envoyerMessage(suggestion)} className="rounded-full border border-indigo/20 bg-white px-3 py-1.5 text-left text-xs font-medium text-indigo transition hover:border-or hover:bg-or/10">
                     {suggestion}

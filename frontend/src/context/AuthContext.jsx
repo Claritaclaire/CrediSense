@@ -104,8 +104,10 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(() => {
     localStorage.removeItem("access_token");
+    delete client.defaults.headers.common["Authorization"];
     setToken(null);
     setUser(null);
+    setLoading(false);
   }, [setToken, setUser]);
 
   const estConnecte = Boolean(token);

@@ -19,7 +19,9 @@ export default function Login() {
   // Si déjà connecté, rediriger automatiquement vers la destination voulue
   useEffect(() => {
     if (estConnecte && user) {
-      if (user.role === "admin") {
+      if (user.role === "admin_systeme") {
+        navigate("/administration-systeme");
+      } else if (user.role === "admin") {
         navigate("/admin");
       } else {
         navigate(targetRedirect);
@@ -33,7 +35,11 @@ export default function Login() {
     setChargement(true);
     try {
       const loggedUser = await login(email, password);
-      const destination = loggedUser?.role === "admin" ? "/admin" : targetRedirect;
+      const destination = loggedUser?.role === "admin_systeme"
+        ? "/administration-systeme"
+        : loggedUser?.role === "admin"
+          ? "/admin"
+          : targetRedirect;
       navigate(destination, { replace: true });
     } catch (err) {
       console.error("Erreur de connexion:", err);

@@ -42,6 +42,8 @@ export default function Simulation() {
   const [revenu, setRevenu] = useState("");
   const [apport, setApport] = useState("");
   const [projet, setProjet] = useState("");
+  const [chargesProfil, setChargesProfil] = useState(0);
+  const [mensualitesPrets, setMensualitesPrets] = useState(0);
 
   // Load persisted values on mount
   useEffect(() => {
@@ -58,6 +60,35 @@ export default function Simulation() {
       console.warn("Failed to read simulation persisted state", e);
     }
   }, []);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    let annule = false;
+    async function chargerEngagements() {
+      let charges = 0;
+      let prets = 0;
+      try {
+        const profil = JSON.parse(localStorage.getItem(`credisense_profil_${user.id}`) || "{}");
+        charges = Number(profil.charges) || 0;
+        const { data } = await client.get("/historique-prets/");
+        prets += (data || []).filter((pret) => pret.statut === "en_cours").reduce((total, pret) => total + (pret.mensualite || 0), 0);
+      } catch (error) {
+        console.warn("Impossible de charger les engagements financiers", error);
+      }
+      try {
+        const locaux = JSON.parse(localStorage.getItem(`credisense_prets_${user.id}`) || "[]");
+        prets += (locaux || []).filter((pret) => pret.statut === "en_cours").reduce((total, pret) => total + (pret.mensualite || 0), 0);
+      } catch (error) {
+        console.warn("Impossible de charger les prêts locaux", error);
+      }
+      if (!annule) {
+        setChargesProfil(charges);
+        setMensualitesPrets(prets);
+      }
+    }
+    chargerEngagements();
+    return () => { annule = true; };
+  }, [user]);
 
   // Persist changes to form fields
   useEffect(() => {
@@ -364,7 +395,12 @@ export default function Simulation() {
                   onProjetChange={setProjet}
                   compact
                 />
-                <BadgeEndettement mensualite={resultat.mensualite} revenu={revenu} />
+                <BadgeEndettement
+                  mensualite={resultat.mensualite + assuranceMensuelle}
+                  revenu={revenu}
+                  chargesMensuelles={chargesProfil}
+                  mensualitesPrets={mensualitesPrets}
+                />
                 <div className="rounded-xl border border-indigo/10 bg-indigo/5 p-5">
                   <p className="eyebrow mb-3">Conseil personnalisé</p>
                   {!recommandation && !chargementIA && (

@@ -88,13 +88,13 @@ export default function FormulaireSimulation({
   };
 
   return (
-    <div className="grid gap-5 xl:grid-cols-2 xl:items-start">
+    <div className="grid min-w-0 gap-5 xl:grid-cols-2 xl:items-start">
       {multiSelect ? (
-        <fieldset className="carte p-5">
-          <legend className="block text-sm font-semibold text-indigo mb-3 uppercase tracking-wider">
+        <fieldset className="carte min-w-0 p-5">
+          <legend className="block max-w-full break-words text-sm font-semibold uppercase tracking-wider text-indigo">
             Produits à comparer
           </legend>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="mt-3 grid min-w-0 gap-3 sm:grid-cols-2">
             {offres.map((offre) => (
               <label
                 key={offre.id}
