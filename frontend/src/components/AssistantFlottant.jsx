@@ -28,12 +28,7 @@ function estQuestionCapacite(texte) {
 
 function IconeAssistant() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8">
-      <path d="M7 8.5a5 5 0 0 1 10 0v1.25a5 5 0 0 1-10 0V8.5Z" />
-      <path d="M9 15.5c.8 1.1 2 1.75 3 1.75s2.2-.65 3-1.75M5.5 10.5H4a2 2 0 0 0 0 4h1.5M18.5 10.5H20a2 2 0 0 1 0 4h-1.5M12 17.25v2.25M9.5 19.5h5" />
-      <circle cx="9.5" cy="10" r=".55" fill="currentColor" stroke="none" />
-      <circle cx="14.5" cy="10" r=".55" fill="currentColor" stroke="none" />
-    </svg>
+    <img src="/ia-robot.png" alt="" aria-hidden="true" className="h-8 w-8 rounded-full object-cover" />
   );
 }
 
@@ -212,7 +207,7 @@ export default function AssistantFlottant() {
         >
           <header className="flex items-center justify-between bg-indigo px-4 py-3 text-white">
             <div className="flex min-w-0 items-center gap-3">
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-or text-indigo">
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo p-0.5 text-indigo shadow-inner">
                 <IconeAssistant />
               </span>
               <div className="min-w-0">
@@ -262,7 +257,7 @@ export default function AssistantFlottant() {
         </section>
       )}
 
-      <button type="button" onClick={() => setOuvert((etat) => !etat)} className="flex h-14 w-14 items-center justify-center rounded-full bg-or text-indigo shadow-xl ring-2 ring-white/80 transition hover:-translate-y-0.5 hover:bg-amber-400 hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-or/40 animate-pulse-glow" aria-expanded={ouvert} aria-label={ouvert ? "Fermer l'assistant" : "Ouvrir l'assistant"} title="Assistant CrediSense">
+      <button type="button" onClick={() => setOuvert((etat) => !etat)} className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo text-or shadow-xl ring-2 ring-or/70 transition hover:-translate-y-0.5 hover:bg-indigo-dark hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-or/40 animate-pulse-glow" aria-expanded={ouvert} aria-label={ouvert ? "Fermer l'assistant" : "Ouvrir l'assistant"} title="Assistant CrediSense">
         {ouvert ? <span className="text-2xl leading-none">×</span> : <IconeAssistant />}
       </button>
     </div>

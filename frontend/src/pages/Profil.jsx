@@ -11,6 +11,7 @@ export default function Profil() {
   const [profession, setProfession] = useState("");
   const [revenuMensuel, setRevenuMensuel] = useState("");
   const [chargesMensuelles, setChargesMensuelles] = useState("");
+  const [photoProfil, setPhotoProfil] = useState("");
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -39,6 +40,7 @@ export default function Profil() {
         setProfession(p.profession || "");
         setRevenuMensuel(p.revenu ? String(p.revenu) : "");
         setChargesMensuelles(p.charges ? String(p.charges) : "");
+        setPhotoProfil(p.photo || "");
       } catch (e) {
         console.error(e);
       }
@@ -65,6 +67,37 @@ export default function Profil() {
     };
     fetchPrets();
   }, [user]);
+
+  function handlePhotoChange(event) {
+    const fichier = event.target.files?.[0];
+    if (!fichier) return;
+    if (!fichier.type.startsWith("image/")) {
+      setErreur("Veuillez sélectionner une image.");
+      return;
+    }
+    if (fichier.size > 5 * 1024 * 1024) {
+      setErreur("La photo ne doit pas dépasser 5 Mo.");
+      return;
+    }
+
+    const lecteur = new FileReader();
+    lecteur.onload = () => {
+      const image = new Image();
+      image.onload = () => {
+        const taille = 512;
+        const ratio = Math.min(1, taille / Math.max(image.width, image.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.width * ratio));
+        canvas.height = Math.max(1, Math.round(image.height * ratio));
+        canvas.getContext("2d").drawImage(image, 0, 0, canvas.width, canvas.height);
+        setPhotoProfil(canvas.toDataURL("image/jpeg", 0.82));
+      };
+      image.onerror = () => setErreur("Impossible de traiter cette photo.");
+      image.src = lecteur.result;
+    };
+    lecteur.onerror = () => setErreur("Impossible de lire cette photo.");
+    lecteur.readAsDataURL(fichier);
+  }
 
   const handleSauvegarderProfil = async (e) => {
     e.preventDefault();
@@ -94,8 +127,13 @@ export default function Profil() {
         profession,
         revenu: Number(revenuMensuel) || 0,
         charges: Number(chargesMensuelles) || 0,
+        photo: photoProfil,
       };
-      localStorage.setItem(`credisense_profil_${user.id}`, JSON.stringify(profilData));
+      try {
+        localStorage.setItem(`credisense_profil_${user.id}`, JSON.stringify(profilData));
+      } catch (storageError) {
+        throw new Error("La photo est trop volumineuse pour être enregistrée. Choisissez une image plus légère.");
+      }
 
       setSucces("Vos informations personnelles et financières ont été enregistrées !");
       setPassword("");
@@ -208,8 +246,25 @@ export default function Profil() {
         {/* COLONNE GAUCHE : Informations Personnelles & Financières */}
         <div className="carte p-6 sm:p-8 space-y-6">
           <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-            <div className="w-12 h-12 rounded-xl bg-indigo text-or font-bold font-display text-xl flex items-center justify-center shadow">
-              {user?.nom ? user.nom.slice(0, 2).toUpperCase() : "CS"}
+            <div className="relative shrink-0">
+              <label htmlFor="photo-profil" className="group block cursor-pointer" title="Modifier la photo de profil">
+                {photoProfil ? (
+                  <img src={photoProfil} alt="Photo de profil" className="h-16 w-16 rounded-xl object-cover shadow transition group-hover:opacity-80" />
+                ) : (
+                  <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-indigo text-xl font-bold font-display text-or shadow transition group-hover:bg-indigo-dark">
+                    {user?.nom ? user.nom.slice(0, 2).toUpperCase() : "CS"}
+                  </div>
+                )}
+                <span className="pointer-events-none absolute inset-0 flex items-center justify-center rounded-xl bg-indigo/75 text-[10px] font-bold text-white opacity-0 transition group-hover:opacity-100">
+                  Modifier
+                </span>
+              </label>
+              <input id="photo-profil" type="file" accept="image/*" onChange={handlePhotoChange} className="sr-only" />
+              {photoProfil && (
+                <button type="button" onClick={() => setPhotoProfil("")} className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-rose-600 text-sm font-bold text-white shadow" aria-label="Supprimer la photo de profil" title="Supprimer la photo">
+                  ×
+                </button>
+              )}
             </div>
             <div>
               <h2 className="text-lg font-bold text-indigo">Informations Personnelles</h2>
