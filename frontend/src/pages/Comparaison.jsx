@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import client from "../api/client";
+import { useAuth } from "../context/AuthContext";
 import FormulaireSimulation from "../components/FormulaireSimulation";
 import CarteOffre from "../components/CarteOffre";
 import GraphiqueComparaison from "../components/GraphiqueComparaison";
+import { calculerQuotiteCessible } from "../components/BadgeEndettement";
 
 export default function Comparaison() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [offres, setOffres] = useState([]);
   const [resultats, setResultats] = useState([]);
   const [dureeUtilisee, setDureeUtilisee] = useState(null);
@@ -14,11 +17,29 @@ export default function Comparaison() {
   const [chargement, setChargement] = useState(false);
   const [erreur, setErreur] = useState("");
   const [metriqueGraphique, setMetriqueGraphique] = useState("taeg");
+  const [revenu, setRevenu] = useState("");
   const formateurFCFA = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
 
   useEffect(() => {
     client.get("/offres/").then((res) => setOffres(res.data));
   }, []);
+
+  // Pré-remplit le revenu depuis le profil financier local, comme sur la page Simulation
+  useEffect(() => {
+    if (!user?.id) return;
+    try {
+      const profil = JSON.parse(localStorage.getItem(`credisense_profil_${user.id}`) || "{}");
+      if (profil.revenu) setRevenu(String(profil.revenu));
+    } catch (e) {
+      console.warn("Impossible de lire le profil financier local", e);
+    }
+  }, [user]);
+
+  // Mensualité maximale disponible selon la quotité cessible légale (charges/prêts en
+  // cours non pris en compte ici : simple indicateur, l'analyse complète reste sur
+  // la page Simulation).
+  const revenuNum = Number(revenu) || 0;
+  const mensualiteDisponible = revenuNum > 0 ? calculerQuotiteCessible(revenuNum) : null;
 
   async function handleSubmit(payload) {
     setErreur("");
@@ -52,6 +73,23 @@ export default function Comparaison() {
             <p className="eyebrow mb-2">Étape 1</p>
             <h2 className="text-xl font-bold text-indigo">Configurez votre comparaison</h2>
             <p className="mt-1 text-sm text-ardoise">Choisissez au moins deux offres, puis donnez-leur les mêmes paramètres.</p>
+            <div className="mt-3 max-w-xs">
+              <label htmlFor="revenu-comparaison" className="block text-xs font-semibold text-ardoise uppercase tracking-wider mb-1">
+                Revenu mensuel (optionnel)
+              </label>
+              <input
+                id="revenu-comparaison"
+                type="number"
+                min="0"
+                placeholder="ex. 300000"
+                className="champ text-sm"
+                value={revenu}
+                onChange={(e) => setRevenu(e.target.value)}
+              />
+              <p className="mt-1 text-[11px] text-ardoise/70">
+                Pour voir si l'offre recommandée reste sous votre quotité cessible disponible.
+              </p>
+            </div>
           </div>
           <FormulaireSimulation
             offres={offres}
@@ -87,9 +125,20 @@ export default function Comparaison() {
                     <section className="mb-6 rounded-2xl bg-gradient-to-br from-indigo to-indigo-dark p-6 text-white shadow-xl">
                       <p className="text-xs font-bold uppercase tracking-widest text-or">Offre recommandée</p>
                       <div className="mt-3 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-                        <div><h2 className="text-2xl font-bold">{meilleure.nom_banque}</h2><p className="mt-2 text-sm text-white/70">TAEG le plus avantageux parmi les offres sélectionnées.</p></div>
+                        <div><h2 className="text-2xl font-bold text-white">{meilleure.nom_banque}</h2><p className="mt-2 text-sm text-white/70">TAEG le plus avantageux parmi les offres sélectionnées.</p></div>
                         <div className="grid grid-cols-2 gap-2 text-center"><div className="rounded-xl bg-white/10 p-3"><p className="text-[10px] uppercase text-white/60">Mensualité</p><p className="mt-1 font-bold chiffres">{formateurFCFA.format(meilleure.mensualite)} F</p></div><div className="rounded-xl bg-white/10 p-3"><p className="text-[10px] uppercase text-white/60">Écart total</p><p className="mt-1 font-bold text-or chiffres">{formateurFCFA.format(economie)} F</p></div></div>
                       </div>
+                      {mensualiteDisponible !== null && (() => {
+                        const mensualiteComplete = meilleure.mensualite + (meilleure.assurance_mensuelle || 0);
+                        const compatible = mensualiteComplete <= mensualiteDisponible;
+                        return (
+                          <p className={`mt-4 rounded-lg px-3 py-2 text-xs font-semibold ${compatible ? "bg-emerald-500/15 text-emerald-200" : "bg-rose-500/15 text-rose-200"}`}>
+                            {compatible
+                              ? `✓ Compatible avec votre quotité cessible disponible (${formateurFCFA.format(mensualiteDisponible)} FCFA/mois).`
+                              : `⚠ Dépasse votre quotité cessible disponible (${formateurFCFA.format(mensualiteDisponible)} FCFA/mois) : cette offre risque de ne pas être finançable en l'état.`}
+                          </p>
+                        );
+                      })()}
                       <button type="button" onClick={() => navigate(`/simulation?offre_id=${meilleure.offre_id}&montant=${montantUtilise}&duree=${dureeUtilisee}`)} className="mt-5 rounded-lg bg-or px-4 py-2.5 text-sm font-bold text-indigo hover:bg-amber-400">Simuler cette offre →</button>
                     </section>
                   </>

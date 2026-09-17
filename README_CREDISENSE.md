@@ -1,152 +1,294 @@
 # CrediSense
 
-Application web de simulation, comparaison et demande de credit pour la CCA Bank.
+Plateforme web de simulation, comparaison et demande de crédit pour un environnement bancaire moderne.
+CrediSense permet à un client de calculer sa capacité d’emprunt, comparer plusieurs offres, suivre ses demandes et obtenir des explications IA guidées par les règles financières du projet.
 
-## Fonctionnalites
+## Fonctionnalités
 
-- Consultation du catalogue des offres de credit
-- Detail et description de chaque offre
-- Inscription et connexion des clients
-- Profil financier : revenu, charges, profession, projet et apport
-- Simulation de montant et de duree
-- Calcul de mensualite, TAEG et cout total
-- Comparaison de plusieurs offres
-- Evaluation indicative du taux d'endettement
-- Recommandation IA et mode local de secours
-- Explication de clauses en langage simple
-- Depot et suivi des demandes de credit
-- Notification email du call center
-- Bouton fixe de contact : `+237 679 00 96 30` et `callcenter@cca-bank.com`
-- Espace administration pour les demandes, simulations, offres, utilisateurs, IA, configuration et audit
+### Espace client
 
-## Parcours client
+- inscription, connexion et authentification JWT ;
+- profil personnel et financier avec revenu, charges et situation actuelle ;
+- photo de profil en cliquant directement sur le cadre des initiales ;
+- ajout et suivi des prêts en cours ;
+- simulation de montant, durée, mensualité, TAEG et coût total ;
+- calcul de capacité d’emprunt ;
+- comparaison de plusieurs offres ;
+- historique des simulations avec détail, graphique et tableau d’amortissement ;
+- bouton pour refaire une simulation depuis l’historique ;
+- dépôt et suivi des demandes de crédit ;
+- notification email côté call center ;
+- explication de clauses en langage simple ;
+- assistant IA flottant pour répondre aux questions du client ;
+- recommandations IA avec mode de secours local ;
+- contact call center : +237 679 00 96 30 et callcenter@cca-bank.com.
+
+### Assistant IA flottant
+
+L’assistant est disponible pour les utilisateurs connectés. Il peut :
+
+- expliquer le TAEG et les notions de crédit ;
+- répondre aux questions générales sur l’application ;
+- estimer une capacité indicative à partir d’un revenu donné dans la question ;
+- afficher les réponses avec du texte en gras et des retours à la ligne ;
+- utiliser une icône robot intégrée à l’interface.
+
+Les blocs internes de raisonnement envoyés par Dify ou d’autres services IA sont nettoyés côté backend avant l’affichage dans le front.
+
+### Recommandation financière
+
+La recommandation prend en compte :
+
+- le revenu mensuel ;
+- les charges mensuelles ;
+- les mensualités des prêts en cours ;
+- l’apport ;
+- le montant et la durée demandés ;
+- la quotité cessible légale ;
+- la mensualité totale du nouveau crédit, y compris assurance.
+
+Une offre n’est recommandée que si :
 
 ```text
-Inscription
-  -> Profil financier
-  -> Simulation
-  -> Analyse de capacite
-  -> Comparaison
-  -> Demande de credit
-  -> Notification du call center
+mensualité + assurance <= quotité cessible - charges - prêts en cours
 ```
 
-Le profil financier sert notamment a estimer le taux d'endettement :
+Le backend effectue les calculs et filtre les offres. Dify ou Claude expliquent ensuite le résultat, sans inventer de taux, de plafond ou de règle bancaire.
+
+## Quotité cessible
+
+Le calcul applique le barème implémenté dans `app/services/calculs_financiers.py` :
+
+- 10 % sur la tranche jusqu’à 18 750 FCFA ;
+- 20 % sur la tranche de 18 751 à 37 500 FCFA ;
+- 25 % sur la tranche de 37 501 à 75 000 FCFA ;
+- 1/3 sur la tranche de 75 001 à 112 500 FCFA ;
+- 50 % sur la tranche de 112 501 à 142 500 FCFA ;
+- 100 % sur la fraction supérieure à 142 500 FCFA.
+
+La mensualité disponible est ensuite calculée ainsi :
 
 ```text
-(charges fixes + mensualites des prets existants + nouvelle mensualite)
-/ revenu mensuel x 100
+quotité cessible - charges mensuelles - mensualités des prêts en cours
 ```
 
-Le seuil indicatif actuel est de 33 %. Cette estimation ne remplace pas la decision de la banque.
+Cette évaluation reste indicative et ne constitue pas une décision définitive de la banque.
 
-## Calculs et confidentialite
+## Administration
 
-Les interets sont conserves dans les calculs internes afin de produire une mensualite, un TAEG et un cout total corrects. Ils ne sont pas affiches dans les vues et exports client. Les informations detaillees restent disponibles dans les vues internes d'administration.
+### Admin bancaire
 
-## Email des demandes
+L’espace `/admin` permet notamment de gérer :
 
-Lorsqu'une demande est deposee, elle est enregistree en base et une notification est envoyee en arriere-plan.
+- les offres de crédit ;
+- les demandes de crédit ;
+- les simulations ;
+- les utilisateurs ;
+- les recommandations IA ;
+- la configuration ;
+- le journal d’audit.
 
-Le message contient le nom et l'email du client, la reference de demande, le montant, la duree, l'apport, le motif et le statut.
+### Admin système
 
-Configuration de test dans `.env` :
+L’espace `/administration-systeme` est réservé au rôle `admin_systeme`.
+Il permet de :
 
-```env
-DEMANDES_EMAIL_DESTINATAIRE=votre-adresse-de-test@example.com
+- consulter les statistiques globales ;
+- voir le nombre de clients, administrateurs, comptes actifs et inactifs ;
+- créer un administrateur bancaire ou un conseiller ;
+- renseigner nom, email, téléphone, banque et agence ;
+- attribuer des permissions ;
+- rechercher un compte ;
+- modifier un compte ;
+- activer ou désactiver un compte ;
+- consulter les activités et la traçabilité.
+
+L’admin système ne gère pas directement les offres ni les comptes clients. Ces responsabilités restent dans l’espace bancaire.
+
+Pour promouvoir un premier compte en admin système, exécuter la migration puis utiliser une commande SQL sur un compte connu :
+
+```sql
+UPDATE users
+SET role = 'admin_systeme'
+WHERE email = 'admin@example.com';
 ```
-
-Configuration de production :
-
-```env
-DEMANDES_EMAIL_DESTINATAIRE=callcenter@cca-bank.com
-```
-
-Ne mettez jamais de mot de passe SMTP, de cle Anthropic ou de cle secrete dans cette documentation. Les secrets doivent rester dans `.env` ou un gestionnaire de secrets. Les secrets deja exposes doivent etre revoques et regeneres.
 
 ## Architecture
 
-### Backend
-
-- Python, FastAPI et Uvicorn
-- SQLAlchemy et PostgreSQL
-- Pydantic pour les schemas API
-- JWT pour l'authentification
-- SMTP pour les emails
-- SciPy pour les calculs numeriques
-- Anthropic pour la recommandation IA
-
-### Frontend
-
-- React
-- Vite
-- React Router
-- Axios
-- Tailwind CSS
-
-### Dossiers principaux
-
 ```text
-app/models       Modeles de donnees
-app/schemas      Schemas API
-app/routers      Routes backend
-app/services     Calculs financiers et IA
-app/utils        Utilitaires, dont email
-frontend/src     Pages et composants React
-configurer_offres.py  Synchronisation du catalogue
-schema.sql       Structure SQL de reference
-docs/            Documentation detaillee
+CrediSense/
+|-- app/
+|   |-- core/                 Sécurité et exceptions
+|   |-- models/               Modèles SQLAlchemy
+|   |-- routers/              Routes FastAPI
+|   |-- schemas/              Schémas Pydantic
+|   |-- services/             Calculs financiers et IA
+|   `-- utils/                Utilitaires email
+|-- frontend/
+|   `-- src/                  Application React et pages client/admin
+|-- tests/                    Tests métier
+|-- docs/                     Documentation détaillée
+|-- migrate_admin_systeme.py  Migration du rôle admin_systeme
+|-- configurer_offres.py      Synchronisation du catalogue
+|-- requirements.txt          Dépendances Python
+`-- schema.sql                Schéma SQL de référence
 ```
 
-## Routes principales
+### Technologies
 
-```text
-POST /auth/register
-POST /auth/login
-GET  /users/me
-GET  /offres/
-GET  /offres/{id}
-POST /simulations/
-POST /simulations/comparer
-GET  /simulations/historique
-POST /ia/recommandation
-POST /ia/explication-clause
-POST /demandes-credit/
-GET  /demandes-credit/mes-demandes
-GET  /historique-prets/
-```
+- Python, FastAPI et Uvicorn ;
+- PostgreSQL, SQLAlchemy et Pydantic ;
+- JWT et passlib/bcrypt ;
+- SciPy pour les calculs numériques ;
+- Dify et Anthropic pour les services IA ;
+- React, Vite, React Router et Axios ;
+- Tailwind CSS.
 
-Les routes d'administration sont reservees aux roles autorises et commencent principalement par `/admin/`.
+## Installation
 
-## Installation et lancement
+### Prérequis
+
+- Python 3.11 ou plus récent ;
+- Node.js et npm ;
+- PostgreSQL ;
+- une base de données CrediSense ;
+- une clé Dify ou Anthropic si l’IA externe est activée.
 
 ### Backend
+
+Depuis la racine du projet :
 
 ```powershell
-cd credit-simulateur
 python -m pip install -r requirements.txt
+python init_db_fixed.py
+python migrate_admin_systeme.py
+python run_server.py
+```
+
+L’API est disponible sur http://127.0.0.1:8000.
+La documentation OpenAPI est disponible sur http://127.0.0.1:8000/docs.
+
+Alternative :
+
+```powershell
 python -m uvicorn app.main:app --reload --port 8000
 ```
 
 ### Frontend
 
-Dans un autre terminal :
+Dans un second terminal :
 
 ```powershell
-cd credit-simulateur/frontend
+cd frontend
 npm install
 npm run dev
 ```
 
-L'API est disponible sur `http://127.0.0.1:8000`. Vite affiche l'URL du frontend, habituellement `http://localhost:5173`.
+Vite affiche normalement le frontend sur http://localhost:5173.
 
-## Points a surveiller avant production
+Pour produire le build :
 
-- Le profil financier est actuellement conserve dans le navigateur.
-- Le revenu n'est pas encore enregistre directement avec chaque simulation.
-- Le CORS doit etre restreint aux domaines autorises.
-- Les secrets doivent etre geres hors du depot Git.
-- Les tests d'envoi email et de depot de demande doivent etre maintenus.
-- Les regles bancaires definitives doivent etre validees par la CCA Bank.
+```powershell
+cd frontend
+npm run build
+```
 
-Pour une description plus complete, consulter [docs/GUIDE_APPLICATION_CREDISENSE.md](docs/GUIDE_APPLICATION_CREDISENSE.md).
+## Variables d’environnement
+
+Créer un fichier `.env` à la racine. Ne jamais le committer.
+
+```env
+DATABASE_URL=postgresql://utilisateur:mot_de_passe@localhost:5432/credit_simulateur
+SECRET_KEY=une-cle-secrete-longue-et-aleatoire
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+
+ANTHROPIC_API_KEY=
+ANTHROPIC_MODEL=claude-haiku-4-5-20251001
+DIFY_API_KEY=
+DIFY_API_URL=https://api.dify.ai/v1
+
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USERNAME=
+SMTP_PASSWORD=
+EMAIL_FROM=
+SMTP_USE_TLS=true
+DEMANDES_EMAIL_DESTINATAIRE=
+```
+
+Les clés API, mots de passe SMTP et secrets JWT doivent rester dans `.env` ou dans un gestionnaire de secrets. Toute clé déjà exposée doit être révoquée.
+
+## Routes API principales
+
+```text
+POST /auth/register
+POST /auth/login
+GET  /users/me
+PATCH /users/me
+
+GET  /offres/
+GET  /offres/{offre_id}
+POST /simulations/
+POST /simulations/comparer
+POST /simulations/capacite
+GET  /simulations/historique
+GET  /simulations/{simulation_id}
+
+POST /ia/assistant
+POST /ia/recommandation
+POST /ia/explication-clause
+
+GET  /historique-prets/
+POST /historique-prets/
+GET  /demandes-credit/mes-demandes
+POST /demandes-credit/
+```
+
+Routes Admin système :
+
+```text
+GET   /admin-systeme/dashboard
+GET   /admin-systeme/administrateurs
+POST  /admin-systeme/administrateurs
+PATCH /admin-systeme/administrateurs/{user_id}
+GET   /admin-systeme/activites
+```
+
+## Tests
+
+Exécuter les tests métier depuis la racine :
+
+```powershell
+python -m pytest -q
+```
+
+Les tests couvrent notamment le calcul de quotité cessible et la déduction des charges et des mensualités de prêts existants.
+
+## Données locales du navigateur
+
+Certaines informations client sont actuellement conservées dans le navigateur via `localStorage` :
+
+- profil financier ;
+- prêts ajoutés localement ;
+- paramètres de simulation ;
+- photo de profil compressée.
+
+La photo est redimensionnée avant stockage et reste liée au navigateur utilisé. Pour une version multi-appareils, il faudra migrer ces données vers le backend et un stockage de fichiers sécurisé.
+
+## Sécurité et production
+
+Avant une mise en production :
+
+- restreindre le CORS aux domaines autorisés ;
+- remplacer les secrets de développement ;
+- protéger les clés Dify, Anthropic et SMTP ;
+- valider officiellement le barème et les conditions de CCA Bank ;
+- stocker le profil financier côté serveur si la synchronisation multi-appareils est nécessaire ;
+- ajouter une rotation et une expiration adaptées des tokens ;
+- vérifier les permissions de chaque route admin ;
+- conserver les journaux d’audit dans un stockage protégé ;
+- ne jamais considérer une recommandation IA comme une décision de crédit.
+
+Documentation complémentaire :
+[docs/GUIDE_APPLICATION_CREDISENSE.md](docs/GUIDE_APPLICATION_CREDISENSE.md)

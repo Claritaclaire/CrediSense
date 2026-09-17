@@ -111,10 +111,10 @@ def generer_recommandation_locale(profil: dict, offres_simulees: list[dict]) -> 
     )
 
     projet = profil.get("projet")
-    mention_projet = f" Pour votre projet ({projet}), l" if projet else " L'"
-    
+    debut_intro = f"Pour votre projet ({projet}), l'" if projet else "L'"
+
     intro = (
-        f"{mention_projet.capitalize()}offre la plus avantageuse est {meilleure['nom_banque']}, avec un TAEG de "
+        f"{debut_intro}offre la plus avantageuse est {meilleure['nom_banque']}, avec un TAEG de "
         f"{meilleure['taeg']:.2f} %, une mensualité de {_formater_fcfa(meilleure['mensualite'])} FCFA "
         f"et un coût total de {_formater_fcfa(meilleure['cout_total'])} FCFA."
     )
@@ -191,6 +191,37 @@ def expliquer_clause_locale(texte_clause: str) -> str:
     return f"**1. Que signifie cette clause ?**\n{signification}\n\n**2. Impacts et risques pour l'emprunteur**\n{risques}\n\n**3. Conseil bancaire CCA Bank**\n{conseil}"
 
 
+def repondre_assistant_locale(question: str) -> str:
+    """Reponse de secours quand le service IA externe est indisponible ou renvoie
+    une reponse invalide. Tente une estimation indicative si un revenu est
+    mentionne dans la question, sinon redirige vers le call center."""
+    import re as _re
+
+    from app.services.calculs_financiers import calculer_quotite_cessible_legale
+
+    correspondance = _re.search(r"(\d[\d\s.]{3,})\s*(?:fcfa|xaf|f\b)?", question, flags=_re.IGNORECASE)
+    if correspondance:
+        try:
+            revenu = float(correspondance.group(1).replace(" ", "").replace(".", ""))
+        except ValueError:
+            revenu = 0
+        if revenu >= 10_000:
+            quotite = calculer_quotite_cessible_legale(revenu)
+            return (
+                f"Pour un revenu net d'environ {_formater_fcfa(revenu)} FCFA, votre quotité cessible "
+                f"légale indicative est de {_formater_fcfa(quotite['quotite_cessible_totale'])} FCFA "
+                f"(soit {quotite['taux_effectif_pct']} % du revenu). Ce montant doit encore être réduit "
+                "de vos charges fixes et de vos mensualités de prêts en cours pour obtenir votre "
+                "mensualité réellement disponible. Cette estimation est indicative et ne remplace pas "
+                "une simulation complète."
+            )
+
+    return (
+        "Je ne peux pas traiter cette question pour le moment. Essayez de reformuler avec un montant "
+        "précis, ou contactez le call center CCA Bank au +237 679 00 96 30 (callcenter@cca-bank.com)."
+    )
+
+
 def generer_recommandation(profil: dict, offres_simulees: list[dict]) -> str:
     """
     Envoie le profil complet de l'utilisateur, son projet et les résultats de simulation à Claude,
@@ -215,6 +246,7 @@ Voici les informations complètes du client :
 - Montant du nouveau crédit souhaité : {profil['montant_souhaite']} FCFA
 - Durée souhaitée : {profil['duree_mois']} mois
 - Offre choisie par le client : {profil.get('offre_id') or 'non précisée'}
+- Quotité cessible disponible après charges et prêts : {profil.get('mensualite_maximale_disponible') or 0} FCFA
 
 Voici les offres simulées, triées par TAEG croissant : {offres_simulees}
 
@@ -223,7 +255,8 @@ Consignes d'analyse banquaires CCA Bank :
 2. Recommande uniquement une offre dont la mensualité complète (mensualité + assurance) ne dépasse pas la mensualité maximale disponible selon la quotité cessible.
 3. Vérifie que la mensualité complète (mensualité + assurance) respecte la mensualité maximale disponible calculée avec la quotité cessible légale. Présente aussi le taux d'endettement global à titre informatif.
 4. Rappelle brièvement les pièces clés nécessaires selon son statut (Fonctionnaire : AVI, CNI, billet à ordre, NIU ; Salarié Privé : Attestation de présence effective, attestation de virement, fiche NSIA).
-5. Réponds en français simple, professionnel et bienveillant, en 3 à 4 phrases complètes maximum, sans liste à puces."""
+5. Ne recommande qu'une offre présente dans les offres simulées compatibles. Si aucune offre n'est compatible, dis-le clairement.
+6. Réponds en français simple, professionnel et bienveillant, en 3 à 4 phrases complètes maximum, sans liste à puces."""
 
     message = _get_client().messages.create(
         model=settings.anthropic_model,

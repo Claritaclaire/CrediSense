@@ -52,12 +52,12 @@ export default function Login() {
   }
 
   return (
-    <div className="max-w-md mx-auto py-6 sm:py-10 animate-slide-up">
-      <div className="carte p-8 sm:p-10 border-t-4 border-t-or shadow-lg">
-        <div className="text-center mb-8 flex flex-col items-center">
-          <img src="/logo-credisense.png" alt="CrediSense" className="h-14 w-auto logo-frame logo-glow mb-3" />
+    <div className="max-w-md mx-auto py-4 sm:py-8 animate-slide-up">
+      <div className="carte p-5 sm:p-7 border-t-4 border-t-or shadow-lg">
+        <div className="text-center mb-5 flex flex-col items-center">
+          <img src="/logo-credisense.png" alt="CrediSense" className="h-12 w-auto logo-frame logo-glow mb-2" />
           <span className="eyebrow mb-1">Espace Client CCA Bank</span>
-          <h1 className="text-3xl font-bold text-indigo">Connexion</h1>
+          <h1 className="text-2xl font-bold text-indigo">Connexion</h1>
           <p className="text-ardoise text-xs mt-1">
             Connectez-vous pour finaliser la simulation de votre crédit.
           </p>
@@ -69,7 +69,7 @@ export default function Login() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-xs font-semibold text-ardoise uppercase tracking-wider mb-1.5">
               Adresse email
@@ -126,7 +126,7 @@ export default function Login() {
           </button>
         </form>
 
-        <div className="mt-8 pt-6 border-t border-slate-100 text-center text-sm text-ardoise">
+        <div className="mt-6 pt-4 border-t border-slate-100 text-center text-sm text-ardoise">
           <p>
             Vous n'avez pas encore de compte ?{" "}
             <Link

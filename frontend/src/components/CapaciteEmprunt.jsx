@@ -1,11 +1,13 @@
 import { Fragment, useEffect, useState } from "react";
 import client from "../api/client";
 import { useAuth } from "../context/AuthContext";
+import { useAssistant } from "../context/AssistantContext";
 
 const formateurFCFA = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
 
 export default function CapaciteEmprunt() {
   const { user } = useAuth();
+  const { ouvrirAvecQuestion } = useAssistant();
   const [revenu, setRevenu] = useState("");
   const [montant, setMontant] = useState("");
   const [charges, setCharges] = useState(0);
@@ -65,9 +67,16 @@ export default function CapaciteEmprunt() {
     }
   }
 
-  const duree12 = resultat?.durees?.find((ligne) => ligne.duree_mois === 12);
-  const mensualite12 = duree12?.mensualite_demande;
-  const demandeDansCapacite = mensualite12 != null && mensualite12 <= resultat?.mensualite_max_avec_prets;
+  // Quand la demande dépasse la capacité, on propose l'alternative la plus favorable
+  // déjà calculée par le backend : la durée qui permet d'emprunter le plus (en général
+  // la plus longue, puisqu'elle réduit la mensualité par FCFA emprunté).
+  const meilleureAlternative = resultat?.durees?.length
+    ? resultat.durees.reduce((meilleure, ligne) =>
+        !meilleure || ligne.montant_dans_capacite_avec_prets > meilleure.montant_dans_capacite_avec_prets
+          ? ligne
+          : meilleure,
+      null)
+    : null;
 
   return (
     <section className="carte space-y-5 border-l-4 border-l-or p-6">
@@ -146,6 +155,27 @@ export default function CapaciteEmprunt() {
                 <p className="text-xs">
                   La mensualité minimale sur les durées du catalogue excède votre quotité cessible disponible de <strong>{formateurFCFA.format(resultat.mensualite_max_avec_prets)} FCFA/mois</strong>.
                 </p>
+                {meilleureAlternative && meilleureAlternative.montant_dans_capacite_avec_prets > 0 && (
+                  <p className="mt-2 rounded-lg bg-white/70 px-3 py-2 text-sm font-semibold text-rose-900">
+                    💡 Avec votre capacité actuelle, vous pourriez emprunter jusqu'à{" "}
+                    <span className="underline">{formateurFCFA.format(meilleureAlternative.montant_dans_capacite_avec_prets)} FCFA</span>{" "}
+                    sur {meilleureAlternative.duree_mois} mois.
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={() =>
+                    ouvrirAvecQuestion(
+                      `Ma demande de ${formateurFCFA.format(resultat.montant_souhaite)} FCFA dépasse ma capacité ` +
+                        `(revenu ${formateurFCFA.format(resultat.revenu_mensuel)}, charges ${formateurFCFA.format(resultat.charges_mensuelles)}, ` +
+                        `prêts ${formateurFCFA.format(resultat.total_mensualites_prets_en_cours)}/mois, ` +
+                        `capacité dispo ${formateurFCFA.format(resultat.mensualite_max_avec_prets)}/mois, en FCFA). Pourquoi, et que faire ?`
+                    )
+                  }
+                  className="mt-3 inline-flex items-center gap-2 rounded-lg bg-or px-4 py-2.5 text-sm font-bold text-indigo shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:bg-amber-400 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-or focus:ring-offset-2"
+                >
+                  💬 Poser la question à l'assistant →
+                </button>
               </div>
             )}
           </div>

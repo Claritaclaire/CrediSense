@@ -355,11 +355,13 @@ export default function Simulation() {
                 <p className="text-xs font-bold uppercase tracking-widest text-or">Votre estimation</p>
                 <div className="mt-3 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
                   <div>
-                    <h2 className="text-xl font-bold">{offreSelectionnee?.nom_banque || resultat.nom_banque || "Votre crédit"}</h2>
+                    <p className="text-xs uppercase tracking-wide text-white/60">Offre sélectionnée</p>
+                    <h2 className="text-xl font-bold text-white">{offreSelectionnee?.nom_banque || resultat.nom_banque || "Votre crédit"}</h2>
                     <p className="mt-2 text-sm text-white/70">Mensualité estimée</p>
                     <p className="chiffres text-4xl font-bold text-or sm:text-5xl">{formateurFCFA.format(resultat.mensualite)} <span className="text-xl">FCFA</span></p>
                   </div>
-                  <div className="grid grid-cols-3 gap-2 text-center sm:min-w-[320px]">
+                  <div className="grid grid-cols-2 gap-2 text-center sm:min-w-[320px] sm:grid-cols-4">
+                    <div className="rounded-xl bg-white/10 p-3"><p className="text-[10px] uppercase text-white/60">Montant souhaité</p><p className="mt-1 font-bold chiffres text-sm">{formateurFCFA.format(resultat.montant)} F</p></div>
                     <div className="rounded-xl bg-white/10 p-3"><p className="text-[10px] uppercase text-white/60">TAEG</p><p className="mt-1 font-bold chiffres">{resultat.taeg?.toFixed(2)}%</p></div>
                     <div className="rounded-xl bg-white/10 p-3"><p className="text-[10px] uppercase text-white/60">Coût total</p><p className="mt-1 font-bold chiffres text-sm">{formateurFCFA.format(resultat.cout_total)} F</p></div>
                     <div className="rounded-xl bg-white/10 p-3"><p className="text-[10px] uppercase text-white/60">Durée</p><p className="mt-1 font-bold chiffres">{resultat.duree_mois} mois</p></div>
@@ -409,7 +411,7 @@ export default function Simulation() {
                       <button type="button" onClick={demanderRecommandation} disabled={!revenu || !apport} className="btn-secondaire w-full sm:w-auto">Demander une recommandation IA</button>
                     </div>
                   )}
-                  <RecommandationIA texte={recommandation} chargement={chargementIA} />
+                  <RecommandationIA texte={recommandation} chargement={chargementIA} afficherTitre={false} />
                 </div>
               </section>
 

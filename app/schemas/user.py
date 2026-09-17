@@ -9,6 +9,7 @@ class UserCreate(BaseModel):
     nom: str
     email: EmailStr
     password: str
+    telephone: str | None = None
 
 
 class UserLogin(BaseModel):
@@ -45,3 +46,4 @@ class UserUpdate(BaseModel):
     nom: str | None = None
     email: EmailStr | None = None
     password: str | None = None
+    telephone: str | None = None

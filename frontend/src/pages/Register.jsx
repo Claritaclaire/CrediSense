@@ -9,6 +9,7 @@ export default function Register() {
 
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
+  const [telephone, setTelephone] = useState("");
   const [password, setPassword] = useState("");
   const [erreur, setErreur] = useState("");
   const [chargement, setChargement] = useState(false);
@@ -20,7 +21,7 @@ export default function Register() {
     setErreur("");
     setChargement(true);
     try {
-      await register(nom, email, password);
+      await register(nom, email, password, telephone);
       navigate(targetRedirect);
     } catch (err) {
       console.error("Erreur d'inscription:", err);
@@ -33,12 +34,12 @@ export default function Register() {
   }
 
   return (
-    <div className="max-w-md mx-auto py-6 sm:py-10 animate-slide-up">
-      <div className="carte p-8 sm:p-10 border-t-4 border-t-indigo shadow-lg">
-        <div className="text-center mb-8 flex flex-col items-center">
-          <img src="/logo-credisense.png" alt="CrediSense" className="h-14 w-auto logo-frame logo-glow mb-3" />
+    <div className="max-w-md mx-auto py-4 sm:py-8 animate-slide-up">
+      <div className="carte p-5 sm:p-7 border-t-4 border-t-indigo shadow-lg">
+        <div className="text-center mb-5 flex flex-col items-center">
+          <img src="/logo-credisense.png" alt="CrediSense" className="h-12 w-auto logo-frame logo-glow mb-2" />
           <span className="eyebrow mb-1">Inscription Gratuite</span>
-          <h1 className="text-3xl font-bold text-indigo">Créer un compte</h1>
+          <h1 className="text-2xl font-bold text-indigo">Créer un compte</h1>
           <p className="text-ardoise text-xs mt-1">
             Simulez vos emprunts et enregistrez vos projets en quelques secondes.
           </p>
@@ -50,7 +51,7 @@ export default function Register() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="nom" className="block text-xs font-semibold text-ardoise uppercase tracking-wider mb-1.5">
               Nom complet
@@ -78,6 +79,20 @@ export default function Register() {
               placeholder="ex. jean.dupont@exemple.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="telephone" className="block text-xs font-semibold text-ardoise uppercase tracking-wider mb-1.5">
+              Numéro de téléphone <span className="normal-case font-normal text-ardoise/60">(optionnel)</span>
+            </label>
+            <input
+              id="telephone"
+              type="tel"
+              className="champ"
+              placeholder="ex. 679 00 96 30"
+              value={telephone}
+              onChange={(e) => setTelephone(e.target.value)}
             />
           </div>
 
@@ -122,7 +137,7 @@ export default function Register() {
           </button>
         </form>
 
-        <div className="mt-8 pt-6 border-t border-slate-100 text-center text-sm text-ardoise">
+        <div className="mt-6 pt-4 border-t border-slate-100 text-center text-sm text-ardoise">
           <p>
             Vous avez déjà un compte ?{" "}
             <Link

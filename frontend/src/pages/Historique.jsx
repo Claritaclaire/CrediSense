@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import client from "../api/client";
 import CarteOffre from "../components/CarteOffre";
 import TableauAmortissement from "../components/TableauAmortissement";
@@ -14,11 +16,15 @@ const formateurDate = new Intl.DateTimeFormat("fr-FR", {
 });
 
 export default function Historique() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [simulations, setSimulations] = useState([]);
   const [chargement, setChargement] = useState(true);
   const [detail, setDetail] = useState(null);
   const [chargementDetail, setChargementDetail] = useState(false);
   const [revenu, setRevenu] = useState("");
+  const [chargesMensuelles, setChargesMensuelles] = useState(0);
+  const [mensualitesPrets, setMensualitesPrets] = useState(0);
 
   useEffect(() => {
     client
@@ -26,6 +32,44 @@ export default function Historique() {
       .then((res) => setSimulations(res.data))
       .finally(() => setChargement(false));
   }, []);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    let annule = false;
+    async function chargerEngagements() {
+      let charges = 0;
+      let prets = 0;
+      try {
+        const profil = JSON.parse(localStorage.getItem(`credisense_profil_${user.id}`) || "{}");
+        charges = Number(profil.charges) || 0;
+        setRevenu(profil.revenu ? String(profil.revenu) : "");
+      } catch {
+        // Le profil local peut être absent ou incomplet.
+      }
+      try {
+        const { data } = await client.get("/historique-prets/");
+        prets += (data || [])
+          .filter((pret) => pret.statut === "en_cours")
+          .reduce((total, pret) => total + (pret.mensualite || 0), 0);
+      } catch {
+        // Les prêts locaux restent utilisables si l'API est indisponible.
+      }
+      try {
+        const locaux = JSON.parse(localStorage.getItem(`credisense_prets_${user.id}`) || "[]");
+        prets += (locaux || [])
+          .filter((pret) => pret.statut === "en_cours")
+          .reduce((total, pret) => total + (pret.mensualite || 0), 0);
+      } catch {
+        // Aucun prêt local disponible.
+      }
+      if (!annule) {
+        setChargesMensuelles(charges);
+        setMensualitesPrets(prets);
+      }
+    }
+    chargerEngagements();
+    return () => { annule = true; };
+  }, [user]);
 
   async function ouvrirDetail(id) {
     if (detail?.id === id) {
@@ -76,8 +120,8 @@ export default function Historique() {
       )}
 
       {!chargement && simulations.length > 0 && (
-        <div className="grid lg:grid-cols-5 gap-8">
-          <div className="lg:col-span-2">
+        <div className="grid gap-8 lg:grid-cols-5">
+          <div className={`${detail ? "hidden lg:block" : "block"} lg:col-span-2`}>
             <div className="carte overflow-hidden">
               <ul className="divide-y divide-ardoise/10">
                 {simulations.map((sim) => (
@@ -122,7 +166,7 @@ export default function Historique() {
             </div>
           </div>
 
-          <div className="lg:col-span-3">
+          <div className={`${detail ? "block" : "hidden lg:block"} lg:col-span-3`}>
             {!detail && !chargementDetail && (
               <p className="text-sm text-white/80">Sélectionnez une simulation pour afficher son détail.</p>
             )}
@@ -131,6 +175,9 @@ export default function Historique() {
 
             {detail && !chargementDetail && (
               <div className="space-y-6">
+                <button type="button" onClick={() => setDetail(null)} className="btn-ghost lg:hidden">
+                  ← Retour à mes simulations
+                </button>
                 <CarteOffre
                   offre={{
                     nom_banque: detail.nom_banque || "Simulation",
@@ -143,19 +190,16 @@ export default function Historique() {
                 />
 
                 <div className="carte p-4">
-                  <label className="block text-sm text-ardoise mb-1">
-                    Revenu mensuel (pour le taux d'endettement)
-                  </label>
-                  <input
-                    type="number"
-                    className="champ chiffres max-w-xs"
-                    placeholder="Ex. 350 000"
-                    value={revenu}
-                    onChange={(e) => setRevenu(e.target.value)}
-                  />
+                  <label className="mb-1 block text-sm text-ardoise">Engagements financiers utilisés</label>
+                  <p className="text-xs text-ardoise">Revenu : <strong className="text-indigo">{revenu ? formateurFCFA.format(Number(revenu)) : "non renseigné"} FCFA</strong> · Charges : <strong className="text-indigo">{formateurFCFA.format(chargesMensuelles)} FCFA</strong> · Prêts en cours : <strong className="text-indigo">{formateurFCFA.format(mensualitesPrets)} FCFA</strong></p>
+                  <p className="mt-2 text-xs text-slate-500">Ces valeurs proviennent de votre profil et de vos prêts enregistrés.</p>
                 </div>
 
-                <BadgeEndettement mensualite={detail.mensualite} revenu={revenu} />
+                <BadgeEndettement mensualite={detail.mensualite} revenu={revenu} chargesMensuelles={chargesMensuelles} mensualitesPrets={mensualitesPrets} />
+
+                <button type="button" onClick={() => navigate(`/simulation?offre_id=${detail.offre_id}&montant=${detail.montant}&duree=${detail.duree_mois}`)} className="btn-primaire w-full sm:w-auto">
+                  Refaire cette simulation →
+                </button>
 
                 {detail.tableau_amortissement && (
                   <>

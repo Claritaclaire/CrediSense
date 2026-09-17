@@ -20,9 +20,15 @@ class ExplicationClauseRequest(BaseModel):
     texte_clause: str
 
 
+class MessageHistorique(BaseModel):
+    role: str  # "user" | "assistant"
+    contenu: str
+
+
 class AssistantRequest(BaseModel):
     question: str
     page: Optional[str] = None
+    historique: Optional[list[MessageHistorique]] = None
 
 
 class MessageIAOut(BaseModel):

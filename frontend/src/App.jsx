@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { AssistantProvider } from "./context/AssistantContext.jsx";
 import PageLayout from "./components/layout/PageLayout.jsx";
 import AdminLayout from "./components/admin/AdminLayout.jsx";
 
@@ -60,6 +61,7 @@ function RouteAdminSysteme({ children }) {
 function AppRoutes() {
   return (
     <BrowserRouter>
+      <AssistantProvider>
       <PageLayout large>
         <Routes>
           <Route path="/" element={<Accueil />} />
@@ -153,6 +155,7 @@ function AppRoutes() {
         </Routes>
       </PageLayout>
       <AssistantFlottant />
+      </AssistantProvider>
     </BrowserRouter>
   );
 }

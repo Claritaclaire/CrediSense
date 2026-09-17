@@ -135,7 +135,7 @@ export function PiedDePage() {
         <div className="flex items-center gap-3">
           <img src="/logo-credisense.png" alt="CrediSense" className="h-8 w-auto logo-frame logo-glow" />
           <span className="text-xs sm:text-sm font-medium">
-            CrediSense — <span className="text-or italic">La finance au cœur des traditions africaines.</span>
+            CrediSense — <span className="text-or italic">L'intelligence financière.</span>
           </span>
         </div>
         <p className="chiffres text-xs text-slate-300">CCA Bank · TAEG · Mensualités · Recommandation IA · FCFA</p>

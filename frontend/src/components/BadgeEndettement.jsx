@@ -6,7 +6,7 @@ const styles = {
   eleve: { bg: "bg-argile/10", border: "border-argile", texte: "text-argile", label: "Risque élevé" },
 };
 
-function calculerQuotiteCessible(revenu) {
+export function calculerQuotiteCessible(revenu) {
   const tranches = [
     [18750, 0.1],
     [37500, 0.2],

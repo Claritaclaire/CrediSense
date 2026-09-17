@@ -91,9 +91,9 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const register = useCallback(async (nom, email, password) => {
+  const register = useCallback(async (nom, email, password, telephone) => {
     try {
-      await client.post("/auth/register", { nom, email, password });
+      await client.post("/auth/register", { nom, email, password, telephone: telephone || null });
       // Après inscription, on connecte directement l'utilisateur
       await login(email, password);
     } catch (error) {

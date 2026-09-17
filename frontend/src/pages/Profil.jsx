@@ -8,6 +8,7 @@ export default function Profil() {
   // Infos de compte & financières (gauche)
   const [nom, setNom] = useState(user?.nom || "");
   const [email, setEmail] = useState(user?.email || "");
+  const [telephone, setTelephone] = useState(user?.telephone || "");
   const [profession, setProfession] = useState("");
   const [revenuMensuel, setRevenuMensuel] = useState("");
   const [chargesMensuelles, setChargesMensuelles] = useState("");
@@ -115,6 +116,7 @@ export default function Profil() {
       const payload = {};
       if (nom && nom !== user.nom) payload.nom = nom;
       if (email && email !== user.email) payload.email = email;
+      if (telephone !== (user.telephone || "")) payload.telephone = telephone;
       if (password) payload.password = password;
 
       if (Object.keys(payload).length > 0) {
@@ -283,6 +285,19 @@ export default function Profil() {
                 className="champ"
                 value={nom}
                 onChange={(e) => setNom(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-ardoise uppercase tracking-wider mb-1">
+                Numéro de téléphone
+              </label>
+              <input
+                type="tel"
+                placeholder="ex. 679 00 96 30"
+                className="champ"
+                value={telephone}
+                onChange={(e) => setTelephone(e.target.value)}
               />
             </div>
 

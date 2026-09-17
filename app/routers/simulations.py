@@ -98,6 +98,7 @@ def comparer_offres(
             "offre_id": str(offre.id),
             "nom_banque": offre.nom_banque,
             "mensualite": resultat["mensualite"],
+            "assurance_mensuelle": resultat["assurance_mensuelle"],
             "taeg": resultat["taeg"],
             "cout_total": resultat["cout_total"],
         })
@@ -105,6 +106,84 @@ def comparer_offres(
     # Tri par TAEG croissant (le vrai critère de comparaison, pas le taux nominal)
     resultats.sort(key=lambda r: r["taeg"])
     return resultats
+
+
+def _indicateurs_offre_duree(
+    offre: OffreCredit, duree: int, montant_souhaite: float,
+    mensualite_max_avec_prets: float, mensualite_max_sans_prets: float,
+) -> dict | None:
+    """Calcule les indicateurs (mensualité demandée, capacité max...) d'UNE offre pour
+    UNE durée donnée. Renvoie None si la durée est hors des bornes de cette offre."""
+    if not (offre.duree_min_mois <= duree <= offre.duree_max_mois):
+        return None
+
+    frais_dossier_min = 5000.0 if "scolaire" in offre.nom_banque.lower() else 0.0
+    capacite_avec_prets = calculer_capacite_offre(
+        mensualite_max=max(0.0, mensualite_max_avec_prets),
+        taux_annuel=offre.taux_annuel, duree_mois=duree,
+        frais_dossier_pct=offre.frais_dossier_pct, assurance_pct_an=offre.assurance_pct_an,
+        montant_max=offre.montant_max, frais_dossier_min=frais_dossier_min,
+    )
+    capacite_sans_prets = calculer_capacite_offre(
+        mensualite_max=max(0.0, mensualite_max_sans_prets),
+        taux_annuel=offre.taux_annuel, duree_mois=duree,
+        frais_dossier_pct=offre.frais_dossier_pct, assurance_pct_an=offre.assurance_pct_an,
+        montant_max=offre.montant_max, frais_dossier_min=frais_dossier_min,
+    )
+    simulation_demandee = None
+    if montant_souhaite <= offre.montant_max:
+        try:
+            simulation_demandee = _executer_simulation(offre, montant_souhaite, duree)
+        except Exception:
+            simulation_demandee = None
+
+    return {
+        "duree_mois": duree,
+        "mensualite_demande": (
+            round(simulation_demandee["mensualite"] + simulation_demandee["assurance_mensuelle"], 2)
+            if simulation_demandee else None
+        ),
+        "cout_total_demande": (
+            round(simulation_demandee["cout_total"], 2) if simulation_demandee else None
+        ),
+        "montant_dans_capacite_avec_prets": capacite_avec_prets["montant_max_indicatif"],
+        "montant_dans_capacite_sans_prets": capacite_sans_prets["montant_max_indicatif"],
+        "tableau_amortissement": simulation_demandee["tableau_amortissement"] if simulation_demandee else [],
+    }
+
+
+def _meilleures_lignes_par_duree(
+    offres: list, durees: list, montant_souhaite: float,
+    mensualite_max_avec_prets: float, mensualite_max_sans_prets: float,
+) -> dict:
+    """Pour chaque durée testée, retient l'offre donnant la plus forte capacité
+    d'emprunt (et, a defaut, la mensualite la plus basse pour le montant demande)."""
+    resultats_par_duree: dict[int, dict] = {}
+    for offre in offres:
+        for duree in durees:
+            ligne = _indicateurs_offre_duree(
+                offre, duree, montant_souhaite, mensualite_max_avec_prets, mensualite_max_sans_prets
+            )
+            if ligne is None:
+                continue
+
+            existant = resultats_par_duree.get(duree)
+            if not existant:
+                resultats_par_duree[duree] = ligne
+                continue
+
+            existant["montant_dans_capacite_avec_prets"] = max(
+                existant["montant_dans_capacite_avec_prets"], ligne["montant_dans_capacite_avec_prets"]
+            )
+            existant["montant_dans_capacite_sans_prets"] = max(
+                existant["montant_dans_capacite_sans_prets"], ligne["montant_dans_capacite_sans_prets"]
+            )
+            if ligne["mensualite_demande"] is not None:
+                if existant["mensualite_demande"] is None or ligne["mensualite_demande"] < existant["mensualite_demande"]:
+                    existant["mensualite_demande"] = ligne["mensualite_demande"]
+                    existant["cout_total_demande"] = ligne["cout_total_demande"]
+                    existant["tableau_amortissement"] = ligne["tableau_amortissement"]
+    return resultats_par_duree
 
 
 @router.post("/capacite")
@@ -127,104 +206,41 @@ def calculer_capacite(
     mensualite_max_avec_prets = mensualite_max_sans_prets - data.total_mensualites_prets_en_cours
 
     offres = db.query(OffreCredit).filter(OffreCredit.actif.is_(True)).all()
-    resultats_bruts = []
 
     # Jalon de durées standards à évaluer (en mois)
     jalons_durees = [3, 6, 12, 18, 24, 36, 48, 60, 72, 84, 96, 108, 120]
 
+    # Union des durées a tester : les jalons qui tombent dans la plage de chaque offre,
+    # plus un repli tous les 12 mois pour les offres dont la plage ne croise aucun jalon
+    # (ex. une offre limitee a 1 mois).
+    durees_a_tester = set()
     for offre in offres:
-        frais_dossier_min = 5000.0 if "scolaire" in offre.nom_banque.lower() else 0.0
-        # Sélectionner les durées applicables pour cette offre
-        durees_applicables = [
-            d for d in jalons_durees
-            if offre.duree_min_mois <= d <= offre.duree_max_mois
-        ]
-        if not durees_applicables:
-            # Fallback si l'offre a une durée spécifique hors jalons
-            durees_applicables = list(range(offre.duree_min_mois, offre.duree_max_mois + 1, 12))
+        applicables = [d for d in jalons_durees if offre.duree_min_mois <= d <= offre.duree_max_mois]
+        if not applicables:
+            applicables = list(range(offre.duree_min_mois, offre.duree_max_mois + 1, 12))
+        durees_a_tester.update(applicables)
 
-        for duree in durees_applicables:
-            capacite_avec_prets = calculer_capacite_offre(
-                mensualite_max=max(0.0, mensualite_max_avec_prets),
-                taux_annuel=offre.taux_annuel, duree_mois=duree,
-                frais_dossier_pct=offre.frais_dossier_pct, assurance_pct_an=offre.assurance_pct_an,
-                montant_max=offre.montant_max, frais_dossier_min=frais_dossier_min,
-            )
-            capacite_sans_prets = calculer_capacite_offre(
-                mensualite_max=max(0.0, mensualite_max_sans_prets),
-                taux_annuel=offre.taux_annuel, duree_mois=duree,
-                frais_dossier_pct=offre.frais_dossier_pct, assurance_pct_an=offre.assurance_pct_an,
-                montant_max=offre.montant_max, frais_dossier_min=frais_dossier_min,
-            )
-            simulation_demandee = None
-            if data.montant_souhaite <= offre.montant_max:
-                try:
-                    simulation_demandee = _executer_simulation(offre, data.montant_souhaite, duree)
-                except Exception:
-                    simulation_demandee = None
-
-            mensualite_demande = (
-                round(simulation_demandee["mensualite"] + simulation_demandee["assurance_mensuelle"], 2)
-                if simulation_demandee else None
-            )
-            cout_total_demande = (
-                round(simulation_demandee["cout_total"], 2)
-                if simulation_demandee else None
-            )
-
-            resultats_bruts.append({
-                "offre_id": str(offre.id),
-                "nom_banque": offre.nom_banque,
-                "duree_mois": duree,
-                "mensualite_demande": mensualite_demande,
-                "cout_total_demande": cout_total_demande,
-                "montant_dans_capacite_avec_prets": capacite_avec_prets["montant_max_indicatif"],
-                "montant_dans_capacite_sans_prets": capacite_sans_prets["montant_max_indicatif"],
-                "tableau_amortissement": simulation_demandee["tableau_amortissement"] if simulation_demandee else [],
-            })
-
-    # Regroupement des capacités par durée en retenant l'offre offrant la plus forte capacité d'emprunt pour chaque durée
-    resultats_par_duree = {}
-    for ligne in resultats_bruts:
-        duree = ligne["duree_mois"]
-        existant = resultats_par_duree.get(duree)
-        if not existant:
-            resultats_par_duree[duree] = {
-                "duree_mois": duree,
-                "mensualite_demande": ligne["mensualite_demande"],
-                "cout_total_demande": ligne["cout_total_demande"],
-                "montant_dans_capacite_avec_prets": ligne["montant_dans_capacite_avec_prets"],
-                "montant_dans_capacite_sans_prets": ligne["montant_dans_capacite_sans_prets"],
-                "tableau_amortissement": ligne["tableau_amortissement"],
-            }
-        else:
-            existant["montant_dans_capacite_avec_prets"] = max(
-                existant["montant_dans_capacite_avec_prets"],
-                ligne["montant_dans_capacite_avec_prets"],
-            )
-            existant["montant_dans_capacite_sans_prets"] = max(
-                existant["montant_dans_capacite_sans_prets"],
-                ligne["montant_dans_capacite_sans_prets"],
-            )
-            if ligne["mensualite_demande"] is not None:
-                if existant["mensualite_demande"] is None or ligne["mensualite_demande"] < existant["mensualite_demande"]:
-                    existant["mensualite_demande"] = ligne["mensualite_demande"]
-                    existant["cout_total_demande"] = ligne["cout_total_demande"]
-                    existant["tableau_amortissement"] = ligne["tableau_amortissement"]
+    resultats_par_duree = _meilleures_lignes_par_duree(
+        offres, sorted(durees_a_tester), data.montant_souhaite, mensualite_max_avec_prets, mensualite_max_sans_prets
+    )
 
     resultats = sorted(resultats_par_duree.values(), key=lambda ligne: ligne["duree_mois"])
 
     # Évaluation de la faisabilité pour chaque durée
     capacite_disponible = max(0.0, mensualite_max_avec_prets)
-    for ligne in resultats:
+
+    def _est_faisable(ligne: dict) -> bool:
         mensualite = ligne.get("mensualite_demande")
-        ligne["faisable"] = (
+        return (
             mensualite is not None
             and mensualite <= capacite_disponible
             and ligne["montant_dans_capacite_avec_prets"] >= data.montant_souhaite
         )
 
-    # Recherche de la première durée (minimale) où le prêt est réalisable
+    for ligne in resultats:
+        ligne["faisable"] = _est_faisable(ligne)
+
+    # Recherche de la première durée (minimale) où le prêt est réalisable, parmi les jalons
     premiere_duree_faisable = next((l for l in resultats if l["faisable"]), None)
 
     if premiere_duree_faisable:
@@ -232,6 +248,34 @@ def calculer_capacite(
         mensualite_duree_min = premiere_duree_faisable["mensualite_demande"]
         cout_total_duree_min = premiere_duree_faisable["cout_total_demande"]
         demande_faisable = True
+
+        # Affinage mois par mois : les jalons sont espacés (ex. 18 puis 24 mois), donc la
+        # duree minimale reelle peut etre plus courte que le premier jalon realisable.
+        # On recherche entre le jalon precedent (non realisable) et celui-ci.
+        index_jalon = jalons_durees.index(duree_min_faisable) if duree_min_faisable in jalons_durees else None
+        duree_jalon_precedent = jalons_durees[index_jalon - 1] if index_jalon else 0
+        durees_a_affiner = list(range(duree_jalon_precedent + 1, duree_min_faisable))
+
+        if durees_a_affiner:
+            lignes_affinees = _meilleures_lignes_par_duree(
+                offres, durees_a_affiner, data.montant_souhaite,
+                mensualite_max_avec_prets, mensualite_max_sans_prets,
+            )
+            for ligne in lignes_affinees.values():
+                ligne["faisable"] = _est_faisable(ligne)
+
+            premiere_duree_affinee = next(
+                (lignes_affinees[d] for d in sorted(lignes_affinees) if lignes_affinees[d]["faisable"]),
+                None,
+            )
+            if premiere_duree_affinee:
+                duree_min_faisable = premiere_duree_affinee["duree_mois"]
+                mensualite_duree_min = premiere_duree_affinee["mensualite_demande"]
+                cout_total_duree_min = premiere_duree_affinee["cout_total_demande"]
+                # On insere cette duree affinee dans le tableau affiche, pour que
+                # l'utilisateur voie exactement pourquoi c'est le bon minimum.
+                resultats_par_duree[duree_min_faisable] = premiere_duree_affinee
+                resultats = sorted(resultats_par_duree.values(), key=lambda ligne: ligne["duree_mois"])
     else:
         duree_min_faisable = None
         mensualite_duree_min = None

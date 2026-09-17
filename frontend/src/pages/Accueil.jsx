@@ -111,11 +111,11 @@ export default function Accueil() {
           </span>
 
           <h1 className="text-4xl sm:text-6xl font-extrabold font-display leading-tight text-white tracking-tight">
-            Calculez, comparez et obtenez votre crédit <span className="text-or">en toute sécurité</span>.
+            Calculez, comparez et préparez votre crédit <span className="text-or">en toute sécurité</span>.
           </h1>
 
           <p className="text-papier/85 text-base sm:text-xl leading-relaxed max-w-2xl font-light">
-            Découvrez nos 4 solutions de crédit phares sans engagement. Simulez vos mensualités au franc près avant de déposer votre dossier en ligne.
+            Découvrez nos  solutions de crédit phares. Simulez vos mensualités au franc près et suivez votre demande avec accompagnement bancaire.
           </p>
 
           <div className="pt-4 flex flex-wrap items-center gap-4">
@@ -226,7 +226,7 @@ export default function Accueil() {
       <section className="carte p-8 sm:p-12 bg-white rounded-2xl border border-ardoise/15 shadow-sm space-y-8">
         <div className="text-center space-y-2">
           <span className="eyebrow">Parcours Transparent</span>
-          <h2 className="section-titre">Comment obtenir votre prêt CCA Bank</h2>
+          <h2 className="text-3xl md:text-4xl font-display leading-tight text-indigo font-bold tracking-tight">Comment obtenir votre prêt CCA Bank</h2>
         </div>
 
         <ol className="grid sm:grid-cols-4 gap-6">

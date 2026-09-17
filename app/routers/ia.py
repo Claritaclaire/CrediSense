@@ -14,6 +14,7 @@ from app.schemas.message_ia import (
 from app.services.claude_service import (
     generer_recommandation_locale,
     expliquer_clause_locale,
+    repondre_assistant_locale,
 )
 from app.services.dify_service import (
     generer_recommandation,
@@ -29,7 +30,10 @@ logger = logging.getLogger(__name__)
 
 @router.post("/recommandation", response_model=MessageIAOut)
 def recommandation(data: RecommandationRequest, db: Session = Depends(get_db)):
-    offres = db.query(OffreCredit).filter(OffreCredit.montant_max >= data.montant_souhaite).all()
+    offres = db.query(OffreCredit).filter(
+        OffreCredit.actif.is_(True),
+        OffreCredit.montant_max >= data.montant_souhaite,
+    ).all()
     quotite = calculer_quotite_cessible_legale(data.revenu_mensuel)
     mensualite_max = max(
         0.0,
@@ -130,13 +134,10 @@ def assistant(data: AssistantRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=422, detail="La question ne peut pas être vide.")
 
     try:
-        reponse_ia = repondre_assistant(question, data.page)
+        reponse_ia = repondre_assistant(question, data.page, data.historique)
     except Exception:
         logger.exception("Échec Dify lors de la question de l'assistant")
-        raise HTTPException(
-            status_code=503,
-            detail="L'assistant est momentanément indisponible.",
-        )
+        reponse_ia = repondre_assistant_locale(question)
 
     message = MessageIA(
         simulation_id=None,

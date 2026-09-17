@@ -30,7 +30,7 @@ def modifier_mon_profil(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    """Permet à l'utilisateur connecté de modifier son nom, email ou mot de passe"""
+    """Permet à l'utilisateur connecté de modifier son nom, email, téléphone ou mot de passe"""
     if user_data.email and user_data.email != current_user.email:
         existant = db.query(User).filter(User.email == user_data.email).first()
         if existant:
@@ -42,6 +42,9 @@ def modifier_mon_profil(
 
     if user_data.nom:
         current_user.nom = user_data.nom
+
+    if user_data.telephone is not None:
+        current_user.telephone = user_data.telephone
 
     if user_data.password:
         from app.services.auth_service import hash_password

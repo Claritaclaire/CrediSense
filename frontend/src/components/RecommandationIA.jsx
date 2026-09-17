@@ -1,4 +1,6 @@
-export default function RecommandationIA({ texte, chargement, titre = "Conseil personnalisé" }) {
+import TexteIA from "./TexteIA";
+
+export default function RecommandationIA({ texte, chargement, titre = "Conseil personnalisé", afficherTitre = true }) {
   if (chargement) {
     return (
       <div className="border-l-2 border-or pl-4 py-1">
@@ -11,13 +13,11 @@ export default function RecommandationIA({ texte, chargement, titre = "Conseil p
 
   return (
     <div className="border-l-2 border-or pl-4 py-1">
-      <p className="eyebrow mb-2">{titre}</p>
-      <p className="text-indigo leading-relaxed">{texte}</p>
-      {titre === "Conseil personnalisé" && (
-        <p className="text-xs text-ardoise mt-3">
-          Cette recommandation est indicative et ne remplace pas l'avis d'un conseiller bancaire.
-        </p>
-      )}
+      {afficherTitre && <p className="eyebrow mb-2">{titre}</p>}
+      <p className="text-indigo leading-relaxed"><TexteIA texte={texte} /></p>
+      <p className="text-xs text-ardoise mt-3">
+        Cette recommandation est indicative et ne remplace pas l'avis d'un conseiller bancaire.
+      </p>
     </div>
   );
 }
