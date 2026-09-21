@@ -3,11 +3,11 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    database_url: str
-    secret_key: str
+    database_url: str = Field(default="sqlite:///./credit_simulateur.db", validation_alias="DATABASE_URL")
+    secret_key: str = Field(default="credisense-dev-secret-key-32charsminimum!", validation_alias="SECRET_KEY")
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
-    anthropic_api_key: str
+    anthropic_api_key: str = Field(default="", validation_alias="ANTHROPIC_API_KEY")
     anthropic_model: str = "claude-haiku-4-5-20251001"
     anthropic_timeout_seconds: float = 25.0
     dify_api_key: str = ""

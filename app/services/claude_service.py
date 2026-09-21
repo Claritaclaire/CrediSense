@@ -231,32 +231,38 @@ def generer_recommandation(profil: dict, offres_simulees: list[dict]) -> str:
     profession_str = profil.get("profession") or "Non précisée"
     charges_fixes = profil.get("charges_mensuelles") or 0
     prets_existants = profil.get("total_mensualites_prets_en_cours") or 0
+    quotite_totale = profil.get("quotite_cessible_totale") or 0
+    mensualite_max_disponible = profil.get("mensualite_maximale_disponible") or 0
+    revenu = profil.get("revenu_mensuel") or 0
+    apport = profil.get("apport") or 0
+    montant_souhaite = profil.get("montant_souhaite") or 0
+    duree_mois = profil.get("duree_mois") or 0
+    offre_choisie = profil.get("offre_id") or "non précisée"
 
     prompt = f"""Réponds directement au client final. N'écris jamais ton raisonnement, tes calculs intermédiaires, ni des phrases en anglais.
 
 Voici les informations complètes du client :
 - Projet / Objet du crédit : {projet_str}
 - Profession / Statut professionnel : {profession_str}
-- Revenu mensuel : {profil['revenu_mensuel']} FCFA
+- Revenu mensuel : {revenu} FCFA
 - Charges fixes mensuelles (hors crédit) : {charges_fixes} FCFA
 - Mensualités de crédits déjà en cours : {prets_existants} FCFA
 - Quotité cessible légale totale : {quotite_totale} FCFA
 - Mensualité maximale disponible après charges et prêts : {mensualite_max_disponible} FCFA
-- Apport disponible : {profil['apport']} FCFA
-- Montant du nouveau crédit souhaité : {profil['montant_souhaite']} FCFA
-- Durée souhaitée : {profil['duree_mois']} mois
-- Offre choisie par le client : {profil.get('offre_id') or 'non précisée'}
-- Quotité cessible disponible après charges et prêts : {profil.get('mensualite_maximale_disponible') or 0} FCFA
+- Apport disponible : {apport} FCFA
+- Montant du nouveau crédit souhaité : {montant_souhaite} FCFA
+- Durée souhaitée : {duree_mois} mois
+- Offre choisie par le client : {offre_choisie}
 
 Voici les offres simulées, triées par TAEG croissant : {offres_simulees}
 
-Consignes d'analyse banquaires CCA Bank :
+Consignes d'analyse bancaire CCA Bank :
 1. Prends en compte l'objectif du projet ({projet_str}) et la situation globale du client.
-2. Recommande uniquement une offre dont la mensualité complète (mensualité + assurance) ne dépasse pas la mensualité maximale disponible selon la quotité cessible.
-3. Vérifie que la mensualité complète (mensualité + assurance) respecte la mensualité maximale disponible calculée avec la quotité cessible légale. Présente aussi le taux d'endettement global à titre informatif.
-4. Rappelle brièvement les pièces clés nécessaires selon son statut (Fonctionnaire : AVI, CNI, billet à ordre, NIU ; Salarié Privé : Attestation de présence effective, attestation de virement, fiche NSIA).
-5. Ne recommande qu'une offre présente dans les offres simulées compatibles. Si aucune offre n'est compatible, dis-le clairement.
-6. Réponds en français simple, professionnel et bienveillant, en 3 à 4 phrases complètes maximum, sans liste à puces."""
+2. Recommande l'offre en 1ère position si sa mensualité complète (mensualité + assurance) ne dépasse pas la mensualité maximale disponible ({mensualite_max_disponible} FCFA).
+3. Mentionne le TAEG exact et la mensualité en FCFA (jamais en euros).
+4. Rappelle brièvement les pièces clés selon son statut ({profession_str}).
+5. Si aucune offre n'est compatible, explique-le clairement et conseille de réduire le montant ou d'augmenter la durée.
+6. Réponds en français simple, professionnel et bienveillant, en 3 à 4 phrases maximum, sans liste à puces."""
 
     message = _get_client().messages.create(
         model=settings.anthropic_model,

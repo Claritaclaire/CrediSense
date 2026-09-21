@@ -1,7 +1,13 @@
 import axios from "axios";
 
+const apiBaseURL =
+  import.meta.env.VITE_API_URL ||
+  (typeof window !== "undefined" && window.location.origin.includes(":5173")
+    ? "http://127.0.0.1:8000"
+    : "");
+
 const client = axios.create({
-  baseURL: "http://127.0.0.1:8000",
+  baseURL: apiBaseURL,
 });
 
 // Log requests

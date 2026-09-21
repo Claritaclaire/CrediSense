@@ -1,8 +1,7 @@
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, Float, Integer, DateTime, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, Float, Integer, DateTime, ForeignKey, Uuid
 from sqlalchemy.orm import relationship
 
 from app.database import Base
@@ -11,9 +10,9 @@ from app.database import Base
 class Simulation(Base):
     __tablename__ = "simulations"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
-    offre_id = Column(UUID(as_uuid=True), ForeignKey("offres_credit.id"), nullable=False)
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    user_id = Column(Uuid, ForeignKey("users.id"), nullable=False)
+    offre_id = Column(Uuid, ForeignKey("offres_credit.id"), nullable=False)
 
     montant = Column(Float, nullable=False)
     duree_mois = Column(Integer, nullable=False)

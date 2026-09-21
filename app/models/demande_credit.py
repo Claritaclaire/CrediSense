@@ -1,8 +1,7 @@
 import enum
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, DateTime, ForeignKey, Enum as SQLEnum, Float, Integer
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, String, DateTime, ForeignKey, Enum as SQLEnum, Float, Integer, Text, Uuid
 from sqlalchemy.orm import relationship
 from app.database import Base
 
@@ -19,21 +18,21 @@ class StatutDemande(str, enum.Enum):
 class DemandeCredit(Base):
     __tablename__ = "demandes_credit"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
-    simulation_id = Column(UUID(as_uuid=True), ForeignKey("simulations.id"), nullable=True)  # Optionnel
+    id = Column(Uuid, primary_key=True, default=uuid.uuid4)
+    user_id = Column(Uuid, ForeignKey("users.id"), nullable=False)
+    simulation_id = Column(Uuid, ForeignKey("simulations.id"), nullable=True)  # Optionnel
 
     montant_demande = Column(Float, nullable=False)
     duree_souhaitee = Column(Integer, nullable=False)
     apport = Column(Float, default=0.0)
-    motif = Column(String)  # Pourquoi ce crédit ?
+    motif = Column(Text, nullable=True)  # Pourquoi ce crédit ?
 
-    statut = Column(SQLEnum(StatutDemande), default=StatutDemande.en_attente, nullable=False)
+    statut = Column(SQLEnum(StatutDemande, native_enum=False), default=StatutDemande.en_attente, nullable=False)
     date_creation = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     date_mise_a_jour = Column(DateTime, default=lambda: datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
 
     # Relation avec l'utilisateur qui a traité la demande (conseiller/admin)
-    traite_par_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
+    traite_par_id = Column(Uuid, ForeignKey("users.id"), nullable=True)
     traite_par = relationship("User", foreign_keys=[traite_par_id])
 
     # Relations
