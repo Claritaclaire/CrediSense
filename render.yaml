@@ -40,10 +40,8 @@ services:
   # ==========================================
   # Service Frontend (React + Vite + SPA)
   # ==========================================
-  - type: web
+  - type: static
     name: credisense-frontend
-    runtime: static
-    plan: free
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
     routes:
