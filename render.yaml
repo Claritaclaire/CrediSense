@@ -43,7 +43,6 @@ services:
   - type: web
     name: credisense-frontend
     runtime: static
-    region: frankfurt
     plan: free
     buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist

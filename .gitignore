@@ -1,6 +1,8 @@
 .env
 
-.env.example
+
 __pycache__/
 *.pyc
 frontend/dist/
+.venv/
+venv/
