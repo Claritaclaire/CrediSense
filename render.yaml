@@ -43,8 +43,9 @@ services:
   - type: web
     name: credisense-frontend
     runtime: static
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/dist
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
     routes:
       # Règle impérative pour le routage client React Router (SPA)
       - type: rewrite
