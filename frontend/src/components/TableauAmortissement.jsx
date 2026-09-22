@@ -8,7 +8,14 @@ const formateurFCFA = new Intl.NumberFormat("fr-FR", {
 
 const LIGNES_PAR_PAGE = 12;
 
-export default function TableauAmortissement({ lignes, nomExport = "amortissement", afficherInterets = false }) {
+export default function TableauAmortissement({
+  lignes,
+  nomExport = "amortissement",
+  afficherInterets = false,
+  montantSouhaite,
+  mensualite,
+  nomBanque,
+}) {
   const [page, setPage] = useState(0);
 
   if (!lignes || lignes.length === 0) return null;
@@ -16,16 +23,17 @@ export default function TableauAmortissement({ lignes, nomExport = "amortissemen
   const totalPages = Math.ceil(lignes.length / LIGNES_PAR_PAGE);
   const debut = page * LIGNES_PAR_PAGE;
   const lignesPage = lignes.slice(debut, debut + LIGNES_PAR_PAGE);
+  const resume = { montantSouhaite, mensualite, nomBanque };
 
   return (
     <div className="carte p-5">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
         <p className="eyebrow">Tableau d'amortissement</p>
         <div className="flex flex-wrap gap-2">
-          <button type="button" onClick={() => exporterPDF(lignes, "Tableau d'amortissement", afficherInterets)} className="btn-ghost text-indigo border border-ardoise/20">
+          <button type="button" onClick={() => exporterPDF(lignes, "Tableau d'amortissement", afficherInterets, resume)} className="btn-ghost text-indigo border border-ardoise/20">
             ↓ Exporter PDF
           </button>
-          <button type="button" onClick={() => exporterCSV(lignes, nomExport, afficherInterets)} className="btn-ghost text-indigo border border-ardoise/20">
+          <button type="button" onClick={() => exporterCSV(lignes, nomExport, afficherInterets, resume)} className="btn-ghost text-indigo border border-ardoise/20">
             ↓ Exporter CSV
           </button>
         </div>

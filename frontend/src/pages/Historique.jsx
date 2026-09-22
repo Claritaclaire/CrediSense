@@ -207,6 +207,9 @@ export default function Historique() {
                     <TableauAmortissement
                       lignes={detail.tableau_amortissement}
                       nomExport={`historique-${detail.nom_banque || "credit"}`.replace(/\s+/g, "-")}
+                      montantSouhaite={detail.montant}
+                      mensualite={detail.mensualite}
+                      nomBanque={detail.nom_banque}
                     />
                   </>
                 )}

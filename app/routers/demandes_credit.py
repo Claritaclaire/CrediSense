@@ -129,7 +129,7 @@ def mettre_a_jour_demande(
 
 Votre demande de crédit (référence #{demande.id}) a été approuvée par notre équipe.
 
-Montant demandé : {demande.montant_demande:,.2f} €
+Montant demandé : {demande.montant_demande:,.0f} FCFA
 Durée souhaitée : {demande.duree_souhaitee} mois
 
 Veuillez vous présenter en agence avec les pièces justificatives nécessaires (pièce d'identité, justificatif de domicile, dernières fiches de paie, avis d'imposition, etc.) afin de finaliser votre dossier.
@@ -137,7 +137,7 @@ Veuillez vous présenter en agence avec les pièces justificatives nécessaires 
 Nous reviendrons vers vous très prochainement pour les étapes suivantes.
 
 Cordialement,
-L’équipe Crédit Simulateur
+CrediSense
 """
             else:  # refusé
                 sujet = "Votre demande de crédit a été refusée ❌"
@@ -145,13 +145,13 @@ L’équipe Crédit Simulateur
 
 Nous regrettons de vous informer que votre demande de crédit (référence #{demande.id}) a été refusée.
 
-Montant demandé : {demande.montant_demande:,.2f} €
+Montant demandé : {demande.montant_demande:,.0f} FCFA
 Durée souhaitée : {demande.duree_souhaitee} mois
 
 Si vous souhaitez connaître les raisons exactes ou discuter d’une alternative, n’hésitez pas à nous contacter ou à passer en agence avec vos documents pour un nouvel examen.
 
 Cordialement,
-L’équipe Crédit Simulateur
+CrediSense
 """
             # Send email in background to avoid blocking the response
             background_tasks.add_task(send_email, sujet, [client.email], body)

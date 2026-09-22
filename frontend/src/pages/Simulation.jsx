@@ -418,7 +418,7 @@ export default function Simulation() {
               {resultat.tableau_amortissement && (
                 <details className="group rounded-xl border border-white/40 bg-white/80 p-1">
                   <summary className="cursor-pointer list-none px-5 py-4 font-bold text-indigo">Voir le tableau d'amortissement complet <span className="ml-2 text-or group-open:hidden">+</span><span className="ml-2 text-or hidden group-open:inline">−</span></summary>
-                  <div className="px-1 pb-1"><TableauAmortissement lignes={resultat.tableau_amortissement} nomExport={`credit-${offreSelectionnee?.nom_banque || "credit"}`.replace(/\s+/g, "-")} /></div>
+                  <div className="px-1 pb-1"><TableauAmortissement lignes={resultat.tableau_amortissement} nomExport={`credit-${offreSelectionnee?.nom_banque || "credit"}`.replace(/\s+/g, "-")} montantSouhaite={resultat.montant} mensualite={resultat.mensualite} nomBanque={offreSelectionnee?.nom_banque || resultat.nom_banque} /></div>
                 </details>
               )}
             </>

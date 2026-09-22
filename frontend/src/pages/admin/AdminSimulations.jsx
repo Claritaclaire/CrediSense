@@ -144,6 +144,9 @@ export default function AdminSimulations() {
                       lignes={detail.tableau_amortissement}
                       nomExport={`credit-admin-${detail.nom_banque || "credit"}`.replace(/\s+/g, "-")}
                       afficherInterets
+                      montantSouhaite={detail.montant}
+                      mensualite={detail.mensualite}
+                      nomBanque={detail.nom_banque}
                     />
                   </>
                 )}
