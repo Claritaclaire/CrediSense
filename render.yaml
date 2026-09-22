@@ -44,7 +44,7 @@ services:
     name: credisense-frontend
     runtime: static
     rootDir: frontend
-    buildCommand: npm install && npm run build
+    buildCommand: chmod +x node_modules/.bin/* 2>/dev/null || true; npm install && npx vite build
     staticPublishPath: dist
     routes:
       # Règle impérative pour le routage client React Router (SPA)
