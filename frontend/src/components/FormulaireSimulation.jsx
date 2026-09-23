@@ -58,6 +58,9 @@ export default function FormulaireSimulation({
     () => bornesOffres(offres, offreId, offreIds, multiSelect),
     [offres, offreId, offreIds, multiSelect]
   );
+  // Quand plusieurs offres n'ont aucune duree commune (ex. 12-120 mois et 1-1 mois),
+  // l'intersection est vide : dureeMin depasse dureeMax, ce qui n'a pas de sens.
+  const dureeIncompatible = multiSelect && offreIds.length >= 2 && bornes.dureeMin > bornes.dureeMax;
 
   useEffect(() => {
     if (multiSelect && offreIds.length === 0 && offres.length > 0) {
@@ -130,10 +133,16 @@ export default function FormulaireSimulation({
             ))}
           </div>
           {offreIds.length > 0 && (
-            <p className="text-xs text-ardoise mt-2">
-              Durée commune : {bornes.dureeMin}–{bornes.dureeMax} mois · Plafond :{" "}
-              {bornes.montantMax.toLocaleString("fr-FR")} FCFA
-            </p>
+            dureeIncompatible ? (
+              <p className="text-xs font-semibold text-rose-700 mt-2">
+                ⚠ Ces offres n'ont aucune durée commune ({bornes.dureeMin}–{bornes.dureeMax} mois) — décochez-en une pour pouvoir comparer.
+              </p>
+            ) : (
+              <p className="text-xs text-ardoise mt-2">
+                Durée commune : {bornes.dureeMin}–{bornes.dureeMax} mois · Plafond :{" "}
+                {bornes.montantMax.toLocaleString("fr-FR")} FCFA
+              </p>
+            )
           )}
         </fieldset>
       ) : (
@@ -211,7 +220,7 @@ export default function FormulaireSimulation({
 
       <button
         type="submit"
-        disabled={chargement || (multiSelect && offreIds.length < 2)}
+        disabled={chargement || (multiSelect && offreIds.length < 2) || dureeIncompatible}
         className="btn-primaire w-full flex items-center justify-center gap-2 group"
       >
         {chargement ? "Calcul en cours..." : multiSelect ? "Comparer les offres →" : "Calculer ma mensualité →"}
