@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+from uuid import UUID
 import json
 
 from app.database import get_db
@@ -29,11 +30,13 @@ def _log_action(
     target_id: str | None,
     details: dict | None,
 ):
+    # admin_id du journal est une colonne Uuid : il faut un vrai objet uuid.UUID,
+    # pas la chaine que les appelants passent (str(current_user.id)).
     log = AdminAuditLog(
-        admin_id=admin_id,
+        admin_id=UUID(admin_id),
         action=action,
         target_table=target_table,
-        target_id=target_id,
+        target_id=str(target_id) if target_id is not None else None,
         details=json.dumps(details) if details else None,
     )
     db.add(log)
@@ -61,7 +64,7 @@ def create_param(
 
 @router.patch("/{param_id}", response_model=SystemParameterOut)
 def update_param(
-    param_id: str,
+    param_id: UUID,
     payload: SystemParameterUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -79,7 +82,7 @@ def update_param(
 
 @router.delete("/{param_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_param(
-    param_id: str,
+    param_id: UUID,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

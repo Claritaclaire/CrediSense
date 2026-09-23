@@ -1,5 +1,6 @@
 import json
 from typing import Optional
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import or_
@@ -111,7 +112,7 @@ def creer_administrateur(
 
 @router.patch("/administrateurs/{user_id}", response_model=AdministrateurBancaireOut)
 def modifier_administrateur(
-    user_id: str,
+    user_id: UUID,
     data: AdministrateurBancaireUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(exiger_role(RoleUtilisateur.admin_systeme)),

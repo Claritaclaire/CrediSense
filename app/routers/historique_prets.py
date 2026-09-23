@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Optional
+from uuid import UUID
 
 from app.database import get_db
 from app.models.historique_pret import HistoriquePret
@@ -40,7 +41,7 @@ def ajouter_pret(
 
 @router.delete("/{pret_id}", status_code=204)
 def supprimer_pret(
-    pret_id: str,
+    pret_id: UUID,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):

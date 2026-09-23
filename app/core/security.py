@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timedelta, timezone
 
 from fastapi import Depends, HTTPException, status
@@ -30,10 +31,15 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         user_id: str = payload.get("sub")
         if user_id is None:
             raise credentials_exception
-    except JWTError:
+        # Le "sub" du token est une chaine (str(user.id) a la connexion) ; le type
+        # Uuid generique de SQLAlchemy (compatible MySQL/TiDB) exige un vrai objet
+        # uuid.UUID pour construire la requete, contrairement a l'ancien type
+        # PostgreSQL specifique qui acceptait une chaine brute.
+        user_id_uuid = uuid.UUID(user_id)
+    except (JWTError, ValueError):
         raise credentials_exception
 
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).filter(User.id == user_id_uuid).first()
     if user is None:
         raise credentials_exception
     return user

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
+from uuid import UUID
 
 from app.database import get_db
 from app.models.user import User, RoleUtilisateur
@@ -56,13 +57,13 @@ def modifier_mon_profil(
 
 @router.get("/{user_id}", response_model=UserOut)
 def obtenir_utilisateur(
-    user_id: str,
+    user_id: UUID,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
     """Obtient les détails d'un utilisateur spécifique"""
     # Un utilisateur peut voir son propre profil, un admin peut voir celui de n'importe qui
-    if str(current_user.id) != user_id and current_user.role != RoleUtilisateur.admin:
+    if current_user.id != user_id and current_user.role != RoleUtilisateur.admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Accès non autorisé"
@@ -75,7 +76,7 @@ def obtenir_utilisateur(
 
 @router.patch("/{user_id}/role", response_model=UserOut, dependencies=[Depends(exiger_role(RoleUtilisateur.admin))])
 def modifier_role_utilisateur(
-    user_id: str,
+    user_id: UUID,
     role_data: RoleUpdate,
     db: Session = Depends(get_db)
 ):
