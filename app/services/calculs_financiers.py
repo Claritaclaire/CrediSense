@@ -106,6 +106,17 @@ def calculer_taeg(capital: float, mensualite: float, duree_mois: int,
         )
         return valeur_actuelle - capital_net
 
+    borne_basse, borne_haute = 0.001, 2.0
+    if equation_taeg(borne_basse) * equation_taeg(borne_haute) > 0:
+        # Pas de changement de signe dans la plage [0,1%, 200%] : le TAEG
+        # n'est pas resoluble ici (capital trop petit face aux frais/assurance,
+        # ou tout autre cas degenere). brentq planterait ("f(a) and f(b) must
+        # have different signs"). On renvoie une valeur sentinelle tres elevee :
+        # ce cas ne se produit qu'en interne, pendant la recherche par
+        # dichotomie du montant maximal empruntable, pour des capitaux
+        # candidats de toute facon trop petits pour etre viables.
+        return 99999.99
+
     # Recherche du taux entre 0,1% et 200% (large marge de sécurité)
     taeg = brentq(equation_taeg, 0.001, 2.0)
     return round(taeg * 100, 2)
