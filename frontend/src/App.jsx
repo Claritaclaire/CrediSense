@@ -5,6 +5,7 @@ import PageLayout from "./components/layout/PageLayout.jsx";
 import AdminLayout from "./components/admin/AdminLayout.jsx";
 
 import Accueil from "./pages/Accueil.jsx";
+import FAQ from "./pages/FAQ.jsx";
 import OffreDetail from "./pages/OffreDetail.jsx";
 import DashboardClient from "./pages/DashboardClient.jsx";
 import Login from "./pages/Login.jsx";
@@ -65,6 +66,7 @@ function AppRoutes() {
       <PageLayout large>
         <Routes>
           <Route path="/" element={<Accueil />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="/offres/:id" element={<OffreDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

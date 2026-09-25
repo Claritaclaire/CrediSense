@@ -150,6 +150,7 @@ export function EnTete() {
               <NavLink to="/mes-demandes">Mes Demandes</NavLink>
               <NavLink to="/clause">Clauses</NavLink>
               <NavLink to="/profil">Mon Profil</NavLink>
+              <NavLink to="/faq">FAQ</NavLink>
               {user?.role === "admin" && (
                 <NavLink to="/admin">Administration</NavLink>
               )}
@@ -162,6 +163,7 @@ export function EnTete() {
             </>
           ) : (
             <>
+              <NavLink to="/faq">FAQ</NavLink>
               <NavLink to="/login">Connexion</NavLink>
               <Link
                 to="/register"
@@ -186,6 +188,7 @@ export function EnTete() {
               <NavLink to="/mes-demandes" onClick={fermeMenu}>Mes Demandes</NavLink>
               <NavLink to="/clause" onClick={fermeMenu}>Clauses</NavLink>
               <NavLink to="/profil" onClick={fermeMenu}>Mon Profil</NavLink>
+              <NavLink to="/faq" onClick={fermeMenu}>FAQ</NavLink>
               {user?.role === "admin" && (
                 <NavLink to="/admin" onClick={fermeMenu}>Administration</NavLink>
               )}
@@ -204,6 +207,7 @@ export function EnTete() {
             </>
           ) : (
             <>
+              <NavLink to="/faq" onClick={fermeMenu}>FAQ</NavLink>
               <NavLink to="/login" onClick={fermeMenu}>Connexion</NavLink>
               <Link
                 to="/register"
@@ -230,6 +234,9 @@ export function PiedDePage() {
             CrediSense — <span className="text-or italic">L'intelligence financière.</span>
           </span>
         </div>
+        <Link to="/faq" className="text-xs sm:text-sm font-semibold text-or underline hover:text-amber-300">
+          Questions fréquentes
+        </Link>
         <p className="chiffres text-xs text-slate-300">CCA Bank · TAEG · Mensualités · Recommandation IA · FCFA</p>
       </div>
     </footer>
