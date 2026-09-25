@@ -16,6 +16,98 @@ function NavLink({ to, children, onClick }) {
   );
 }
 
+function IconeAccueil({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 11.5 12 4l9 7.5" />
+      <path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9" />
+    </svg>
+  );
+}
+function IconeSimuler({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="5" y="3" width="14" height="18" rx="2" />
+      <line x1="8" y1="7" x2="16" y2="7" />
+      <line x1="8" y1="12" x2="8" y2="12" />
+      <line x1="12" y1="12" x2="12" y2="12" />
+      <line x1="16" y1="12" x2="16" y2="12" />
+      <line x1="8" y1="16" x2="8" y2="16" />
+      <line x1="12" y1="16" x2="12" y2="16" />
+      <line x1="16" y1="16" x2="16" y2="16" />
+    </svg>
+  );
+}
+function IconeComparer({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="6" y1="20" x2="6" y2="10" />
+      <line x1="12" y1="20" x2="12" y2="4" />
+      <line x1="18" y1="20" x2="18" y2="14" />
+    </svg>
+  );
+}
+function IconeDemandes({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v6h6" />
+      <line x1="9" y1="13" x2="15" y2="13" />
+      <line x1="9" y1="17" x2="15" y2="17" />
+    </svg>
+  );
+}
+function IconeProfil({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 20c0-4 4-6 8-6s8 2 8 6" />
+    </svg>
+  );
+}
+
+const ONGLETS_MOBILE = [
+  { to: "/dashboard", label: "Accueil", Icone: IconeAccueil },
+  { to: "/simulation", label: "Simuler", Icone: IconeSimuler },
+  { to: "/comparaison", label: "Comparer", Icone: IconeComparer },
+  { to: "/mes-demandes", label: "Demandes", Icone: IconeDemandes },
+  { to: "/profil", label: "Profil", Icone: IconeProfil },
+];
+
+export function BarreNavigationMobile() {
+  const { estConnecte } = useAuth();
+  const { pathname } = useLocation();
+
+  if (!estConnecte) return null;
+
+  return (
+    <nav
+      className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#350B4C] border-t border-amber-500/20 shadow-[0_-4px_12px_rgba(0,0,0,0.25)]"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      aria-label="Navigation principale"
+    >
+      <div className="grid grid-cols-5">
+        {ONGLETS_MOBILE.map(({ to, label, Icone }) => {
+          const actif = pathname === to || (to !== "/" && pathname.startsWith(to));
+          return (
+            <Link
+              key={to}
+              to={to}
+              className={`flex flex-col items-center justify-center gap-0.5 py-2.5 text-[10px] font-semibold transition-colors ${
+                actif ? "text-or" : "text-white/60 hover:text-white/90"
+              }`}
+              aria-current={actif ? "page" : undefined}
+            >
+              <Icone className="h-5 w-5" />
+              <span>{label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
+  );
+}
+
 export function EnTete() {
   const { user, estConnecte, logout } = useAuth();
   const [menuOuvert, setMenuOuvert] = useState(false);
@@ -130,7 +222,7 @@ export function EnTete() {
 
 export function PiedDePage() {
   return (
-    <footer className="mt-16 bg-[#350B4C]/95 text-white backdrop-blur-md border-t border-amber-500/20 shadow-inner">
+    <footer className="mt-16 hidden md:block bg-[#350B4C]/95 text-white backdrop-blur-md border-t border-amber-500/20 shadow-inner">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-slate-200">
         <div className="flex items-center gap-3">
           <img src="/logo-credisense.png" alt="CrediSense" className="h-8 w-auto logo-frame logo-glow" />
@@ -151,7 +243,7 @@ function ContactCallCenter() {
   if (!estConnecte) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-40 flex flex-col items-end gap-3">
+    <div className="fixed bottom-40 md:bottom-24 right-5 z-40 flex flex-col items-end gap-3">
       {ouvert && (
         <div className="w-72 rounded-2xl border border-white/80 bg-white p-4 text-slate-900 shadow-2xl animate-scale-in">
           <div className="mb-3 flex items-start justify-between gap-3">
@@ -221,11 +313,12 @@ export default function PageLayout({ children, large = false }) {
   return (
     <div className="flex flex-col min-h-screen">
       <EnTete />
-      <main className={`flex-1 ${large ? "max-w-6xl" : "max-w-5xl"} mx-auto w-full px-4 sm:px-6 py-8 sm:py-12`}>
+      <main className={`flex-1 ${large ? "max-w-6xl" : "max-w-5xl"} mx-auto w-full px-4 sm:px-6 py-8 sm:py-12 pb-24 md:pb-12`}>
         {children}
       </main>
       <PiedDePage />
       <ContactCallCenter />
+      <BarreNavigationMobile />
     </div>
   );
 }

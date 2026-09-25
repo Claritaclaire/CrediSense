@@ -58,7 +58,7 @@ export default function AssistantFlottant() {
   }
 
   return (
-    <div className="fixed bottom-5 right-4 z-[60] flex flex-col items-end gap-3 sm:right-24">
+    <div className="fixed bottom-20 md:bottom-5 right-4 z-[60] flex flex-col items-end gap-3 sm:right-24">
       {ouvert && (
         <section
           className="assistant-panneau carte flex w-[calc(100vw-2rem)] max-w-[390px] flex-col overflow-hidden border-0 shadow-2xl animate-scale-in"
