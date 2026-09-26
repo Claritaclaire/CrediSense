@@ -70,26 +70,52 @@ export function AuthProvider({ children }) {
     };
   }, [token]);
 
+  // Finalise une connexion une fois un vrai access_token obtenu (avec ou sans
+  // etape 2FA prealable) : stocke le token, recupere le profil, met a jour l'etat.
+  const finaliserConnexion = useCallback(async (accessToken) => {
+    localStorage.setItem("access_token", accessToken);
+    client.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+
+    const { data: userData } = await client.get("/users/me");
+    setUser(userData);
+    setToken(accessToken);
+    setLoading(false);
+    return userData;
+  }, []);
+
   const login = useCallback(async (email, password) => {
     try {
       setLoading(true);
       const { data } = await client.post("/auth/login", { email, password });
-      const accessToken = data.access_token;
-      
-      localStorage.setItem("access_token", accessToken);
-      client.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
-      
-      const { data: userData } = await client.get("/users/me");
-      setUser(userData);
-      setToken(accessToken);
-      setLoading(false);
-      return userData;
+
+      if (data.requires_2fa) {
+        // Mot de passe correct, mais un code a 6 chiffres est encore requis :
+        // on ne connecte pas encore l'utilisateur.
+        setLoading(false);
+        return { requires2FA: true, tempToken: data.temp_token };
+      }
+
+      const userData = await finaliserConnexion(data.access_token);
+      return { requires2FA: false, user: userData };
     } catch (error) {
       setLoading(false);
       console.error('[AuthContext.login] Login error:', error);
       throw error;
     }
-  }, []);
+  }, [finaliserConnexion]);
+
+  const completerConnexion2FA = useCallback(async (tempToken, code) => {
+    try {
+      setLoading(true);
+      const { data } = await client.post("/auth/login/2fa", { temp_token: tempToken, code });
+      const userData = await finaliserConnexion(data.access_token);
+      return userData;
+    } catch (error) {
+      setLoading(false);
+      console.error('[AuthContext.completerConnexion2FA] Error:', error);
+      throw error;
+    }
+  }, [finaliserConnexion]);
 
   const register = useCallback(async (nom, email, password, telephone) => {
     try {
@@ -113,7 +139,7 @@ export function AuthProvider({ children }) {
   const estConnecte = Boolean(token);
 
   return (
-    <AuthContext.Provider value={{ token, user, setUser, loading, estConnecte, login, register, logout }}>
+    <AuthContext.Provider value={{ token, user, setUser, loading, estConnecte, login, completerConnexion2FA, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

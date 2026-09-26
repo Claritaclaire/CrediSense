@@ -27,6 +27,8 @@ class User(Base):
     agence = Column(String(100), nullable=True)
     actif = Column(Boolean, nullable=False, default=True, server_default="1")
     permissions = Column(String(500), nullable=True)
+    otp_secret = Column(String(64), nullable=True)
+    otp_enabled = Column(Boolean, nullable=False, default=False, server_default="0")
     role = Column(SQLEnum(RoleUtilisateur, native_enum=False), default=RoleUtilisateur.client, nullable=False)
     date_creation = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 

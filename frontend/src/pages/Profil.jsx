@@ -31,6 +31,15 @@ export default function Profil() {
   const [succes, setSucces] = useState("");
   const [erreur, setErreur] = useState("");
 
+  // Double authentification (2FA)
+  const [setup2FA, setSetup2FA] = useState(null); // { secret, qrCodeBase64 } pendant l'activation
+  const [code2FAConfirm, setCode2FAConfirm] = useState("");
+  const [afficherDesactivation2FA, setAfficherDesactivation2FA] = useState(false);
+  const [motDePasse2FA, setMotDePasse2FA] = useState("");
+  const [chargement2FA, setChargement2FA] = useState(false);
+  const [erreur2FA, setErreur2FA] = useState("");
+  const [succes2FA, setSucces2FA] = useState("");
+
   // Charger le profil financier et les prêts sauvegardés
   useEffect(() => {
     if (!user) return;
@@ -145,6 +154,54 @@ export default function Profil() {
       setErreur(err.response?.data?.detail || "Impossible de sauvegarder votre profil.");
     } finally {
       setChargement(false);
+    }
+  };
+
+  const demarrerActivation2FA = async () => {
+    setErreur2FA("");
+    setSucces2FA("");
+    setChargement2FA(true);
+    try {
+      const { data } = await client.post("/auth/2fa/setup");
+      setSetup2FA({ secret: data.secret, qrCodeBase64: data.qr_code_base64 });
+    } catch (err) {
+      setErreur2FA(err.response?.data?.detail || "Impossible de démarrer l'activation de la double authentification.");
+    } finally {
+      setChargement2FA(false);
+    }
+  };
+
+  const confirmerActivation2FA = async (e) => {
+    e.preventDefault();
+    setErreur2FA("");
+    setChargement2FA(true);
+    try {
+      const { data } = await client.post("/auth/2fa/confirm", { code: code2FAConfirm });
+      setUser(data);
+      setSetup2FA(null);
+      setCode2FAConfirm("");
+      setSucces2FA("Double authentification activée avec succès !");
+    } catch (err) {
+      setErreur2FA(err.response?.data?.detail || "Code de vérification incorrect.");
+    } finally {
+      setChargement2FA(false);
+    }
+  };
+
+  const desactiver2FA = async (e) => {
+    e.preventDefault();
+    setErreur2FA("");
+    setChargement2FA(true);
+    try {
+      const { data } = await client.post("/auth/2fa/disable", { password: motDePasse2FA });
+      setUser(data);
+      setAfficherDesactivation2FA(false);
+      setMotDePasse2FA("");
+      setSucces2FA("Double authentification désactivée.");
+    } catch (err) {
+      setErreur2FA(err.response?.data?.detail || "Mot de passe incorrect.");
+    } finally {
+      setChargement2FA(false);
     }
   };
 
@@ -493,6 +550,129 @@ export default function Profil() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Sécurité — Double authentification (2FA) */}
+      <div className="carte p-6 sm:p-8 space-y-5">
+        <div className="border-b border-slate-100 pb-4">
+          <h2 className="text-lg font-bold text-indigo">Sécurité — Double authentification</h2>
+          <p className="text-xs text-ardoise mt-1">
+            Ajoutez une couche de protection supplémentaire : un code à 6 chiffres généré par une application d'authentification (Google Authenticator, Authy...) sera demandé en plus de votre mot de passe.
+          </p>
+        </div>
+
+        {succes2FA && (
+          <div className="p-3 bg-emerald-500/10 border-l-4 border-emerald-400 text-emerald-800 rounded-r-lg text-sm font-medium">
+            ✓ {succes2FA}
+          </div>
+        )}
+        {erreur2FA && <div className="alerte-erreur">{erreur2FA}</div>}
+
+        {!setup2FA && !afficherDesactivation2FA && (
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <span
+              className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full ${
+                user?.otp_enabled ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-ardoise"
+              }`}
+            >
+              {user?.otp_enabled ? "● Activée" : "○ Désactivée"}
+            </span>
+            {user?.otp_enabled ? (
+              <button
+                type="button"
+                onClick={() => setAfficherDesactivation2FA(true)}
+                className="btn-secondaire text-xs py-2"
+              >
+                Désactiver la double authentification
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={demarrerActivation2FA}
+                disabled={chargement2FA}
+                className="btn-primaire text-xs py-2"
+              >
+                {chargement2FA ? "Chargement..." : "Activer la double authentification →"}
+              </button>
+            )}
+          </div>
+        )}
+
+        {setup2FA && (
+          <form onSubmit={confirmerActivation2FA} className="space-y-4 rounded-xl border border-or/40 bg-slate-50 p-4">
+            <p className="text-xs font-bold text-indigo">
+              1. Scannez ce QR code avec Google Authenticator, Authy ou une app similaire :
+            </p>
+            <img
+              src={`data:image/png;base64,${setup2FA.qrCodeBase64}`}
+              alt="QR code de configuration de la double authentification"
+              className="h-40 w-40 mx-auto rounded-lg border border-slate-200 bg-white p-2"
+            />
+            <p className="text-[11px] text-ardoise text-center">
+              Impossible de scanner ? Entrez ce code manuellement : <code className="font-bold text-indigo select-all">{setup2FA.secret}</code>
+            </p>
+
+            <p className="text-xs font-bold text-indigo pt-2">
+              2. Entrez le code à 6 chiffres affiché par l'application :
+            </p>
+            <input
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              required
+              maxLength={6}
+              className="champ text-center text-2xl tracking-[0.5em] font-bold chiffres"
+              placeholder="000000"
+              value={code2FAConfirm}
+              onChange={(e) => setCode2FAConfirm(e.target.value.replace(/\D/g, "").slice(0, 6))}
+            />
+
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => { setSetup2FA(null); setCode2FAConfirm(""); setErreur2FA(""); }}
+                className="btn-ghost text-xs flex-1"
+              >
+                Annuler
+              </button>
+              <button
+                type="submit"
+                disabled={chargement2FA || code2FAConfirm.length !== 6}
+                className="btn-primaire text-xs flex-1"
+              >
+                {chargement2FA ? "Vérification..." : "Confirmer et activer"}
+              </button>
+            </div>
+          </form>
+        )}
+
+        {afficherDesactivation2FA && (
+          <form onSubmit={desactiver2FA} className="space-y-3 rounded-xl border border-rose-200 bg-rose-50 p-4">
+            <label className="block text-xs font-semibold text-rose-800 uppercase tracking-wider">
+              Confirmez votre mot de passe pour désactiver la double authentification
+            </label>
+            <input
+              type="password"
+              required
+              className="champ"
+              placeholder="Mot de passe actuel"
+              value={motDePasse2FA}
+              onChange={(e) => setMotDePasse2FA(e.target.value)}
+            />
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => { setAfficherDesactivation2FA(false); setMotDePasse2FA(""); setErreur2FA(""); }}
+                className="btn-ghost text-xs flex-1"
+              >
+                Annuler
+              </button>
+              <button type="submit" disabled={chargement2FA} className="btn-primaire text-xs flex-1 bg-rose-600 hover:bg-rose-700">
+                {chargement2FA ? "..." : "Désactiver"}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );

@@ -27,6 +27,7 @@ class UserOut(BaseModel):
     agence: str | None = None
     actif: bool = True
     permissions: str | None = None
+    otp_enabled: bool = False
     date_creation: datetime
 
     class Config:
@@ -36,6 +37,32 @@ class UserOut(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+class LoginOut(BaseModel):
+    """Reponse de /auth/login : soit un token complet, soit une demande de code 2FA."""
+    requires_2fa: bool = False
+    access_token: str | None = None
+    token_type: str = "bearer"
+    temp_token: str | None = None
+
+
+class Login2FAIn(BaseModel):
+    temp_token: str
+    code: str
+
+
+class TwoFactorSetupOut(BaseModel):
+    secret: str
+    qr_code_base64: str
+
+
+class TwoFactorConfirmIn(BaseModel):
+    code: str
+
+
+class TwoFactorDisableIn(BaseModel):
+    password: str
 
 
 class RoleUpdate(BaseModel):
