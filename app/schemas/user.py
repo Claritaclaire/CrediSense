@@ -65,6 +65,15 @@ class TwoFactorDisableIn(BaseModel):
     password: str
 
 
+class MotDePasseOublieIn(BaseModel):
+    email: EmailStr
+
+
+class ReinitialiserMotDePasseIn(BaseModel):
+    token: str
+    nouveau_mot_de_passe: str
+
+
 class RoleUpdate(BaseModel):
     role: RoleUtilisateur
 

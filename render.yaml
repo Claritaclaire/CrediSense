@@ -37,6 +37,8 @@ services:
         sync: false
       - key: DEMANDES_EMAIL_DESTINATAIRE
         sync: false
+      - key: FRONTEND_URL
+        sync: false # URL du service credisense-frontend, pour les liens envoyes par email (ex. https://credisense-frontend.onrender.com)
 
   # ==========================================
   # Service Frontend (React + Vite + SPA)

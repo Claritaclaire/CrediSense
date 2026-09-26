@@ -44,6 +44,29 @@ def lire_token_2fa_temporaire(temp_token: str) -> uuid.UUID:
         raise credentials_exception
 
 
+def creer_token_reset_mdp(user_id) -> str:
+    """Jeton de reinitialisation de mot de passe (45 min), envoye par email.
+    Meme principe que le jeton 2FA temporaire : un "purpose" dedie empeche
+    qu'il soit utilisable comme jeton de session normal."""
+    return creer_access_token({"sub": str(user_id), "purpose": "password_reset"}, expire_minutes=45)
+
+
+def lire_token_reset_mdp(token: str) -> uuid.UUID:
+    """Decode un jeton de reinitialisation et renvoie l'id utilisateur, ou leve
+    une HTTPException 400 s'il est invalide, expire, ou n'est pas du bon type."""
+    erreur = HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Lien de réinitialisation invalide ou expiré, refaites une demande.",
+    )
+    try:
+        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
+        if payload.get("purpose") != "password_reset":
+            raise erreur
+        return uuid.UUID(payload.get("sub"))
+    except (JWTError, ValueError, TypeError):
+        raise erreur
+
+
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -53,7 +76,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     try:
         payload = jwt.decode(token, settings.secret_key, algorithms=[settings.algorithm])
         user_id: str = payload.get("sub")
-        if user_id is None or payload.get("purpose") == "2fa_pending":
+        if user_id is None or payload.get("purpose") in ("2fa_pending", "password_reset"):
             raise credentials_exception
         # Le "sub" du token est une chaine (str(user.id) a la connexion) ; le type
         # Uuid generique de SQLAlchemy (compatible MySQL/TiDB) exige un vrai objet

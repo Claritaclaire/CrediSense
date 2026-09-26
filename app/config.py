@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     anthropic_timeout_seconds: float = 25.0
     dify_api_key: str = ""
     dify_api_url: str = "https://api.dify.ai/v1"
+    frontend_url: str = Field(default="http://localhost:5173", validation_alias="FRONTEND_URL")
 
     # SMTP configuration for email notifications
     smtp_host: str = Field(default="", validation_alias="SMTP_HOST")

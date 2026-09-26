@@ -1,11 +1,13 @@
 import base64
 import io
+import logging
 
 import pyotp
 import qrcode
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.config import settings
 from app.database import get_db
 from app.models.user import User
 from app.schemas.user import (
@@ -18,16 +20,44 @@ from app.schemas.user import (
     TwoFactorSetupOut,
     TwoFactorConfirmIn,
     TwoFactorDisableIn,
+    MotDePasseOublieIn,
+    ReinitialiserMotDePasseIn,
 )
 from app.services.auth_service import hash_password, verifier_password
+from app.utils.mail import send_email
 from app.core.security import (
     creer_access_token,
     creer_token_2fa_temporaire,
     lire_token_2fa_temporaire,
+    creer_token_reset_mdp,
+    lire_token_reset_mdp,
     get_current_user,
 )
 
 router = APIRouter(prefix="/auth", tags=["Authentification"])
+logger = logging.getLogger(__name__)
+
+
+def _envoyer_email_reset(destinataire: str, nom: str, lien: str) -> None:
+    try:
+        send_email(
+            "Réinitialisation de votre mot de passe CrediSense",
+            [destinataire],
+            f"""Bonjour {nom},
+
+Vous avez demandé la réinitialisation de votre mot de passe CrediSense.
+
+Cliquez sur ce lien pour choisir un nouveau mot de passe (valable 45 minutes) :
+{lien}
+
+Si vous n'êtes pas à l'origine de cette demande, ignorez simplement cet email : votre mot de passe actuel reste inchangé.
+
+Cordialement,
+CrediSense
+""",
+        )
+    except Exception:
+        logger.exception("Échec d'envoi de l'email de réinitialisation vers %s", destinataire)
 
 
 def _emettre_token(user: User) -> dict:
@@ -138,3 +168,37 @@ def disable_2fa(
     db.commit()
     db.refresh(current_user)
     return current_user
+
+
+@router.post("/mot-de-passe-oublie")
+def mot_de_passe_oublie(
+    data: MotDePasseOublieIn,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+):
+    # Reponse volontairement identique que l'email existe ou non, pour ne pas
+    # laisser deviner quels emails sont inscrits (enumeration de comptes).
+    reponse = {"message": "Si un compte existe avec cet email, un lien de réinitialisation vient de lui être envoyé."}
+
+    user = db.query(User).filter(User.email == data.email).first()
+    if not user or not user.actif:
+        return reponse
+
+    lien = f"{settings.frontend_url.rstrip('/')}/reinitialiser-mot-de-passe?token={creer_token_reset_mdp(user.id)}"
+    background_tasks.add_task(_envoyer_email_reset, user.email, user.nom, lien)
+    return reponse
+
+
+@router.post("/reinitialiser-mot-de-passe")
+def reinitialiser_mot_de_passe(data: ReinitialiserMotDePasseIn, db: Session = Depends(get_db)):
+    if len(data.nouveau_mot_de_passe) < 6:
+        raise HTTPException(status_code=422, detail="Le mot de passe doit contenir au moins 6 caractères.")
+
+    user_id = lire_token_reset_mdp(data.token)
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=400, detail="Lien de réinitialisation invalide ou expiré, refaites une demande.")
+
+    user.password_hash = hash_password(data.nouveau_mot_de_passe)
+    db.commit()
+    return {"message": "Mot de passe réinitialisé avec succès. Vous pouvez maintenant vous connecter."}

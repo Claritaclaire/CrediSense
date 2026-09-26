@@ -10,6 +10,8 @@ import OffreDetail from "./pages/OffreDetail.jsx";
 import DashboardClient from "./pages/DashboardClient.jsx";
 import Login from "./pages/Login.jsx";
 import Register from "./pages/Register.jsx";
+import MotDePasseOublie from "./pages/MotDePasseOublie.jsx";
+import ReinitialiserMotDePasse from "./pages/ReinitialiserMotDePasse.jsx";
 import Simulation from "./pages/Simulation.jsx";
 import Comparaison from "./pages/Comparaison.jsx";
 import Historique from "./pages/Historique.jsx";
@@ -70,6 +72,8 @@ function AppRoutes() {
           <Route path="/offres/:id" element={<OffreDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/mot-de-passe-oublie" element={<MotDePasseOublie />} />
+          <Route path="/reinitialiser-mot-de-passe" element={<ReinitialiserMotDePasse />} />
           <Route
             path="/dashboard"
             element={

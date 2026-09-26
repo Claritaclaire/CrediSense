@@ -119,6 +119,9 @@ export default function Login() {
                 <label htmlFor="password" className="block text-xs font-semibold text-ardoise uppercase tracking-wider">
                   Mot de passe
                 </label>
+                <Link to="/mot-de-passe-oublie" className="text-[11px] font-semibold text-indigo hover:text-or underline">
+                  Mot de passe oublié ?
+                </Link>
               </div>
               <input
                 id="password"
