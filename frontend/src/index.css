@@ -184,4 +184,23 @@
   .assistant-messages {
     min-height: 240px;
   }
+
+  @media (max-width: 639px) {
+    .assistant-panneau {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: var(--zone-haut, 0px);
+      height: var(--zone-hauteur, 100dvh);
+      width: 100%;
+      max-width: none;
+      border-radius: 0;
+      padding-top: env(safe-area-inset-top);
+      background-color: #4e156d;
+    }
+
+    .assistant-messages {
+      min-height: 0;
+    }
+  }
 }

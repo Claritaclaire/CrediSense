@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAssistant } from "../context/AssistantContext";
 import TexteIA from "./TexteIA";
 
@@ -40,9 +40,25 @@ export default function AssistantFlottant() {
   } = useAssistant();
   const messagesRef = useRef(null);
   const inputRef = useRef(null);
+  const [zoneVisible, setZoneVisible] = useState(null);
 
   useEffect(() => {
-    if (ouvert) inputRef.current?.focus();
+    // Sur ecran tactile, ne pas ouvrir le clavier d'office : il masquerait la conversation.
+    if (ouvert && !window.matchMedia("(pointer: coarse)").matches) inputRef.current?.focus();
+  }, [ouvert]);
+
+  // Suit la zone reellement visible (hors clavier virtuel) pour le mode plein ecran mobile.
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!ouvert || !viewport) return undefined;
+    const mettreAJour = () => setZoneVisible({ hauteur: viewport.height, haut: viewport.offsetTop });
+    mettreAJour();
+    viewport.addEventListener("resize", mettreAJour);
+    viewport.addEventListener("scroll", mettreAJour);
+    return () => {
+      viewport.removeEventListener("resize", mettreAJour);
+      viewport.removeEventListener("scroll", mettreAJour);
+    };
   }, [ouvert]);
 
   useEffect(() => {
@@ -63,6 +79,7 @@ export default function AssistantFlottant() {
         <section
           className="assistant-panneau carte flex w-[calc(100vw-2rem)] max-w-[390px] flex-col overflow-hidden border-0 shadow-2xl animate-scale-in"
           aria-label="Assistant CrediSense"
+          style={zoneVisible ? { "--zone-hauteur": `${zoneVisible.hauteur}px`, "--zone-haut": `${zoneVisible.haut}px` } : undefined}
         >
           <header className="flex items-center justify-between bg-indigo px-4 py-3 text-white">
             <div className="flex min-w-0 items-center gap-3">
@@ -108,7 +125,7 @@ export default function AssistantFlottant() {
 
           <form onSubmit={handleSubmit} className="flex items-end gap-2 border-t border-slate-200 bg-white p-3">
             <label htmlFor="assistant-question" className="sr-only">Votre question</label>
-            <textarea ref={inputRef} id="assistant-question" value={question} onChange={(event) => setQuestion(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); handleSubmit(event); } }} rows={1} maxLength={1000} placeholder="Posez votre question..." className="champ max-h-24 min-h-[44px] resize-none py-2.5 text-sm" disabled={chargement} />
+            <textarea ref={inputRef} id="assistant-question" value={question} onChange={(event) => setQuestion(event.target.value)} onKeyDown={(event) => { if (event.key === "Enter" && !event.shiftKey) { event.preventDefault(); handleSubmit(event); } }} rows={1} maxLength={1000} placeholder="Posez votre question..." className="champ max-h-24 min-h-[44px] resize-none py-2.5 text-base sm:text-sm" disabled={chargement} />
             <button type="submit" disabled={!question.trim() || chargement} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-or text-indigo shadow-sm transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-40" aria-label="Envoyer la question" title="Envoyer la question">
               <IconeEnvoyer />
             </button>
@@ -116,7 +133,7 @@ export default function AssistantFlottant() {
         </section>
       )}
 
-      <button type="button" onClick={() => setOuvert(!ouvert)} className="flex h-14 w-14 items-center justify-center rounded-full bg-indigo text-or shadow-xl ring-2 ring-or/70 transition hover:-translate-y-0.5 hover:bg-indigo-dark hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-or/40 animate-pulse-glow" aria-expanded={ouvert} aria-label={ouvert ? "Fermer l'assistant" : "Ouvrir l'assistant"} title="Assistant CrediSense">
+      <button type="button" onClick={() => setOuvert(!ouvert)} className={`${ouvert ? "hidden sm:flex" : "flex"} h-14 w-14 items-center justify-center rounded-full bg-indigo text-or shadow-xl ring-2 ring-or/70 transition hover:-translate-y-0.5 hover:bg-indigo-dark hover:shadow-2xl focus:outline-none focus:ring-4 focus:ring-or/40 animate-pulse-glow`} aria-expanded={ouvert} aria-label={ouvert ? "Fermer l'assistant" : "Ouvrir l'assistant"} title="Assistant CrediSense">
         {ouvert ? <span className="text-2xl leading-none">×</span> : <IconeAssistant />}
       </button>
     </div>
