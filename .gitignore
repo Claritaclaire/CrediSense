@@ -4,6 +4,7 @@
 __pycache__/
 *.pyc
 frontend/dist/
+frontend/dev-dist/
 .venv/
 venv/
 node_modules/
