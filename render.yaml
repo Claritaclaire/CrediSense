@@ -8,7 +8,7 @@ services:
     region: frankfurt # ou oregon, selon votre proximité
     plan: free
     healthCheckPath: /
-    buildCommand: pip install -r requirements.txt && python init_db_tidb.py
+    buildCommand: pip install -r requirements.txt && python init_db_tidb.py && python migrate_2fa.py
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
