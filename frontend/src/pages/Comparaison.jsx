@@ -6,6 +6,7 @@ import FormulaireSimulation from "../components/FormulaireSimulation";
 import CarteOffre from "../components/CarteOffre";
 import GraphiqueComparaison from "../components/GraphiqueComparaison";
 import { calculerQuotiteCessible } from "../components/BadgeEndettement";
+import { MENTION_ASSURANCE } from "../utils/mentions";
 
 export default function Comparaison() {
   const navigate = useNavigate();
@@ -139,6 +140,7 @@ export default function Comparaison() {
                           </p>
                         );
                       })()}
+                      <p className="mt-3 text-xs text-white/70">{MENTION_ASSURANCE}</p>
                       <button type="button" onClick={() => navigate(`/simulation?offre_id=${meilleure.offre_id}&montant=${montantUtilise}&duree=${dureeUtilisee}`)} className="mt-5 rounded-lg bg-or px-4 py-2.5 text-sm font-bold text-indigo hover:bg-amber-400">Simuler cette offre →</button>
                     </section>
                   </>

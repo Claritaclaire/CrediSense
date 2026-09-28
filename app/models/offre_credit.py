@@ -18,6 +18,7 @@ class OffreCredit(Base):
     duree_min_mois = Column(Integer, nullable=False)
     duree_max_mois = Column(Integer, nullable=False)
     frais_dossier_pct = Column(Float, nullable=False)     # ex. 0.015
+    frais_dossier_min = Column(Float, nullable=False, default=0.0, server_default="0")  # FCFA HT
     assurance_pct_an = Column(Float, nullable=False)       # ex. 0.004
     montant_max = Column(Float, nullable=False)
 

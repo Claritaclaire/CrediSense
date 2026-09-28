@@ -81,7 +81,7 @@ export default function AdminOffres() {
                 <td className="px-4 py-3 text-sm">{o.montant_max?.toLocaleString("fr-FR")} F</td>
                 <td className="px-4 py-3 text-sm">{o.duree_min_mois}</td>
                 <td className="px-4 py-3 text-sm">{o.duree_max_mois}</td>
-                <td className="px-4 py-3 text-sm">{o.frais_dossier_pct}%</td>
+                <td className="px-4 py-3 text-sm">{(o.frais_dossier_pct * 100).toFixed(2).replace(/\.?0+$/, "")}%{o.frais_dossier_min > 0 ? ` (min. ${new Intl.NumberFormat("fr-FR").format(o.frais_dossier_min)} F)` : ""}</td>
                 <td className="px-4 py-3 text-sm">{o.assurance_pct_an}%</td>
                 <td className="px-4 py-3 text-sm">
                   <Link to={`/admin/offres/${o.id}/edit`} className="text-indigo hover:text-or font-medium">

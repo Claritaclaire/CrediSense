@@ -9,11 +9,11 @@ export function exporterCSV(lignes, nomFichier = "amortissement", afficherIntere
   if (montantSouhaite != null) lignesResume.push(["Montant emprunté (FCFA)", formateur.format(montantSouhaite)]);
   if (mensualite != null) lignesResume.push(["Mensualité (FCFA)", formateur.format(mensualite)]);
 
-  const entetes = ["Mois", "Mensualité", ...(afficherInterets ? ["Intérêts"] : []), "Capital", "Restant dû"];
+  const entetes = ["Mois", "Mensualité TTC", ...(afficherInterets ? ["Intérêts HT", "TVA"] : []), "Capital", "Restant dû"];
   const rows = lignes.map((l) => [
     l.mois,
     formateur.format(l.mensualite),
-    ...(afficherInterets ? [formateur.format(l.interets)] : []),
+    ...(afficherInterets ? [formateur.format(l.interets), formateur.format(l.tva || 0)] : []),
     formateur.format(l.part_capital),
     formateur.format(l.capital_restant_fin),
   ]);
@@ -50,7 +50,7 @@ export function exporterPDF(lignes, titre = "Tableau d'amortissement", afficherI
     <tr>
       <td>${ligne.mois}</td>
       <td>${fcfa(ligne.mensualite)}</td>
-      ${afficherInterets ? `<td>${fcfa(ligne.interets)}</td>` : ""}
+      ${afficherInterets ? `<td>${fcfa(ligne.interets)}</td><td>${fcfa(ligne.tva || 0)}</td>` : ""}
       <td>${fcfa(ligne.part_capital)}</td>
       <td>${fcfa(ligne.capital_restant_fin)}</td>
     </tr>`
@@ -102,15 +102,15 @@ export function exporterPDF(lignes, titre = "Tableau d'amortissement", afficherI
     <img class="filigrane" src="/logo-cca-bank.png" alt="" />
     <div class="header">
       <h1>${echapperHTML(titre)}</h1>
-      <p>Document d'amortissement · Édité le ${new Date().toLocaleDateString("fr-FR")}</p>
+      <p>Document d'amortissement · Édité le ${new Date().toLocaleDateString("fr-FR")} · Montants TTC (TVA 19,25 % sur les intérêts)</p>
     </div>
     ${resumeHTML}
     <table>
       <thead>
         <tr>
           <th>Mois</th>
-          <th>Mensualité</th>
-          ${afficherInterets ? "<th>Intérêts</th>" : ""}
+          <th>Mensualité TTC</th>
+          ${afficherInterets ? "<th>Intérêts HT</th><th>TVA</th>" : ""}
           <th>Capital</th>
           <th>Restant dû</th>
         </tr>

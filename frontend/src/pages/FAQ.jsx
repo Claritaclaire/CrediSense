@@ -5,7 +5,11 @@ const QUESTIONS = [
   },
   {
     q: "Que signifie le TAEG, et pourquoi diffère-t-il du taux affiché sur l'offre ?",
-    r: "Le TAEG (Taux Annuel Effectif Global) inclut le taux d'intérêt nominal, les frais de dossier et l'assurance — c'est le coût réel du crédit. Deux offres avec le même taux nominal peuvent avoir un TAEG différent selon leurs frais et leur assurance : c'est toujours le TAEG qu'il faut comparer, jamais le taux nominal seul.",
+    r: "Le TAEG (Taux Annuel Effectif Global) inclut le taux d'intérêt nominal, les frais de dossier, l'assurance et la TVA de 19,25 % sur les intérêts et les frais — c'est le coût réel du crédit. Deux offres avec le même taux nominal peuvent avoir un TAEG différent selon leurs frais et leur assurance : c'est toujours le TAEG qu'il faut comparer, jamais le taux nominal seul.",
+  },
+  {
+    q: "Le montant de l'assurance affiché est-il définitif ?",
+    r: "Non. Le montant d'assurance affiché dans les simulations est indicatif. La prime d'assurance emprunteur n'est pas fixe : elle est déterminée par l'assureur partenaire de CCA Bank selon votre état de santé (questionnaire médical), votre âge et le montant emprunté. Le montant définitif vous est communiqué lors de l'étude de votre dossier.",
   },
   {
     q: "Comment est calculée ma capacité d'emprunt (quotité cessible) ?",

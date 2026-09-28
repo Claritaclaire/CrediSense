@@ -45,14 +45,13 @@ def recommandation(data: RecommandationRequest, db: Session = Depends(get_db)):
     offres_simulees = []
     for offre in offres:
         if offre.duree_min_mois <= data.duree_mois <= offre.duree_max_mois:
-            frais_dossier_min = 5000.0 if "scolaire" in offre.nom_banque.lower() else 0.0
             resultat = simuler_credit(
                 capital=data.montant_souhaite,
                 taux_annuel=offre.taux_annuel,
                 duree_mois=data.duree_mois,
                 frais_dossier_pct=offre.frais_dossier_pct,
                 assurance_pct_an=offre.assurance_pct_an,
-                frais_dossier_min=frais_dossier_min,
+                frais_dossier_min=offre.frais_dossier_min,
             )
             mensualite_complete = round(
                 resultat["mensualite"] + resultat["assurance_mensuelle"],
@@ -68,6 +67,7 @@ def recommandation(data: RecommandationRequest, db: Session = Depends(get_db)):
                 "duree_min_mois": offre.duree_min_mois,
                 "duree_max_mois": offre.duree_max_mois,
                 "frais_dossier_pct": offre.frais_dossier_pct,
+                "frais_dossier_min": offre.frais_dossier_min,
                 "assurance_pct_an": offre.assurance_pct_an,
                 "mensualite": resultat["mensualite"],
                 "assurance_mensuelle": resultat["assurance_mensuelle"],

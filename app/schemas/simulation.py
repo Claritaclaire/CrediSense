@@ -13,6 +13,7 @@ class LigneAmortissement(BaseModel):
     mois: int
     capital_restant_debut: float
     interets: float
+    tva: float = 0.0
     part_capital: float
     mensualite: float
     capital_restant_fin: float
@@ -28,6 +29,9 @@ class SimulationOut(BaseModel):
     taeg: float
     cout_total: float
     date_creation: datetime
+    frais_dossier: float | None = None
+    assurance_mensuelle: float | None = None
+    total_tva: float | None = None
     tableau_amortissement: list[LigneAmortissement] | None = None
 
     class Config:

@@ -44,8 +44,9 @@ export default function TableauAmortissement({
           <thead>
             <tr className="text-left text-ardoise border-b border-ardoise/20">
               <th className="py-2.5 pr-4 font-medium">Mois</th>
-              <th className="py-2.5 pr-4 font-medium text-right">Mensualité</th>
-              {afficherInterets && <th className="py-2.5 pr-4 font-medium text-right">Intérêts</th>}
+              <th className="py-2.5 pr-4 font-medium text-right">Mensualité TTC</th>
+              {afficherInterets && <th className="py-2.5 pr-4 font-medium text-right">Intérêts HT</th>}
+              {afficherInterets && <th className="py-2.5 pr-4 font-medium text-right">TVA</th>}
               <th className="py-2.5 pr-4 font-medium text-right">Capital</th>
               <th className="py-2.5 font-medium text-right">Restant dû</th>
             </tr>
@@ -58,6 +59,11 @@ export default function TableauAmortissement({
                 {afficherInterets && (
                   <td className="py-2.5 pr-4 text-right text-ardoise">
                     {formateurFCFA.format(ligne.interets)} F
+                  </td>
+                )}
+                {afficherInterets && (
+                  <td className="py-2.5 pr-4 text-right text-ardoise">
+                    {formateurFCFA.format(ligne.tva || 0)} F
                   </td>
                 )}
                 <td className="py-2.5 pr-4 text-right">{formateurFCFA.format(ligne.part_capital)} F</td>

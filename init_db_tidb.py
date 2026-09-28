@@ -26,6 +26,7 @@ OFFRES_PAR_DEFAUT = [
         "duree_min_mois": 1,
         "duree_max_mois": 11,
         "frais_dossier_pct": 0.005,
+        "frais_dossier_min": 5000.0,
         "assurance_pct_an": 0.004,
         "montant_max": 5_000_000.0,
         "actif": True,
@@ -125,7 +126,9 @@ def init_database():
     db = SessionLocal()
     try:
         # Offres de crédit
-        offres_existantes = db.query(OffreCredit).count()
+        # Ne selectionner que l'id : la requete reste valide meme si une colonne
+        # recente n'a pas encore ete ajoutee par un script de migration.
+        offres_existantes = db.query(OffreCredit.id).count()
         if offres_existantes == 0:
             logger.info("Amorçage du catalogue d'offres CCA Bank...")
             for offre_data in OFFRES_PAR_DEFAUT:

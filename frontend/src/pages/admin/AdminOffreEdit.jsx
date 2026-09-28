@@ -21,6 +21,7 @@ export default function AdminOffreEdit() {
     duree_min_mois: 0,
     duree_max_mois: 0,
     frais_dossier_pct: 0,
+    frais_dossier_min: 0,
     assurance_pct_an: 0,
     montant_max: 0,
   });
@@ -45,6 +46,7 @@ export default function AdminOffreEdit() {
           duree_min_mois: resp.duree_min_mois,
           duree_max_mois: resp.duree_max_mois,
           frais_dossier_pct: resp.frais_dossier_pct,
+          frais_dossier_min: resp.frais_dossier_min ?? 0,
           assurance_pct_an: resp.assurance_pct_an,
           montant_max: resp.montant_max,
         });
@@ -90,7 +92,11 @@ export default function AdminOffreEdit() {
       }, 1500);
     } catch (err) {
       console.error(err);
-      setError("Erreur lors de la mise à jour de l'offre");
+      const detail = err.response?.data?.detail;
+      const message = Array.isArray(detail)
+        ? detail.map((d) => d.msg?.replace(/^Value error, /, "")).join(" ")
+        : detail;
+      setError(message || "Erreur lors de la mise à jour de l'offre");
     } finally {
       setSubmitLoading(false);
     }
@@ -130,10 +136,12 @@ export default function AdminOffreEdit() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-ardoise mb-1">Taux annuel (%)</label>
+          <label className="block text-sm font-medium text-ardoise mb-1">Taux annuel hors taxes (fraction : 0.12 = 12 %, maximum 0.15)</label>
           <input
             type="number"
-            step="0.01"
+            step="0.001"
+            min="0"
+            max="0.15"
             name="taux_annuel"
             value={form.taux_annuel}
             onChange={handleChange}
@@ -183,12 +191,12 @@ export default function AdminOffreEdit() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
-            <label className="block text-sm font-medium text-ardoise mb-1">Frais de dossier (%)</label>
+            <label className="block text-sm font-medium text-ardoise mb-1">Frais de dossier HT (fraction : 0.005 = 0,5 %)</label>
             <input
               type="number"
-              step="0.01"
+              step="0.001"
               name="frais_dossier_pct"
               value={form.frais_dossier_pct}
               onChange={handleChange}
@@ -198,10 +206,22 @@ export default function AdminOffreEdit() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-ardoise mb-1">Assurance (%/an)</label>
+            <label className="block text-sm font-medium text-ardoise mb-1">Frais de dossier minimum HT (FCFA)</label>
             <input
               type="number"
-              step="0.01"
+              step="1"
+              name="frais_dossier_min"
+              value={form.frais_dossier_min}
+              onChange={handleChange}
+              className="champ w-full px-3 py-2 border border-ardoise/30 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              min="0"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-ardoise mb-1">Assurance (fraction par an : 0.004 = 0,4 %)</label>
+            <input
+              type="number"
+              step="0.001"
               name="assurance_pct_an"
               value={form.assurance_pct_an}
               onChange={handleChange}

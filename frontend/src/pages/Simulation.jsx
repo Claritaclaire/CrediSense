@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import client from "../api/client";
 import { useAuth } from "../context/AuthContext";
@@ -11,6 +11,7 @@ import GraphiqueRepartition from "../components/GraphiqueRepartition";
 import InterpretationTAEG from "../components/InterpretationTAEG";
 import { SkeletonCarte } from "../components/Skeleton";
 import CapaciteEmprunt from "../components/CapaciteEmprunt";
+import { MENTION_ASSURANCE } from "../utils/mentions";
 
 export default function Simulation() {
   const navigate = useNavigate();
@@ -261,20 +262,9 @@ export default function Simulation() {
     }
   }, [revenu, apport, projet, dernierePayload, offreSelectionnee, resultat, user]);
 
-  // Memoized derived values
-  const fraisDossier = useMemo(() => {
-    if (!offreSelectionnee || !dernierePayload?.montant) return 0;
-    return Math.round(
-      dernierePayload.montant * offreSelectionnee.frais_dossier_pct
-    );
-  }, [offreSelectionnee, dernierePayload?.montant]);
-
-  const assuranceMensuelle = useMemo(() => {
-    if (!offreSelectionnee || !dernierePayload?.montant) return 0;
-    return Math.round(
-      (dernierePayload.montant * offreSelectionnee.assurance_pct_an) / 12
-    );
-  }, [offreSelectionnee, dernierePayload?.montant]);
+  // Montants TTC calcules par le backend (minimum de frais et TVA inclus).
+  const fraisDossier = resultat?.frais_dossier ?? 0;
+  const assuranceMensuelle = resultat?.assurance_mensuelle ?? 0;
 
   // Helper to check if form can be submitted
   const canSubmit = offres.length > 0;
@@ -359,6 +349,7 @@ export default function Simulation() {
                     <h2 className="text-xl font-bold text-white">{offreSelectionnee?.nom_banque || resultat.nom_banque || "Votre crédit"}</h2>
                     <p className="mt-2 text-sm text-white/70">Mensualité estimée</p>
                     <p className="chiffres text-4xl font-bold text-or sm:text-5xl">{formateurFCFA.format(resultat.mensualite)} <span className="text-xl">FCFA</span></p>
+                    <p className="mt-1 text-xs text-white/60">TTC (TVA 19,25 % sur les intérêts incluse){assuranceMensuelle > 0 ? `, hors assurance estimée à ${formateurFCFA.format(assuranceMensuelle)} F/mois` : ""}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-2 text-center sm:min-w-[320px] sm:grid-cols-4">
                     <div className="rounded-xl bg-white/10 p-3"><p className="text-[10px] uppercase text-white/60">Montant souhaité</p><p className="mt-1 font-bold chiffres text-sm">{formateurFCFA.format(resultat.montant)} F</p></div>
@@ -367,6 +358,14 @@ export default function Simulation() {
                     <div className="rounded-xl bg-white/10 p-3"><p className="text-[10px] uppercase text-white/60">Durée</p><p className="mt-1 font-bold chiffres">{resultat.duree_mois} mois</p></div>
                   </div>
                 </div>
+                {resultat.total_tva > 0 && (
+                  <p className="mt-3 text-xs text-white/70">
+                    Coût total TTC, dont {formateurFCFA.format(resultat.total_tva)} F de TVA (19,25 %) sur les intérêts et les frais de dossier ({formateurFCFA.format(fraisDossier)} F TTC).
+                  </p>
+                )}
+                {assuranceMensuelle > 0 && (
+                  <p className="mt-2 text-xs text-white/70">{MENTION_ASSURANCE}</p>
+                )}
                 {offreSelectionnee?.taux_annuel !== undefined && (
                   <div className="mt-5 border-t border-white/15 pt-4"><InterpretationTAEG taeg={resultat.taeg} tauxAnnuel={offreSelectionnee.taux_annuel} dureeMois={resultat.duree_mois} /></div>
                 )}

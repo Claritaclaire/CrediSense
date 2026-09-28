@@ -1,4 +1,6 @@
-const formateurFCFA = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
+import { MENTION_ASSURANCE } from "../utils/mentions";
+
+const formateurFCFA =new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 });
 
 /**
  * Donut SVG montrant la répartition capital remboursé vs intérêts totaux.
@@ -7,17 +9,21 @@ export default function GraphiqueRepartition({ lignes, fraisDossier = 0, assuran
   if (!lignes?.length) return null;
 
   const totalInterets = lignes.reduce((s, l) => s + l.interets, 0);
+  const totalTVA = lignes.reduce((s, l) => s + (l.tva || 0), 0);
   const totalCapital = lignes.reduce((s, l) => s + l.part_capital, 0);
   const totalAssurance = assuranceMensuelle * lignes.length;
   const segments = [{ label: "Capital", valeur: totalCapital, couleur: "#1B2A4A" }];
   if (afficherInterets) {
-    segments.push({ label: "Intérêts", valeur: totalInterets, couleur: "#B8860B" });
+    segments.push({ label: "Intérêts HT", valeur: totalInterets, couleur: "#B8860B" });
+    if (totalTVA > 0) {
+      segments.push({ label: "TVA sur intérêts", valeur: totalTVA, couleur: "#6B21A8" });
+    }
   }
   if (fraisDossier > 0) {
     segments.push({ label: "Frais dossier", valeur: fraisDossier, couleur: "#9B4B3F" });
   }
   if (totalAssurance > 0) {
-    segments.push({ label: "Assurance", valeur: totalAssurance, couleur: "#3A6B52" });
+    segments.push({ label: "Assurance (estimée)", valeur: totalAssurance, couleur: "#3A6B52" });
   }
 
   const total = segments.reduce((s, seg) => s + seg.valeur, 0);
@@ -72,6 +78,7 @@ export default function GraphiqueRepartition({ lignes, fraisDossier = 0, assuran
           ))}
         </ul>
       </div>
+      {totalAssurance > 0 && <p className="mt-4 text-xs text-ardoise">{MENTION_ASSURANCE}</p>}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import client from "../api/client";
+import { formaterPourcentage } from "../utils/mentions";
 
 export default function OffreDetail() {
   const { id } = useParams();
@@ -37,7 +38,8 @@ export default function OffreDetail() {
   // Calcul d'exemple simplifié
   const calculMensualiteIndicative = () => {
     if (!offre) return 0;
-    const r = (offre.taux_annuel <= 1 ? offre.taux_annuel : offre.taux_annuel / 100) / 12;
+    // Taux TTC : la TVA de 19,25 % s'applique aux intérêts, comme dans le simulateur.
+    const r = ((offre.taux_annuel <= 1 ? offre.taux_annuel : offre.taux_annuel / 100) * 1.1925) / 12;
     const n = dureeExemple;
     if (r === 0) return Math.round(montantExemple / n);
     const m = (montantExemple * r) / (1 - Math.pow(1 + r, -n));
@@ -121,15 +123,16 @@ export default function OffreDetail() {
           <div className="p-4 rounded-xl bg-white border border-slate-200/60 shadow-sm">
             <span className="block text-xs text-ardoise font-medium uppercase">Frais de Dossier</span>
             <span className="text-lg font-bold text-indigo font-display">
-              {offre.frais_dossier_pct} %
+              {formaterPourcentage(offre.frais_dossier_pct)}
             </span>
           </div>
 
           <div className="p-4 rounded-xl bg-white border border-slate-200/60 shadow-sm">
-            <span className="block text-xs text-ardoise font-medium uppercase">Assurance / an</span>
+            <span className="block text-xs text-ardoise font-medium uppercase">Assurance / an (indicative)</span>
             <span className="text-lg font-bold text-indigo font-display">
-              {offre.assurance_pct_an} %
+              {formaterPourcentage(offre.assurance_pct_an)}
             </span>
+            <span className="mt-1 block text-[11px] text-ardoise">Variable selon votre état de santé</span>
           </div>
         </div>
       </div>
@@ -185,7 +188,7 @@ export default function OffreDetail() {
               {mensualiteExemple.toLocaleString("fr-FR")} <span className="text-lg text-or">FCFA/mois</span>
             </div>
             <p className="text-xs text-white/70">
-              *Taux nominal de {(offre.taux_annuel <= 1 ? offre.taux_annuel * 100 : offre.taux_annuel).toFixed(1)} %. Hors frais d'assurance ajustés.
+              *Taux nominal de {(offre.taux_annuel <= 1 ? offre.taux_annuel * 100 : offre.taux_annuel).toFixed(1)} %, TVA sur les intérêts incluse. Hors assurance, dont le montant dépend notamment de votre état de santé.
             </p>
           </div>
         </div>

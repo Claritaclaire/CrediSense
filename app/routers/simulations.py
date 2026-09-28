@@ -26,11 +26,15 @@ router = APIRouter(prefix="/simulations", tags=["Simulations"])
 
 
 def _construire_simulation_out(simulation: Simulation, offre: OffreCredit,
-                                tableau_amortissement: list[dict] | None = None) -> SimulationOut:
+                                resultat: dict | None = None) -> SimulationOut:
     simulation_out = SimulationOut.model_validate(simulation)
     simulation_out.offre_id = offre.id
     simulation_out.nom_banque = offre.nom_banque
-    simulation_out.tableau_amortissement = tableau_amortissement
+    if resultat:
+        simulation_out.tableau_amortissement = resultat["tableau_amortissement"]
+        simulation_out.frais_dossier = resultat["frais_dossier"]
+        simulation_out.assurance_mensuelle = resultat["assurance_mensuelle"]
+        simulation_out.total_tva = resultat["total_tva"]
     return simulation_out
 
 
@@ -40,15 +44,13 @@ def _executer_simulation(offre: OffreCredit, montant: float, duree_mois: int) ->
     if not (offre.duree_min_mois <= duree_mois <= offre.duree_max_mois):
         raise DureeHorsLimitesException(offre.duree_min_mois, offre.duree_max_mois)
 
-    frais_dossier_min = 5000.0 if "scolaire" in offre.nom_banque.lower() else 0.0
-
     return simuler_credit(
         capital=montant,
         taux_annuel=offre.taux_annuel,
         duree_mois=duree_mois,
         frais_dossier_pct=offre.frais_dossier_pct,
         assurance_pct_an=offre.assurance_pct_an,
-        frais_dossier_min=frais_dossier_min,
+        frais_dossier_min=offre.frais_dossier_min,
     )
 
 
@@ -77,11 +79,7 @@ def creer_simulation(
     db.commit()
     db.refresh(simulation)
 
-    return _construire_simulation_out(
-        simulation,
-        offre,
-        resultat["tableau_amortissement"],
-    )
+    return _construire_simulation_out(simulation, offre, resultat)
 
 
 @router.post("/comparer")
@@ -118,7 +116,7 @@ def _indicateurs_offre_duree(
     if not (offre.duree_min_mois <= duree <= offre.duree_max_mois):
         return None
 
-    frais_dossier_min = 5000.0 if "scolaire" in offre.nom_banque.lower() else 0.0
+    frais_dossier_min = offre.frais_dossier_min
     capacite_avec_prets = calculer_capacite_offre(
         mensualite_max=max(0.0, mensualite_max_avec_prets),
         taux_annuel=offre.taux_annuel, duree_mois=duree,
@@ -362,8 +360,9 @@ def obtenir_simulation(
         duree_mois=simulation.duree_mois,
         frais_dossier_pct=offre.frais_dossier_pct,
         assurance_pct_an=offre.assurance_pct_an,
+        frais_dossier_min=offre.frais_dossier_min,
     )
-    return _construire_simulation_out(simulation, offre, resultat["tableau_amortissement"])
+    return _construire_simulation_out(simulation, offre, resultat)
 
 
 @router.delete("/{simulation_id}", status_code=204)

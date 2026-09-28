@@ -8,6 +8,10 @@ Aucune de ces fonctions ne fait appel à une API externe (IA) ou à une DB.
 
 from scipy.optimize import brentq
 
+# TVA camerounaise appliquee aux interets, commissions et frais bancaires
+# (conditions tarifaires CCA Bank). Les primes d'assurance n'y sont pas soumises.
+TAUX_TVA = 0.1925
+
 
 def calculer_mensualite(capital: float, taux_annuel: float, duree_mois: int) -> float:
     """
@@ -30,40 +34,49 @@ def calculer_mensualite(capital: float, taux_annuel: float, duree_mois: int) -> 
     return round(mensualite, 2)
 
 
-def generer_tableau_amortissement(capital: float, taux_annuel: float, duree_mois: int) -> list[dict]:
+def generer_tableau_amortissement(capital: float, taux_annuel: float, duree_mois: int,
+                                  taux_tva: float = 0.0) -> list[dict]:
     """
     Génère le tableau d'amortissement mois par mois.
+
+    Avec TVA, l'échéance constante est calculée au taux TTC (taux nominal x (1 + TVA)),
+    comme sur les tableaux bancaires de la zone CEMAC ; les intérêts de chaque mois
+    sont ensuite ventilés en intérêts HT et TVA.
 
     Le dernier mois est ajusté pour que le capital restant tombe exactement
     à zéro (correction des écarts d'arrondis cumulés).
 
     :return: liste de dictionnaires, un par mois
     """
-    taux_mensuel = taux_annuel / 12
-    mensualite = calculer_mensualite(capital, taux_annuel, duree_mois)
+    taux_annuel_ttc = taux_annuel * (1 + taux_tva)
+    taux_mensuel_ttc = taux_annuel_ttc / 12
+    mensualite = calculer_mensualite(capital, taux_annuel_ttc, duree_mois)
 
     tableau = []
     capital_restant = round(capital, 2)
 
     for mois in range(1, duree_mois + 1):
         capital_restant_debut = capital_restant
-        interets = round(capital_restant_debut * taux_mensuel, 2)
+        interets_ttc = round(capital_restant_debut * taux_mensuel_ttc, 2)
+        interets_ht = round(interets_ttc / (1 + taux_tva), 2)
+        tva = round(interets_ttc - interets_ht, 2)
 
         if mois < duree_mois:
-            part_capital = round(mensualite - interets, 2)
+            part_capital = round(mensualite - interets_ttc, 2)
             capital_restant = round(capital_restant_debut - part_capital, 2)
             mensualite_du_mois = mensualite
         else:
             # Dernier mois : on solde exactement le capital restant,
             # pour éviter un résidu du type "0.73 FCFA" dû aux arrondis successifs.
             part_capital = capital_restant_debut
-            mensualite_du_mois = round(part_capital + interets, 2)
+            mensualite_du_mois = round(part_capital + interets_ttc, 2)
             capital_restant = 0.0
 
         tableau.append({
             "mois": mois,
             "capital_restant_debut": capital_restant_debut,
-            "interets": interets,
+            "interets": interets_ht,
+            "tva": tva,
             "part_capital": part_capital,
             "mensualite": mensualite_du_mois,
             "capital_restant_fin": capital_restant,
@@ -124,23 +137,29 @@ def calculer_taeg(capital: float, mensualite: float, duree_mois: int,
 
 def simuler_credit(capital: float, taux_annuel: float, duree_mois: int,
                      frais_dossier_pct: float, assurance_pct_an: float,
-                     frais_dossier_min: float = 0.0) -> dict:
+                     frais_dossier_min: float = 0.0, taux_tva: float = TAUX_TVA) -> dict:
     """
     Fonction principale : orchestre les calculs pour produire une simulation complète.
 
-    :param frais_dossier_pct: ex. 0.005 pour 0,5% du capital
+    Les montants renvoyés (mensualité, frais de dossier, coût total, TAEG) sont TTC :
+    la TVA s'applique aux intérêts et aux frais de dossier, pas à l'assurance.
+
+    :param frais_dossier_pct: ex. 0.005 pour 0,5% du capital (hors taxes)
     :param assurance_pct_an: ex. 0.004 pour 0,4% par an du capital initial
-    :param frais_dossier_min: montant minimum des frais de dossier en FCFA
+    :param frais_dossier_min: montant minimum des frais de dossier en FCFA (hors taxes)
     :return: dictionnaire de synthèse (mensualité, TAEG, coût total, tableau complet)
     """
-    frais_calcules = capital * frais_dossier_pct
-    frais_dossier = round(max(frais_calcules, frais_dossier_min), 2)
+    frais_dossier_ht = round(max(capital * frais_dossier_pct, frais_dossier_min), 2)
+    frais_dossier = round(frais_dossier_ht * (1 + taux_tva), 2)
     assurance_mensuelle = round(capital * assurance_pct_an / 12, 2)
 
-    mensualite = calculer_mensualite(capital, taux_annuel, duree_mois)
-    tableau = generer_tableau_amortissement(capital, taux_annuel, duree_mois)
+    tableau = generer_tableau_amortissement(capital, taux_annuel, duree_mois, taux_tva)
+    mensualite = tableau[0]["mensualite"]
     cout_total = calculer_cout_total(tableau, frais_dossier, assurance_mensuelle)
     taeg = calculer_taeg(capital, mensualite, duree_mois, frais_dossier, assurance_mensuelle)
+
+    total_interets_ht = round(sum(ligne["interets"] for ligne in tableau), 2)
+    tva_interets = round(sum(ligne["tva"] for ligne in tableau), 2)
 
     return {
         "capital": capital,
@@ -148,7 +167,11 @@ def simuler_credit(capital: float, taux_annuel: float, duree_mois: int,
         "duree_mois": duree_mois,
         "mensualite": mensualite,
         "frais_dossier": frais_dossier,
+        "frais_dossier_ht": frais_dossier_ht,
         "assurance_mensuelle": assurance_mensuelle,
+        "total_interets_ht": total_interets_ht,
+        "total_tva": round(tva_interets + frais_dossier - frais_dossier_ht, 2),
+        "taux_tva": taux_tva,
         "cout_total": cout_total,
         "taeg": taeg,
         "tableau_amortissement": tableau,
