@@ -22,7 +22,7 @@ from app.services.dify_service import (
     repondre_assistant,
 )
 from app.models.offre_credit import OffreCredit
-from app.services.calculs_financiers import calculer_quotite_cessible_legale, simuler_credit
+from app.services.calculs_financiers import calculer_plafonds_mensualite, simuler_credit
 
 router = APIRouter(prefix="/ia", tags=["Intelligence Artificielle"])
 logger = logging.getLogger(__name__)
@@ -34,13 +34,13 @@ def recommandation(data: RecommandationRequest, db: Session = Depends(get_db)):
         OffreCredit.actif.is_(True),
         OffreCredit.montant_max >= data.montant_souhaite,
     ).all()
-    quotite = calculer_quotite_cessible_legale(data.revenu_mensuel)
-    mensualite_max = max(
-        0.0,
-        quotite["quotite_cessible_totale"]
-        - (data.charges_mensuelles or 0)
-        - (data.total_mensualites_prets_en_cours or 0),
+    plafonds = calculer_plafonds_mensualite(
+        data.revenu_mensuel,
+        data.charges_mensuelles or 0,
+        data.total_mensualites_prets_en_cours or 0,
     )
+    quotite = plafonds["quotite_legale"]
+    mensualite_max = max(0.0, plafonds["prudent"]["avec_prets"])
 
     offres_simulees = []
     for offre in offres:
@@ -86,7 +86,7 @@ def recommandation(data: RecommandationRequest, db: Session = Depends(get_db)):
     contexte_recommandation.update({
         "quotite_cessible_totale": quotite["quotite_cessible_totale"],
         "mensualite_maximale_disponible": mensualite_max,
-        "taux_quotite_effectif_pct": quotite["taux_effectif_pct"],
+        "seuil_endettement_prudent_pct": min(quotite["taux_effectif_pct"], plafonds["taux_endettement_pct"]),
     })
 
     try:

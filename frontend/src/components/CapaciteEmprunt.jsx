@@ -78,6 +78,43 @@ export default function CapaciteEmprunt() {
       null)
     : null;
 
+  // Ce qui reste au client chaque mois une fois toutes ses charges et mensualités payées.
+  const resteAVivre = (mensualite) =>
+    resultat.revenu_mensuel - resultat.charges_mensuelles - resultat.total_mensualites_prets_en_cours - mensualite;
+
+  const legal = resultat?.legal;
+
+  // Une ligne par durée, avec le verdict des deux règles côte à côte (les durées
+  // affinées mois par mois peuvent n'exister que dans l'une des deux analyses).
+  const lignesParDuree = resultat
+    ? Object.values(
+        [...resultat.durees.map((l) => ({ ...l, regle: "prudent" })), ...legal.durees.map((l) => ({ ...l, regle: "legal" }))]
+          .reduce((acc, l) => {
+            const ligne = acc[l.duree_mois] || {
+              duree_mois: l.duree_mois,
+              mensualite_demande: l.mensualite_demande,
+              cout_total_demande: l.cout_total_demande,
+              tableau_amortissement: l.tableau_amortissement,
+            };
+            ligne[l.regle] = { faisable: l.faisable, capacite: l.montant_dans_capacite_avec_prets };
+            acc[l.duree_mois] = ligne;
+            return acc;
+          }, {})
+      ).sort((a, b) => a.duree_mois - b.duree_mois)
+    : [];
+
+  const badge = (verdict) =>
+    !verdict ? (
+      <span className="text-xs text-ardoise">-</span>
+    ) : (
+      <span className="flex flex-col gap-0.5">
+        <span className={`w-fit rounded-full px-2.5 py-0.5 text-xs font-semibold ${verdict.faisable ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"}`}>
+          {verdict.faisable ? "✓ Réalisable" : "Non réalisable"}
+        </span>
+        <span className="text-[11px] text-ardoise chiffres">max {formateurFCFA.format(verdict.capacite)} F</span>
+      </span>
+    );
+
   return (
     <section className="carte space-y-5 border-l-4 border-l-or p-6">
       <div>
@@ -118,6 +155,9 @@ export default function CapaciteEmprunt() {
         <div className="space-y-5">
           {/* Bloc de synthèse direct */}
           <div className={`rounded-xl border p-5 text-sm ${resultat.demande_faisable ? "border-emerald-200 bg-emerald-50 text-emerald-900" : "border-rose-200 bg-rose-50 text-rose-900"}`}>
+            <p className="text-xs font-bold uppercase tracking-wide opacity-70">
+              Résultat recommandé · règle prudente (au plus 1/3 de votre revenu)
+            </p>
             <p className="text-base font-bold">
               Résultat pour votre demande de {formateurFCFA.format(resultat.montant_souhaite)} FCFA
             </p>
@@ -126,7 +166,7 @@ export default function CapaciteEmprunt() {
                 <p className="text-lg font-bold text-emerald-800">
                   ✓ Votre prêt est réalisable à partir de <span className="underline">{resultat.duree_min_faisable} mois</span> de remboursement.
                 </p>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mt-3 pt-3 border-t border-emerald-200/60 text-xs">
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5 mt-3 pt-3 border-t border-emerald-200/60 text-xs">
                   <div>
                     <span className="block text-emerald-700 font-medium">Mensualité minimale ({resultat.duree_min_faisable} mois) :</span>
                     <span className="text-base font-bold chiffres">{formateurFCFA.format(resultat.mensualite_duree_min)} FCFA/mois</span>
@@ -145,7 +185,14 @@ export default function CapaciteEmprunt() {
                     <span className="block text-emerald-700 font-medium">Prêts en cours déduits :</span>
                     <span className="text-base font-bold chiffres">{formateurFCFA.format(resultat.total_mensualites_prets_en_cours)} FCFA</span>
                   </div>
+                  <div className="rounded-lg bg-white/70 p-2">
+                    <span className="block text-emerald-700 font-medium">Reste à vivre après le prêt :</span>
+                    <span className="text-base font-bold text-indigo chiffres">{formateurFCFA.format(resteAVivre(resultat.mensualite_duree_min))} FCFA/mois</span>
+                  </div>
                 </div>
+                <p className="text-xs text-emerald-800">
+                  Reste à vivre = revenu net ({formateurFCFA.format(resultat.revenu_mensuel)}) − charges ({formateurFCFA.format(resultat.charges_mensuelles)}) − prêts en cours ({formateurFCFA.format(resultat.total_mensualites_prets_en_cours)}) − nouvelle mensualité ({formateurFCFA.format(resultat.mensualite_duree_min)}).
+                </p>
               </div>
             ) : (
               <div className="mt-3 space-y-2">
@@ -153,7 +200,7 @@ export default function CapaciteEmprunt() {
                   ❌ Votre demande de {formateurFCFA.format(resultat.montant_souhaite)} FCFA dépasse votre capacité mensuelle autorisée.
                 </p>
                 <p className="text-xs">
-                  La mensualité minimale sur les durées du catalogue excède votre quotité cessible disponible de <strong>{formateurFCFA.format(resultat.mensualite_max_avec_prets)} FCFA/mois</strong>.
+                  La mensualité minimale sur les durées du catalogue excède votre capacité de remboursement prudente de <strong>{formateurFCFA.format(resultat.mensualite_max_avec_prets)} FCFA/mois</strong>.
                 </p>
                 {meilleureAlternative && meilleureAlternative.montant_dans_capacite_avec_prets > 0 && (
                   <p className="mt-2 rounded-lg bg-white/70 px-3 py-2 text-sm font-semibold text-rose-900">
@@ -180,27 +227,48 @@ export default function CapaciteEmprunt() {
             )}
           </div>
 
+          {/* Plafond légal : ce que la loi autorise au maximum, présenté comme une limite */}
+          <div className="rounded-xl border border-amber-300 bg-amber-50 p-5 text-sm text-amber-950">
+            <p className="text-xs font-bold uppercase tracking-wide text-amber-800">
+              Pour information · maximum autorisé par la loi (Décret 94/197/PM)
+            </p>
+            {legal.demande_faisable ? (
+              <p className="mt-2">
+                Au maximum légal, votre demande serait réalisable dès <strong>{legal.duree_min_faisable} mois</strong>, avec une mensualité de{" "}
+                <strong className="chiffres">{formateurFCFA.format(legal.mensualite_duree_min)} FCFA</strong>. Il ne vous resterait alors que{" "}
+                <strong className="chiffres">{formateurFCFA.format(resteAVivre(legal.mensualite_duree_min))} FCFA/mois</strong> pour vivre.
+              </p>
+            ) : (
+              <p className="mt-2">Même au maximum autorisé par la loi, cette demande dépasse votre capacité de remboursement.</p>
+            )}
+            <p className="mt-2 text-xs text-amber-900/80">
+              Ce plafond est la part maximale du salaire que la loi permet de céder. C'est une limite à ne pas dépasser, pas un niveau d'endettement conseillé.
+            </p>
+          </div>
+
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-xl bg-indigo p-4 text-white">
-              <p className="text-xs text-white/70">Quotité mensuelle disponible (avec prêts)</p>
+              <p className="text-xs text-white/70">Capacité prudente (1/3 du revenu, après charges et prêts)</p>
               <p className="mt-1 text-xl font-bold text-or chiffres">{formateurFCFA.format(resultat.mensualite_max_avec_prets)} FCFA/mois</p>
             </div>
             <div className="rounded-xl bg-slate-50 p-4">
-              <p className="text-xs text-ardoise">Quotité mensuelle nette (sans prêts)</p>
-              <p className="mt-1 text-xl font-bold text-indigo chiffres">{formateurFCFA.format(resultat.mensualite_max_sans_prets)} FCFA/mois</p>
+              <p className="text-xs text-ardoise">Maximum légal (quotité cessible, après charges et prêts)</p>
+              <p className="mt-1 text-xl font-bold text-indigo chiffres">{formateurFCFA.format(legal.mensualite_max_avec_prets)} FCFA/mois</p>
             </div>
             <div className="rounded-xl bg-slate-50 p-4">
-              <p className="text-xs text-ardoise">Barème réglementaire utilisé</p>
-              <p className="mt-1 text-sm font-bold text-indigo">Décret 94/197/PM (Quotité Cessible)</p>
+              <p className="text-xs text-ardoise">Règle la plus stricte pour votre revenu</p>
+              <p className="mt-1 text-sm font-bold text-indigo">
+                {resultat.tiers_plus_strict ? "Le tiers du revenu (règle prudente)" : "La quotité cessible légale"}
+              </p>
             </div>
           </div>
 
           <div>
             <h3 className="text-base font-bold text-indigo">Options de remboursement selon la durée</h3>
-            <p className="mt-0.5 text-xs text-ardoise">Découvrez ci-dessous votre mensualité, le montant total remboursé et la faisabilité selon chaque durée de prêt.</p>
+            <p className="mt-0.5 text-xs text-ardoise">Découvrez ci-dessous votre mensualité, le montant total remboursé et la faisabilité selon chaque durée, avec la règle prudente et avec le maximum légal (« max » = montant maximal empruntable).</p>
           </div>
 
-          {resultat.durees.length > 0 && (
+          {lignesParDuree.length > 0 && (
             <div className="overflow-x-auto rounded-xl border border-slate-200">
               <table className="min-w-full divide-y divide-slate-200 text-sm">
                 <thead className="bg-slate-50 text-left text-xs uppercase text-ardoise">
@@ -208,12 +276,13 @@ export default function CapaciteEmprunt() {
                     <th className="px-4 py-3">Durée</th>
                     <th className="px-4 py-3">Mensualité estimée</th>
                     <th className="px-4 py-3">Montant total remboursé</th>
-                    <th className="px-4 py-3">Éligibilité</th>
-                    <th className="px-4 py-3">Capacité max d'emprunt</th>
+                    <th className="px-4 py-3">Reste à vivre</th>
+                    <th className="px-4 py-3">Règle prudente (1/3)</th>
+                    <th className="px-4 py-3">Maximum légal</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 bg-white">
-                  {resultat.durees.map((ligne) => (
+                  {lignesParDuree.map((ligne) => (
                     <Fragment key={ligne.duree_mois}>
                       <tr onClick={() => setLigneOuverte(ligneOuverte === ligne.duree_mois ? null : ligne.duree_mois)} className="cursor-pointer hover:bg-or/5">
                         <td className="px-4 py-3 font-bold text-indigo">{ligne.duree_mois} mois</td>
@@ -223,24 +292,15 @@ export default function CapaciteEmprunt() {
                         <td className="px-4 py-3 text-indigo chiffres font-bold">
                           {ligne.cout_total_demande == null ? "-" : `${formateurFCFA.format(ligne.cout_total_demande)} FCFA`}
                         </td>
-                        <td className="px-4 py-3">
-                          {ligne.faisable ? (
-                            <span className="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
-                              ✓ Réalisable
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
-                              Non réalisable
-                            </span>
-                          )}
+                        <td className="px-4 py-3 text-ardoise chiffres">
+                          {ligne.mensualite_demande == null ? "-" : `${formateurFCFA.format(resteAVivre(ligne.mensualite_demande))} FCFA/mois`}
                         </td>
-                        <td className="px-4 py-3 font-bold chiffres text-indigo">
-                          {formateurFCFA.format(ligne.montant_dans_capacite_avec_prets)} FCFA
-                        </td>
+                        <td className="px-4 py-3">{badge(ligne.prudent)}</td>
+                        <td className="px-4 py-3">{badge(ligne.legal)}</td>
                       </tr>
                       {ligneOuverte === ligne.duree_mois && (
                         <tr className="bg-slate-50">
-                          <td colSpan="5" className="px-4 py-3">
+                          <td colSpan="6" className="px-4 py-3">
                             <div className="overflow-x-auto">
                               <p className="mb-2 text-xs font-bold text-indigo">Détail du remboursement sur {ligne.duree_mois} mois</p>
                               <table className="min-w-full text-xs"><thead><tr className="text-left text-ardoise"><th className="px-2 py-1">Mois</th><th className="px-2 py-1">Capital début</th><th className="px-2 py-1">Mensualité</th><th className="px-2 py-1">Capital restant</th></tr></thead><tbody className="divide-y divide-slate-200">{ligne.tableau_amortissement.map((mois) => <tr key={mois.mois}><td className="px-2 py-1">{mois.mois}</td><td className="px-2 py-1 chiffres">{formateurFCFA.format(mois.capital_restant_debut)} F</td><td className="px-2 py-1 chiffres">{formateurFCFA.format(mois.mensualite)} F</td><td className="px-2 py-1 font-semibold text-indigo chiffres">{formateurFCFA.format(mois.capital_restant_fin)} F</td></tr>)}</tbody></table>
@@ -254,7 +314,7 @@ export default function CapaciteEmprunt() {
               </table>
             </div>
           )}
-          {resultat.durees.length === 0 && <p className="p-4 text-sm text-ardoise">Aucune durée de remboursement n'est disponible pour ce montant.</p>}
+          {lignesParDuree.length === 0 &&<p className="p-4 text-sm text-ardoise">Aucune durée de remboursement n'est disponible pour ce montant.</p>}
           <p className="text-xs text-ardoise">Résultat indicatif : la décision finale et le montant accordé dépendent de l'étude du dossier par CCA Bank.</p>
         </div>
       )}

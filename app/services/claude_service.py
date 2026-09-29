@@ -84,7 +84,8 @@ def generer_recommandation_locale(profil: dict, offres_simulees: list[dict]) -> 
         mensualite_max_disponible = profil.get("mensualite_maximale_disponible")
         if mensualite_max_disponible is not None:
             return (
-                f"Aucune offre ne respecte votre quotité cessible : après vos charges et crédits en cours, "
+                f"Aucune offre ne respecte votre capacité de remboursement (un tiers de votre revenu, "
+                f"dans la limite de la quotité cessible légale) : après vos charges et crédits en cours, "
                 f"votre mensualité disponible est de {_formater_fcfa(mensualite_max_disponible)} FCFA. "
                 "Réduisez le montant demandé, choisissez une durée plus longue ou consultez votre conseiller."
             )
@@ -120,7 +121,7 @@ def generer_recommandation_locale(profil: dict, offres_simulees: list[dict]) -> 
     )
 
     quotite = (
-        f" La mensualité complète reste sous votre quotité disponible de {_formater_fcfa(mensualite_max_disponible)} FCFA."
+        f" La mensualité complète reste sous votre capacité de remboursement disponible de {_formater_fcfa(mensualite_max_disponible)} FCFA."
         if mensualite_max_disponible is not None
         else ""
     )
@@ -197,7 +198,7 @@ def repondre_assistant_locale(question: str) -> str:
     mentionne dans la question, sinon redirige vers le call center."""
     import re as _re
 
-    from app.services.calculs_financiers import calculer_quotite_cessible_legale
+    from app.services.calculs_financiers import TAUX_ENDETTEMENT_MAX, calculer_quotite_cessible_legale
 
     correspondance = _re.search(r"(\d[\d\s.]{3,})\s*(?:fcfa|xaf|f\b)?", question, flags=_re.IGNORECASE)
     if correspondance:
@@ -207,13 +208,15 @@ def repondre_assistant_locale(question: str) -> str:
             revenu = 0
         if revenu >= 10_000:
             quotite = calculer_quotite_cessible_legale(revenu)
+            prudent = min(quotite["quotite_cessible_totale"], revenu * TAUX_ENDETTEMENT_MAX)
             return (
-                f"Pour un revenu net d'environ {_formater_fcfa(revenu)} FCFA, votre quotité cessible "
-                f"légale indicative est de {_formater_fcfa(quotite['quotite_cessible_totale'])} FCFA "
-                f"(soit {quotite['taux_effectif_pct']} % du revenu). Ce montant doit encore être réduit "
-                "de vos charges fixes et de vos mensualités de prêts en cours pour obtenir votre "
-                "mensualité réellement disponible. Cette estimation est indicative et ne remplace pas "
-                "une simulation complète."
+                f"Pour un revenu net d'environ {_formater_fcfa(revenu)} FCFA, la mensualité de crédit "
+                f"recommandée est d'au plus {_formater_fcfa(prudent)} FCFA (un tiers du revenu, dans la "
+                f"limite légale). Le maximum autorisé par la loi (quotité cessible) est de "
+                f"{_formater_fcfa(quotite['quotite_cessible_totale'])} FCFA, soit "
+                f"{quotite['taux_effectif_pct']} % du revenu. Ces montants doivent encore être réduits "
+                "de vos charges fixes et de vos mensualités de prêts en cours. Cette estimation est "
+                "indicative et ne remplace pas une simulation complète."
             )
 
     return (
@@ -248,7 +251,7 @@ Voici les informations complètes du client :
 - Charges fixes mensuelles (hors crédit) : {charges_fixes} FCFA
 - Mensualités de crédits déjà en cours : {prets_existants} FCFA
 - Quotité cessible légale totale : {quotite_totale} FCFA
-- Mensualité maximale disponible après charges et prêts : {mensualite_max_disponible} FCFA
+- Mensualité maximale disponible après charges et prêts (un tiers du revenu, dans la limite de la quotité légale) : {mensualite_max_disponible} FCFA
 - Apport disponible : {apport} FCFA
 - Montant du nouveau crédit souhaité : {montant_souhaite} FCFA
 - Durée souhaitée : {duree_mois} mois

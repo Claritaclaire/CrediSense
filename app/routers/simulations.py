@@ -11,7 +11,7 @@ from app.models.user import User, RoleUtilisateur
 from app.schemas.simulation import SimulationCreate, SimulationOut, ComparaisonRequest, CapaciteRequest
 from app.services.calculs_financiers import (
     calculer_capacite_offre,
-    calculer_quotite_cessible_legale,
+    calculer_plafonds_mensualite,
     simuler_credit,
 )
 from app.core.security import get_current_user, exiger_role
@@ -116,18 +116,15 @@ def _indicateurs_offre_duree(
     if not (offre.duree_min_mois <= duree <= offre.duree_max_mois):
         return None
 
-    frais_dossier_min = offre.frais_dossier_min
     capacite_avec_prets = calculer_capacite_offre(
         mensualite_max=max(0.0, mensualite_max_avec_prets),
         taux_annuel=offre.taux_annuel, duree_mois=duree,
-        frais_dossier_pct=offre.frais_dossier_pct, assurance_pct_an=offre.assurance_pct_an,
-        montant_max=offre.montant_max, frais_dossier_min=frais_dossier_min,
+        assurance_pct_an=offre.assurance_pct_an, montant_max=offre.montant_max,
     )
     capacite_sans_prets = calculer_capacite_offre(
         mensualite_max=max(0.0, mensualite_max_sans_prets),
         taux_annuel=offre.taux_annuel, duree_mois=duree,
-        frais_dossier_pct=offre.frais_dossier_pct, assurance_pct_an=offre.assurance_pct_an,
-        montant_max=offre.montant_max, frais_dossier_min=frais_dossier_min,
+        assurance_pct_an=offre.assurance_pct_an, montant_max=offre.montant_max,
     )
     simulation_demandee = None
     if montant_souhaite <= offre.montant_max:
@@ -191,23 +188,47 @@ def calculer_capacite(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
-    """Calcule la capacité d'emprunt directement sur la base de la Quotité Cessible Légale (Décret n°94/197/PM)."""
+    """Capacité d'emprunt selon deux règles : prudente (1/3 du revenu, plafonnée par la
+    quotité légale) en résultat principal, et légale (Décret n°94/197/PM) en plafond."""
     if data.revenu_mensuel <= 0 or data.montant_souhaite <= 0:
         raise HTTPException(status_code=422, detail="Le revenu et le montant souhaité doivent être supérieurs à zéro.")
     if data.charges_mensuelles < 0 or data.total_mensualites_prets_en_cours < 0:
         raise HTTPException(status_code=422, detail="Les charges ne peuvent pas être négatives.")
 
-    # Calcul direct selon la Quotité Cessible Légale (Décret n°94/197/PM)
-    quotite_legale = calculer_quotite_cessible_legale(data.revenu_mensuel)
-    quotite_totale = quotite_legale["quotite_cessible_totale"]
-
-    mensualite_max_sans_prets = quotite_totale - data.charges_mensuelles
-    mensualite_max_avec_prets = mensualite_max_sans_prets - data.total_mensualites_prets_en_cours
-
+    plafonds = calculer_plafonds_mensualite(
+        data.revenu_mensuel, data.charges_mensuelles, data.total_mensualites_prets_en_cours
+    )
     offres = db.query(OffreCredit).filter(OffreCredit.actif.is_(True)).all()
 
-    # Jalon de durées standards à évaluer (en mois)
-    jalons_durees = [3, 6, 12, 18, 24, 36, 48, 60, 72, 84, 96, 108, 120]
+    prudent = _analyser_capacite(
+        offres, data.montant_souhaite, plafonds["prudent"]["avec_prets"], plafonds["prudent"]["sans_prets"]
+    )
+    legal = _analyser_capacite(
+        offres, data.montant_souhaite, plafonds["legal"]["avec_prets"], plafonds["legal"]["sans_prets"]
+    )
+
+    return {
+        "revenu_mensuel": data.revenu_mensuel,
+        "montant_souhaite": data.montant_souhaite,
+        "charges_mensuelles": data.charges_mensuelles,
+        "total_mensualites_prets_en_cours": data.total_mensualites_prets_en_cours,
+        "seuil_endettement": plafonds["quotite_legale"]["taux_effectif_pct"],
+        "quotite_legale": plafonds["quotite_legale"],
+        "taux_endettement_pct": plafonds["taux_endettement_pct"],
+        "plafond_endettement": plafonds["plafond_endettement"],
+        "tiers_plus_strict": plafonds["tiers_plus_strict"],
+        **prudent,
+        "legal": legal,
+    }
+
+
+JALONS_DUREES = [3, 6, 12, 18, 24, 36, 48, 60, 72, 84, 96, 108, 120]
+
+
+def _analyser_capacite(offres: list, montant_souhaite: float,
+                       mensualite_max_avec_prets: float, mensualite_max_sans_prets: float) -> dict:
+    """Faisabilité de la demande, durée minimale et détail par durée pour UN plafond de mensualité."""
+    jalons_durees = JALONS_DUREES
 
     # Union des durées a tester : les jalons qui tombent dans la plage de chaque offre,
     # plus un repli tous les 12 mois pour les offres dont la plage ne croise aucun jalon
@@ -220,7 +241,7 @@ def calculer_capacite(
         durees_a_tester.update(applicables)
 
     resultats_par_duree = _meilleures_lignes_par_duree(
-        offres, sorted(durees_a_tester), data.montant_souhaite, mensualite_max_avec_prets, mensualite_max_sans_prets
+        offres, sorted(durees_a_tester), montant_souhaite, mensualite_max_avec_prets, mensualite_max_sans_prets
     )
 
     resultats = sorted(resultats_par_duree.values(), key=lambda ligne: ligne["duree_mois"])
@@ -233,7 +254,7 @@ def calculer_capacite(
         return (
             mensualite is not None
             and mensualite <= capacite_disponible
-            and ligne["montant_dans_capacite_avec_prets"] >= data.montant_souhaite
+            and ligne["montant_dans_capacite_avec_prets"] >= montant_souhaite
         )
 
     for ligne in resultats:
@@ -257,7 +278,7 @@ def calculer_capacite(
 
         if durees_a_affiner:
             lignes_affinees = _meilleures_lignes_par_duree(
-                offres, durees_a_affiner, data.montant_souhaite,
+                offres, durees_a_affiner, montant_souhaite,
                 mensualite_max_avec_prets, mensualite_max_sans_prets,
             )
             for ligne in lignes_affinees.values():
@@ -282,16 +303,10 @@ def calculer_capacite(
         demande_faisable = False
 
     return {
-        "revenu_mensuel": data.revenu_mensuel,
-        "montant_souhaite": data.montant_souhaite,
-        "charges_mensuelles": data.charges_mensuelles,
-        "total_mensualites_prets_en_cours": data.total_mensualites_prets_en_cours,
-        "seuil_endettement": quotite_legale["taux_effectif_pct"],
         "mensualite_max_avec_prets": round(max(0.0, mensualite_max_avec_prets), 2),
         "mensualite_max_sans_prets": round(max(0.0, mensualite_max_sans_prets), 2),
         "depassement_avec_prets": mensualite_max_avec_prets <= 0,
         "depassement_sans_prets": mensualite_max_sans_prets <= 0,
-        "quotite_legale": quotite_legale,
         "demande_faisable": demande_faisable,
         "duree_min_faisable": duree_min_faisable,
         "mensualite_duree_min": mensualite_duree_min,

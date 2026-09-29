@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import FormulaireSimulation from "../components/FormulaireSimulation";
 import CarteOffre from "../components/CarteOffre";
 import GraphiqueComparaison from "../components/GraphiqueComparaison";
-import { calculerQuotiteCessible } from "../components/BadgeEndettement";
+import { calculerMensualiteMaxPrudente, calculerQuotiteCessible } from "../components/BadgeEndettement";
 import { MENTION_ASSURANCE } from "../utils/mentions";
 
 export default function Comparaison() {
@@ -40,7 +40,8 @@ export default function Comparaison() {
   // cours non pris en compte ici : simple indicateur, l'analyse complète reste sur
   // la page Simulation).
   const revenuNum = Number(revenu) || 0;
-  const mensualiteDisponible = revenuNum > 0 ? calculerQuotiteCessible(revenuNum) : null;
+  const mensualiteDisponible = revenuNum > 0 ? calculerMensualiteMaxPrudente(revenuNum) : null;
+  const maximumLegal = revenuNum > 0 ? calculerQuotiteCessible(revenuNum) : null;
 
   async function handleSubmit(payload) {
     setErreur("");
@@ -132,11 +133,14 @@ export default function Comparaison() {
                       {mensualiteDisponible !== null && (() => {
                         const mensualiteComplete = meilleure.mensualite + (meilleure.assurance_mensuelle || 0);
                         const compatible = mensualiteComplete <= mensualiteDisponible;
+                        const sousMaximumLegal = mensualiteComplete <= maximumLegal;
                         return (
-                          <p className={`mt-4 rounded-lg px-3 py-2 text-xs font-semibold ${compatible ? "bg-emerald-500/15 text-emerald-200" : "bg-rose-500/15 text-rose-200"}`}>
+                          <p className={`mt-4 rounded-lg px-3 py-2 text-xs font-semibold ${compatible ? "bg-emerald-500/15 text-emerald-200" : sousMaximumLegal ? "bg-amber-500/15 text-amber-200" : "bg-rose-500/15 text-rose-200"}`}>
                             {compatible
-                              ? `✓ Compatible avec votre quotité cessible disponible (${formateurFCFA.format(mensualiteDisponible)} FCFA/mois).`
-                              : `⚠ Dépasse votre quotité cessible disponible (${formateurFCFA.format(mensualiteDisponible)} FCFA/mois) : cette offre risque de ne pas être finançable en l'état.`}
+                              ? `✓ Compatible avec votre capacité de remboursement prudente (1/3 du revenu : ${formateurFCFA.format(mensualiteDisponible)} FCFA/mois).`
+                              : sousMaximumLegal
+                                ? `⚠ Dépasse le tiers de votre revenu (${formateurFCFA.format(mensualiteDisponible)} FCFA/mois), mais reste sous le maximum légal (${formateurFCFA.format(maximumLegal)} FCFA/mois) : finançable en théorie, mais votre budget serait très serré.`
+                                : `⚠ Dépasse même le maximum légal (${formateurFCFA.format(maximumLegal)} FCFA/mois) : cette offre ne sera pas finançable en l'état.`}
                           </p>
                         );
                       })()}

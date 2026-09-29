@@ -13,7 +13,7 @@ const QUESTIONS = [
   },
   {
     q: "Comment est calculée ma capacité d'emprunt (quotité cessible) ?",
-    r: "Elle suit le barème progressif du Décret n°94/197/PM du Cameroun, appliqué par tranche de revenu : 10 % jusqu'à 18 750 FCFA, 20 % de 18 751 à 37 500 FCFA, 25 % de 37 501 à 75 000 FCFA, 1/3 de 75 001 à 112 500 FCFA, 50 % de 112 501 à 142 500 FCFA, et 100 % au-delà. Vos charges fixes et vos mensualités de prêts en cours sont ensuite déduites pour obtenir votre mensualité réellement disponible.",
+    r: "Elle suit le barème progressif du Décret n°94/197/PM du Cameroun, appliqué par tranche de revenu : 10 % jusqu'à 18 750 FCFA, 20 % de 18 751 à 37 500 FCFA, 25 % de 37 501 à 75 000 FCFA, 1/3 de 75 001 à 112 500 FCFA, 50 % de 112 501 à 142 500 FCFA, et 100 % au-delà. Ce barème fixe le maximum autorisé par la loi. CrediSense applique en plus une règle prudente : vos mensualités de crédit ne dépassent pas un tiers de votre revenu net, pour vous laisser de quoi vivre. Le résultat principal utilise la plus stricte des deux règles, et le maximum légal est affiché pour information. Vos charges fixes et vos mensualités de prêts en cours sont ensuite déduites pour obtenir votre mensualité réellement disponible.",
   },
   {
     q: "Quelles pièces justificatives dois-je préparer pour une demande de crédit ?",

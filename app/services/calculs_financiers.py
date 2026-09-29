@@ -12,6 +12,10 @@ from scipy.optimize import brentq
 # (conditions tarifaires CCA Bank). Les primes d'assurance n'y sont pas soumises.
 TAUX_TVA = 0.1925
 
+# Regle prudentielle : les mensualites de credit ne depassent pas le tiers du revenu net
+# (pratique bancaire, CCA Bank : "1/3 du premier virement"), en plus du plafond legal.
+TAUX_ENDETTEMENT_MAX = 1 / 3
+
 
 def calculer_mensualite(capital: float, taux_annuel: float, duree_mois: int) -> float:
     """
@@ -182,25 +186,24 @@ def calculer_capacite_offre(
     mensualite_max: float,
     taux_annuel: float,
     duree_mois: int,
-    frais_dossier_pct: float,
     assurance_pct_an: float,
     montant_max: float,
-    frais_dossier_min: float = 0.0,
 ) -> dict:
     """Trouve le capital maximal compatible avec une mensualite donnee."""
     if mensualite_max <= 0 or duree_mois <= 0 or montant_max <= 0:
         return {"montant_max_indicatif": 0.0, "mensualite": 0.0}
 
+    # Meme mensualite TTC + assurance que simuler_credit, sans generer le tableau ni
+    # resoudre le TAEG : cette fonction est appelee des dizaines de fois par recherche.
+    taux_annuel_ttc = taux_annuel * (1 + TAUX_TVA)
+
     def mensualite_complete(capital: float) -> float:
-        resultat = simuler_credit(
-            capital=capital,
-            taux_annuel=taux_annuel,
-            duree_mois=duree_mois,
-            frais_dossier_pct=frais_dossier_pct,
-            assurance_pct_an=assurance_pct_an,
-            frais_dossier_min=frais_dossier_min,
+        if capital <= 0:
+            return 0.0
+        return (
+            calculer_mensualite(capital, taux_annuel_ttc, duree_mois)
+            + round(capital * assurance_pct_an / 12, 2)
         )
-        return resultat["mensualite"] + resultat["assurance_mensuelle"]
 
     if mensualite_complete(montant_max) <= mensualite_max:
         montant = montant_max
@@ -219,6 +222,33 @@ def calculer_capacite_offre(
     return {
         "montant_max_indicatif": round(montant, 2),
         "mensualite": round(mensualite, 2),
+    }
+
+
+def calculer_plafonds_mensualite(revenu_net: float, charges_mensuelles: float,
+                                 mensualites_prets_en_cours: float) -> dict:
+    """
+    Mensualité maximale selon deux règles :
+    - légale : quotité cessible du Décret n°94/197/PM (plafond à ne jamais dépasser) ;
+    - prudente : la plus stricte entre la quotité légale et le tiers du revenu net.
+    Les charges et les prêts en cours sont déduits dans les deux cas.
+    """
+    quotite = calculer_quotite_cessible_legale(revenu_net)
+    quotite_totale = quotite["quotite_cessible_totale"]
+    plafond_endettement = round(revenu_net * TAUX_ENDETTEMENT_MAX, 2)
+    base_prudente = min(quotite_totale, plafond_endettement)
+
+    def _regle(base: float) -> dict:
+        sans_prets = base - charges_mensuelles
+        return {"base": round(base, 2), "sans_prets": sans_prets, "avec_prets": sans_prets - mensualites_prets_en_cours}
+
+    return {
+        "quotite_legale": quotite,
+        "taux_endettement_pct": round(TAUX_ENDETTEMENT_MAX * 100, 2),
+        "plafond_endettement": plafond_endettement,
+        "tiers_plus_strict": plafond_endettement < quotite_totale,
+        "legal": _regle(quotite_totale),
+        "prudent": _regle(base_prudente),
     }
 
 

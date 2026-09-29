@@ -141,13 +141,12 @@ def generer_recommandation(data: dict, offres_simulees: list) -> str:
         if revenu > 0
         else None
     )
-    # Seuil d'alerte base sur le taux effectif de la quotite cessible legale
-    # (bareme progressif de calculs_financiers.py), pas un seuil fixe de 33 % :
-    # c'est la meme regle que celle utilisee pour filtrer les offres compatibles
-    # (compatible_quotite), juste exprimee en pourcentage du revenu plutot qu'en FCFA.
-    taux_quotite_effectif = data.get("taux_quotite_effectif_pct") or 0
+    # Seuil d'alerte = regle prudente (le plus strict entre 1/3 du revenu et la quotite
+    # cessible legale) : la meme regle que celle qui filtre les offres compatibles
+    # (compatible_quotite), exprimee en pourcentage du revenu plutot qu'en FCFA.
+    seuil_prudent = data.get("seuil_endettement_prudent_pct") or 0
     depassement_seuil = (
-        "oui" if taux_endettement is not None and taux_endettement > taux_quotite_effectif else "non"
+        "oui" if taux_endettement is not None and taux_endettement > seuil_prudent else "non"
     )
     offres_compatibles = [
         offre for offre in offres_simulees
@@ -187,12 +186,13 @@ def generer_recommandation(data: dict, offres_simulees: list) -> str:
         "regles_metier": (
             "Recommande TOUJOURS l'offre en première position dans offres_compatibles : "
             "cette liste est déjà triée par TAEG croissant et déjà filtrée par compatibilité "
-            "avec la quotité cessible, c'est la seule règle de choix valide. Ne recommande "
+            "avec la capacité de remboursement (un tiers du revenu net, dans la limite de la "
+            "quotité cessible légale), c'est la seule règle de choix valide. Ne recommande "
             "jamais une offre exclue. N'invente et n'utilise JAMAIS de correspondance entre le "
             "nom d'une offre (Scolaire, Urgence, Commercial, Découvert, Projet Personnel...) et "
             "le projet du client (achat véhicule, immobilier, etc.) : cette application n'a "
             "aucune règle métier associant un type de projet à un nom d'offre, seuls le TAEG et "
-            "la compatibilité avec la quotité cessible comptent. Toutes les sommes sont en FCFA, "
+            "la compatibilité avec la capacité de remboursement comptent. Toutes les sommes sont en FCFA, "
             "jamais en euros ni dans une autre devise. Ne mentionne jamais d'identifiant "
             "technique (ID, UUID) d'une offre dans ta réponse : utilise uniquement son nom. "
             "Il n'existe qu'une seule banque dans cette application : CCA Bank. Le champ "

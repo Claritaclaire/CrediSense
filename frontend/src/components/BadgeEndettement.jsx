@@ -25,6 +25,11 @@ export function calculerQuotiteCessible(revenu) {
   return quotite;
 }
 
+// Règle prudente : un tiers du revenu, sans jamais dépasser la quotité légale.
+export function calculerMensualiteMaxPrudente(revenu) {
+  return Math.min(calculerQuotiteCessible(revenu), revenu / 3);
+}
+
 export default function BadgeEndettement({ mensualite, revenu = "", chargesMensuelles = 0, mensualitesPrets = 0 }) {
   const revenuNum = Number(revenu);
   const charges = Math.max(0, Number(chargesMensuelles) || 0);
@@ -32,16 +37,20 @@ export default function BadgeEndettement({ mensualite, revenu = "", chargesMensu
   const mensualiteComplete = Math.max(0, Number(mensualite) || 0);
   const engagementTotal = charges + prets + mensualiteComplete;
   const tauxEndettement = revenuNum > 0 ? (engagementTotal / revenuNum) * 100 : null;
-  const quotiteCessible = revenuNum > 0 ? calculerQuotiteCessible(revenuNum) : 0;
-  const mensualiteDisponible = Math.max(0, quotiteCessible - charges - prets);
-  const depasseQuotite = mensualiteComplete > mensualiteDisponible;
+  const disponiblePrudent = revenuNum > 0 ? Math.max(0, calculerMensualiteMaxPrudente(revenuNum) - charges - prets) : 0;
+  const disponibleLegal = revenuNum > 0 ? Math.max(0, calculerQuotiteCessible(revenuNum) - charges - prets) : 0;
 
   let niveau = null;
   if (tauxEndettement !== null) {
-    if (!depasseQuotite && tauxEndettement <= 33) niveau = "faible";
-    else if (!depasseQuotite) niveau = "raisonnable";
+    if (mensualiteComplete <= disponiblePrudent) niveau = "faible";
+    else if (mensualiteComplete <= disponibleLegal) niveau = "raisonnable";
     else niveau = "eleve";
   }
+  const explication = {
+    faible: `sous la capacité prudente (1/3 du revenu, disponible : ${formateurFCFA.format(disponiblePrudent)} FCFA)`,
+    raisonnable: `au-delà du tiers du revenu (${formateurFCFA.format(disponiblePrudent)} FCFA) mais sous le maximum légal (${formateurFCFA.format(disponibleLegal)} FCFA)`,
+    eleve: `maximum légal dépassé (quotité cessible disponible : ${formateurFCFA.format(disponibleLegal)} FCFA)`,
+  };
 
   if (!revenu) {
     return (
@@ -69,9 +78,7 @@ export default function BadgeEndettement({ mensualite, revenu = "", chargesMensu
         </p>
         <p className="text-xs text-ardoise mt-0.5">
           {formateurFCFA.format(engagementTotal)} FCFA d'engagements / {formateurFCFA.format(revenuNum)} FCFA de revenu
-          {depasseQuotite
-            ? ` — quotité cessible dépassée (disponible : ${formateurFCFA.format(mensualiteDisponible)} FCFA)`
-            : ` — sous la quotité cessible (disponible : ${formateurFCFA.format(mensualiteDisponible)} FCFA)`}
+          {` — ${explication[niveau]}`}
         </p>
       </div>
     </div>
